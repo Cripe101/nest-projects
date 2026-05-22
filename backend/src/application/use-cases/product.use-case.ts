@@ -18,7 +18,7 @@ export class ProductUseCase {
       dto.sellingPrice,
       dto.stock,
       dto?.description,
-      dto?.imageUrl,
+      dto.imageUrl,
     );
 
     return this.repository.createProduct(product);

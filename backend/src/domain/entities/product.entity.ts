@@ -8,7 +8,7 @@ export class ProductEntity {
     public sellingPrice: number,
     public stock: number,
     public description?: string,
-    public imgUrl?: string,
+    public imageUrl?: string,
   ) {
     if (stock < 0) {
       throw new NotAcceptableException('Stock cannot be negative');

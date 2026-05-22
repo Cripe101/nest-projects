@@ -9,4 +9,6 @@ export abstract class ProfitRepository {
   abstract getTotalProfitByDay(): Promise<{ totalProfit: number }>;
   abstract updateProfit(id: string, profit: Profit): Promise<Profit>;
   abstract deleteProfit(id: string): Promise<Profit>;
+  abstract getPhoneTotalProfit(): Promise<{ totalProfit: number }>;
+  abstract getGcashTotalProfit(): Promise<{ totalProfit: number }>;
 }

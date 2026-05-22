@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { asyncWrapProviders } from 'async_hooks';
 import { Model } from 'mongoose';
 import { Profit } from 'src/sample-profit/domain/entities/profit.entity';
 import { ProfitRepository } from 'src/sample-profit/domain/repositories/profit.repository';
@@ -90,6 +91,50 @@ export class MongoProfitRepository implements ProfitRepository {
             $gte: startOfDay,
             $lte: endOfDay,
           },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalProfit: {
+            $sum: '$amount',
+          },
+        },
+      },
+    ]);
+
+    return {
+      totalProfit: summary?.totalProfit ?? 0,
+    };
+  }
+
+  async getPhoneTotalProfit(): Promise<{ totalProfit: number }> {
+    const [summary] = await this.profitModel.aggregate([
+      {
+        $match: {
+          description: 'Phone',
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalProfit: {
+            $sum: '$amount',
+          },
+        },
+      },
+    ]);
+
+    return {
+      totalProfit: summary?.totalProfit ?? 0,
+    };
+  }
+
+  async getGcashTotalProfit(): Promise<{ totalProfit: number }> {
+    const [summary] = await this.profitModel.aggregate([
+      {
+        $match: {
+          description: 'G-cash',
         },
       },
       {

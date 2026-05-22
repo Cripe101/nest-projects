@@ -39,6 +39,16 @@ export class ProfitController {
     return this.profitUseCase.getTotalProfitByDay();
   }
 
+  @Get('phone')
+  getPhoneTotalProfit() {
+    return this.profitUseCase.getPhoneTotalProfit();
+  }
+
+  @Get('g-cash')
+  getGcashTotalProfit() {
+    return this.profitUseCase.getGcashTotalProfit();
+  }
+
   @Get(':id')
   getProfitById(@Param('id') id: string) {
     return this.profitUseCase.getProfitById(id);

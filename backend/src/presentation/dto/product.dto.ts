@@ -25,8 +25,9 @@ export class CreateProductDto {
   @IsString()
   description?: string;
 
+  @IsNotEmpty()
   @IsString()
-  imageUrl?: string;
+  imageUrl!: string;
 }
 
 export class UpdateProductDto {
@@ -53,6 +54,7 @@ export class UpdateProductDto {
   @IsString()
   description?: string;
 
+  @IsNotEmpty()
   @IsString()
   imageUrl?: string;
 }

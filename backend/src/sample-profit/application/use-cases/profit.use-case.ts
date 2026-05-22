@@ -43,4 +43,12 @@ export class ProfitUseCase {
   async deleteProfit(id: string) {
     return this.repository.deleteProfit(id);
   }
+
+  async getPhoneTotalProfit() {
+    return this.repository.getPhoneTotalProfit();
+  }
+
+  async getGcashTotalProfit() {
+    return this.repository.getGcashTotalProfit();
+  }
 }
