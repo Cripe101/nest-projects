@@ -6,6 +6,7 @@ export const addProfit = async (data: {
   amount: number;
 }) => {
   const response = await apiClient.post("/profits", data);
+
   return response.data;
 };
 
@@ -29,6 +30,18 @@ export const getProfitByDay = async () => {
 
 export const getProfitByMonth = async () => {
   const response = await apiClient.get("/profits/month");
+
+  return response.data;
+};
+
+export const getPhoneTotalProfit = async () => {
+  const response = await apiClient.get("/profits/phone");
+
+  return response.data;
+};
+
+export const getGcashTotalProfit = async () => {
+  const response = await apiClient.get("/profits/g-cash");
 
   return response.data;
 };

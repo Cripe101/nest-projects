@@ -1,15 +1,15 @@
 import { BiPlus } from "react-icons/bi";
-import { CiMobile1, CiTrash } from "react-icons/ci";
+import { CiCalendar, CiMobile1, CiTrash, CiWallet } from "react-icons/ci";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {
   addProfit,
   deleteProfit,
+  getGcashTotalProfit,
+  getPhoneTotalProfit,
   getProfit,
-  getProfitByDay,
   getProfitByMonth,
-  getTotalProfit,
 } from "../api/ProfitApi";
 import DashboardCard from "../components/cards/DashboardCard";
 
@@ -43,16 +43,30 @@ const Profit = () => {
         amount: data.amount,
       }),
     onSuccess: () => {
-      toast.success("Added Successfully");
+      toast.success("Added Successfully", {
+        position: "top-right",
+        autoClose: 2000,
+        style: {
+          width: 300,
+          borderRadius: 10,
+        },
+      });
       refetch();
-      totalProfit.refetch();
-      dailyQuery.refetch();
+      phoneTotalProfit.refetch();
+      gcashTotalProfit.refetch();
       monthlyQuery.refetch();
       setAmount(0);
       setDescription("");
     },
     onError: (err) => {
-      toast.error(err.message);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 2000,
+        style: {
+          width: 300,
+          borderRadius: 10,
+        },
+      });
     },
   });
 
@@ -60,14 +74,28 @@ const Profit = () => {
     mutationKey: ["Phone"],
     mutationFn: (id: string) => deleteProfit(id),
     onSuccess: () => {
-      toast.success("Successfully Deleted");
+      toast.success("Successfully Deleted", {
+        position: "top-right",
+        autoClose: 2000,
+        style: {
+          width: 300,
+          borderRadius: 10,
+        },
+      });
       refetch();
-      totalProfit.refetch();
-      dailyQuery.refetch();
+      phoneTotalProfit.refetch();
+      gcashTotalProfit.refetch();
       monthlyQuery.refetch();
     },
     onError: (err) => {
-      toast.error(err.message);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 2000,
+        style: {
+          width: 300,
+          borderRadius: 10,
+        },
+      });
     },
   });
 
@@ -95,14 +123,14 @@ const Profit = () => {
     queryFn: getProfit,
   });
 
-  const totalProfit = useQuery({
-    queryKey: ["total"],
-    queryFn: getTotalProfit,
+  const phoneTotalProfit = useQuery({
+    queryKey: ["phone"],
+    queryFn: getPhoneTotalProfit,
   });
 
-  const dailyQuery = useQuery({
-    queryKey: ["day"],
-    queryFn: getProfitByDay,
+  const gcashTotalProfit = useQuery({
+    queryKey: ["gcash"],
+    queryFn: getGcashTotalProfit,
   });
 
   const monthlyQuery = useQuery({
@@ -117,7 +145,7 @@ const Profit = () => {
         <p className="text-lg">Phone</p>
       </h1>
       <section className="grid md:grid-cols-4 gap-5">
-        <form className="flex flex-col gap-5 p-5 bg-slate-50 rounded-xl">
+        <form className="flex flex-col gap-5 p-5 bg-slate-50 rounded-xl shadow">
           <h1 className="flex items-center gap-1">
             <BiPlus size={26} />
             <p className="font-medium">Add Transaction</p>
@@ -170,25 +198,25 @@ const Profit = () => {
           </button>
         </form>
         <DashboardCard
-          label="Total Profit"
+          label="Monthly Profit"
+          icon={CiCalendar}
+          data={monthlyQuery?.data?.totalProfit ?? 0}
+          text="text-white"
+          bgColor="bg-blue-600"
+        />
+        <DashboardCard
+          label="Phone Total Profit"
           icon={CiMobile1}
-          data={totalProfit.data.totalProfit}
+          data={phoneTotalProfit?.data?.totalProfit ?? 0}
           text="text-white"
           bgColor="bg-[#2191FB]"
         />
         <DashboardCard
-          label="This Month"
-          icon={CiMobile1}
-          data={monthlyQuery.data.totalProfit}
+          label="G-cash Total Profit"
+          icon={CiWallet}
+          data={gcashTotalProfit?.data?.totalProfit ?? 0}
           text="text-white"
-          bgColor="bg-[#2191FB]"
-        />
-        <DashboardCard
-          label="This Day"
-          icon={CiMobile1}
-          data={dailyQuery.data.totalProfit}
-          text="text-white"
-          bgColor="bg-[#2191FB]"
+          bgColor="bg-blue-400"
         />
       </section>
       <section className="grid gap-5">

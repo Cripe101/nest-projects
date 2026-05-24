@@ -2,8 +2,9 @@ import axios, { type AxiosInstance } from "axios";
 // import { authState } from "../store/auth";
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL: "http://localhost:5000",
-  // localhost:5000/profits
+  baseURL: "http://192.168.1.27:5000",
+  // http://localhost:5000
+  // http://192.168.1.27:5000
   timeout: Infinity,
   headers: { "Content-Type": "application/json" },
 });
@@ -23,7 +24,6 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle errors globally
     console.error(error);
     return Promise.reject(error);
   },

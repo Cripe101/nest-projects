@@ -19,6 +19,15 @@ export class MongoProductSaleRepository {
     private readonly productModel: Model<ProductEntity>,
   ) {}
 
+  private deductStock = async (productId: string, quantity: number) => {
+    await this.productModel.findByIdAndUpdate(
+      { _id: productId },
+      {
+        $inc: { stock: quantity },
+      },
+    );
+  };
+
   async createProductSale(
     productSale: ProductSaleEntity,
   ): Promise<ProductSaleEntity> {
@@ -50,7 +59,8 @@ export class MongoProductSaleRepository {
       throw new NotAcceptableException('Provide valid datas');
     }
 
-    getProduct.stock -= productSale.quantity;
+    this.deductStock(productSale.productId, -productSale.quantity);
+
     await getProduct?.save();
 
     return createdProductSale;

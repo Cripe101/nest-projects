@@ -2,8 +2,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import HomeLayout from "./layouts/HomeLayout";
-import Home from "./pages/Home";
 import Profit from "./pages/Profit";
+import Inventory from "./pages/Inventory";
+import AddProduct from "./pages/inventory/AddProduct";
 
 const router = createBrowserRouter([
   {
@@ -11,12 +12,12 @@ const router = createBrowserRouter([
     element: <HomeLayout />,
     children: [
       {
-        path: "/",
-        element: <Home />,
-      },
-      {
         path: "/profit",
         element: <Profit />,
+      },
+      {
+        path: "/inventory",
+        element: <Inventory />,
       },
     ],
   },
