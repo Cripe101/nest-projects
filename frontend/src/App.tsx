@@ -4,7 +4,8 @@ import { ToastContainer } from "react-toastify";
 import HomeLayout from "./layouts/HomeLayout";
 import Profit from "./pages/Profit";
 import Inventory from "./pages/Inventory";
-import AddProduct from "./pages/inventory/AddProduct";
+import Sale from "./pages/Sale";
+import InventoryLayout from "./layouts/InventoryLayout";
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,17 @@ const router = createBrowserRouter([
       },
       {
         path: "/inventory",
-        element: <Inventory />,
+        element: <InventoryLayout />,
+        children: [
+          {
+            path: "/inventory",
+            element: <Inventory />,
+          },
+        ],
+      },
+      {
+        path: "/sale",
+        element: <Sale />,
       },
     ],
   },

@@ -18,3 +18,14 @@ export interface IProductPost {
   description?: string;
   imageUrl?: string;
 }
+
+export interface IProductSaleGet {
+  _id: string;
+  productId: IProductGet;
+  quantity: number;
+  sellingPrice: number;
+  buyingPrice: number;
+  totalPrice: number;
+  profit: number;
+  createdAt: string;
+}

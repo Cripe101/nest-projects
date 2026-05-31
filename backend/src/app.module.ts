@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ProfitModule } from './sample-profit/infrastracture/profit.module';
-import { ProductModule } from './infastracture/product.module';
-import { ProductSaleModule } from './infastracture/persistence/product-sale.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ProductSaleModule } from './product/infastracture/product-sale.module';
+import { ProductModule } from './product/infastracture/product.module';
 
 @Module({
   imports: [

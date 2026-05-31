@@ -5,7 +5,7 @@ import { useState } from "react";
 import { createProductSale } from "../../api/ProductSaleApi";
 import { toast } from "react-toastify";
 
-const AddSale = () => {
+const AddSale = ({ refetch }: { refetch: any }) => {
   const productsQuery = useQuery({
     queryKey: ["Products"],
     queryFn: getAllProducts,
@@ -28,6 +28,7 @@ const AddSale = () => {
       createProductSale(data),
     onSuccess: () => {
       toast.success("Sale Added");
+      refetch();
     },
   });
 
@@ -41,41 +42,30 @@ const AddSale = () => {
   };
 
   return (
-    <div>
+    <div className="grid gap-5">
       <h1>AddSale</h1>
-      <h1 className="text-xs font-bold">Select Product:</h1>
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-        {productsQuery?.data?.map((product: IProductGet) => (
-          <span
-            onClick={() => setProductId(product._id)}
-            key={product._id}
-            className={`${checkProduct(product._id) ? "bg-green-300" : ""} cursor-pointer p-5 rounded-xl shadow active:scale-90 duration-200`}
-          >
-            <img src={product.imageUrl} className="" />
-            <h1>{product.productName}</h1>
-          </span>
-        ))}
-      </section>
-      {/* <section className="gap-1 hidden">
-        <label className="pl-3 text-xs font-bold">Product:</label>
-        <input
-          name="product"
-          placeholder="Product"
-          className="outline-none border border-slate-400 p-2 px-4 rounded-xl"
-          type="text"
-          value={productId}
-          onChange={(e) => {
-            setProductId(e.target.value);
-          }}
-        />
-      </section> */}
+      <span className="grid gap-2">
+        <h1 className="lp-3 text-xs font-bold">Select Product:</h1>
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 justify-center">
+          {productsQuery?.data?.map((product: IProductGet) => (
+            <span
+              onClick={() => setProductId(product._id)}
+              key={product._id}
+              className={`${checkProduct(product._id) ? "bg-green-300" : ""} grid gap-1 cursor-pointer p-5 rounded-xl shadow active:scale-90 duration-200`}
+            >
+              <img src={product.imageUrl} className="" />
+              <h1 className="text-xs font-medium">{product.productName}</h1>
+            </span>
+          ))}
+        </section>
+      </span>
       <section className="grid gap-1">
         <label className="pl-3 text-xs font-bold">Quantity:</label>
         <input
           name="quantity"
           placeholder="Quantity"
           className="outline-none border border-slate-400 p-2 px-4 rounded-xl"
-          type="text"
+          type="number"
           value={quantity}
           onChange={(e) => {
             setQuantity(Number(e.target.value));

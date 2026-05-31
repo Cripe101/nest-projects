@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateProfitDto, UpdateProfitDto } from './dto/profit.dto';
-import { ProfitUseCase } from 'src/sample-profit/application/use-cases/profit.use-case';
+import { ProfitUseCase } from '../application/use-cases/profit.use-case';
 
 @Controller('profits')
 export class ProfitController {

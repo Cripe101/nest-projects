@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { asyncWrapProviders } from 'async_hooks';
 import { Model } from 'mongoose';
-import { Profit } from 'src/sample-profit/domain/entities/profit.entity';
-import { ProfitRepository } from 'src/sample-profit/domain/repositories/profit.repository';
-import { UpdateProfitDto } from 'src/sample-profit/presentation/dto/profit.dto';
+import { ProfitRepository } from '../../domain/repositories/profit.repository';
+import { Profit } from '../../domain/entities/profit.entity';
+import { UpdateProfitDto } from '../../presentation/dto/profit.dto';
 
 @Injectable()
 export class MongoProfitRepository implements ProfitRepository {

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Profit } from 'src/sample-profit/domain/entities/profit.entity';
-import { ProfitRepository } from 'src/sample-profit/domain/repositories/profit.repository';
+import { ProfitRepository } from '../../domain/repositories/profit.repository';
 import {
   CreateProfitDto,
   UpdateProfitDto,
-} from 'src/sample-profit/presentation/dto/profit.dto';
+} from '../../presentation/dto/profit.dto';
+import { Profit } from '../../domain/entities/profit.entity';
 
 @Injectable()
 export class ProfitUseCase {

@@ -8,3 +8,9 @@ export const createProductSale = async (data: {
 
   return response.data;
 };
+
+export const getAllProductSale = async () => {
+  const response = await apiClient.get("/product-sales");
+
+  return response.data;
+};
