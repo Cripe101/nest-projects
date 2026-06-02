@@ -8,34 +8,63 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
-import { ProductUseCase } from '../../application/use-case/product.use-case';
+import { CreateProductCommand } from '../../application/commands/create-product/create-product.command';
+import { GetProductQuery } from '../../application/queries/get-product/get-product.query';
+import { UpdateProductCommand } from '../../application/commands/update-product/update-product.command';
+import { GetProductsQuery } from '../../application/queries/get-products/get-products.query';
+import { DeleteProductCommand } from '../../application/commands/delete-product/delete-product.command';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 @Controller('products')
 export class ProductController {
-  constructor(private readonly productUseCase: ProductUseCase) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
 
   @Post()
   createProduct(@Body() dto: CreateProductDto) {
-    return this.productUseCase.createProduct(dto);
+    return this.commandBus.execute(
+      new CreateProductCommand(
+        dto.productName,
+        dto.productCategory,
+        dto.buyingPrice,
+        dto.sellingPrice,
+        dto.stock,
+        dto.description,
+        dto.imageUrl,
+      ),
+    );
   }
 
   @Get()
   getAllProducts() {
-    return this.productUseCase.getAllProducts();
+    return this.queryBus.execute(new GetProductsQuery());
   }
 
   @Get(':id')
   getOneProduct(@Param('id') id: string) {
-    return this.productUseCase.getOneProduct(id);
+    return this.queryBus.execute(new GetProductQuery(id));
   }
 
   @Put(':id')
   updateOneProduct(@Param('id') id: string, @Body() dto: UpdateProductDto) {
-    return this.productUseCase.updateOneProduct(id, dto);
+    return this.commandBus.execute(
+      new UpdateProductCommand(
+        id,
+        dto.productName,
+        dto.productCategory,
+        dto.buyingPrice,
+        dto.sellingPrice,
+        dto.stock,
+        dto.description,
+        dto.imageUrl,
+      ),
+    );
   }
 
   @Delete(':id')
   deleteOneProduct(@Param('id') id: string) {
-    return this.productUseCase.deleteOneProduct(id);
+    return this.commandBus.execute(new DeleteProductCommand(id));
   }
 }

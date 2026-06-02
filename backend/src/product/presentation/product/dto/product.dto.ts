@@ -1,4 +1,10 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNegative,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -6,7 +12,6 @@ export class CreateProductDto {
   productName!: string;
 
   @IsNotEmpty()
-  @IsEnum(['beverages', 'snacks', 'instant foods', 'cigarettes'])
   @IsString()
   productCategory!: string;
 
@@ -35,7 +40,6 @@ export class UpdateProductDto {
   @IsString()
   productName!: string;
 
-  @IsEnum(['beverages', 'snacks', 'instant foods', 'cigarettes'])
   @IsString()
   productCategory!: string;
 

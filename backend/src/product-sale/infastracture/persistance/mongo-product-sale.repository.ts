@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ProductSaleEntity } from '../../../product-sale/domain/entities/product-sale.entity';
 import { ProductSaleRepository } from '../../domain/repositories/product-sale.repository';
-import { ProductSaleEntity } from '../../domain/entities/product-sale.entity';
-import { ProductEntity } from '../../domain/entities/product.entity';
+import { ProductEntity } from '../../../product/domain/entities/product.entity';
 
 @Injectable()
 export class MongoProductSaleRepository implements ProductSaleRepository {

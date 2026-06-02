@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateProductSaleDto {
   @IsNotEmpty()
@@ -28,26 +28,6 @@ export class CreateProductSaleDto {
 
 export class UpdateProductSaleDto {
   @IsNotEmpty()
-  @IsString()
-  productId!: string;
-
-  @IsNotEmpty()
   @IsNumber()
   quantity!: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  sellingPrice!: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  buyingPrice!: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  totalPrice!: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  profit!: number;
 }

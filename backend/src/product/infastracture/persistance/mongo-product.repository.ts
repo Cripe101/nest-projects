@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotAcceptableException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ProductRepository } from '../../domain/repositories/product.repository';
@@ -18,50 +14,27 @@ export class MongoProductRepository implements ProductRepository {
   async createProduct(product: ProductEntity): Promise<ProductEntity> {
     const createdProduct = new this.productModel(product);
 
-    if (!createdProduct) {
-      throw new NotAcceptableException('Provide valid datas');
-    }
-
-    return createdProduct.save();
+    return await createdProduct.save();
   }
 
   async getAllProducts(): Promise<ProductEntity[]> {
-    const products = await this.productModel.find();
-
-    return products;
+    return await this.productModel.find();
   }
 
-  async getOneProduct(id: string): Promise<ProductEntity> {
-    const product = await this.productModel.findById(id);
-
-    if (!product) {
-      throw new NotFoundException('Product not found');
-    }
-
-    return product;
+  async getOneProduct(id: string): Promise<ProductEntity | null> {
+    return await this.productModel.findById(id);
   }
 
-  async updateOneProduct(id: string, product: ProductEntity) {
-    const toBeUpdatedProduct = await this.productModel.findByIdAndUpdate(
-      id,
-      product,
-      { returnDocument: 'after' },
-    );
-
-    if (!toBeUpdatedProduct) {
-      throw new NotFoundException('Product not found');
-    }
-
-    return toBeUpdatedProduct;
+  async updateOneProduct(
+    id: string,
+    product: ProductEntity,
+  ): Promise<ProductEntity | null> {
+    return await this.productModel.findByIdAndUpdate(id, product, {
+      new: true,
+    });
   }
 
-  async deleteOneProduct(id: string) {
-    const product = await this.productModel.findByIdAndDelete(id);
-
-    if (!product) {
-      throw new NotFoundException('Product not found');
-    }
-
-    return product;
+  async deleteOneProduct(id: string): Promise<ProductEntity | null> {
+    return await this.productModel.findByIdAndDelete(id);
   }
 }

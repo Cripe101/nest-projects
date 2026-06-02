@@ -1,4 +1,4 @@
-import { ProductSaleEntity } from '../entities/product-sale.entity';
+import { ProductSaleEntity } from '../../../product-sale/domain/entities/product-sale.entity';
 
 export abstract class ProductSaleRepository {
   abstract createProductSale(
