@@ -11,7 +11,6 @@ import { DeleteUserHandler } from '../application/commands/delete-user/delete-us
 import { GetUserHandler } from '../application/queries/get-user/get-user.handler';
 import { GetUsersHandler } from '../application/queries/get-users/get-users.handler';
 import { UserEntity } from '../domain/entities/user.entity';
-import { LoginUserHandler } from '../application/queries/login-user/login-user.handler';
 import { GetUserByUsernameHandler } from '../application/queries/get-user-by-name/get-user-by-username.handler';
 
 const commandHandlers = [
@@ -23,7 +22,6 @@ const queryHandlers = [
   GetUserHandler,
   GetUsersHandler,
   GetUserByUsernameHandler,
-  LoginUserHandler,
 ];
 
 @Module({
@@ -42,5 +40,6 @@ const queryHandlers = [
     ...commandHandlers,
     ...queryHandlers,
   ],
+  exports: [UserRepository],
 })
 export class UserModule {}

@@ -3,6 +3,9 @@ import { CreateProductSaleDto } from './dto/product-sale.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateProductSaleCommand } from '../application/commands/create-product-sale/create-product-sale.command';
 import { DeleteProductSaleCommand } from '../application/commands/delete-product-sale/delete-product-sale.command';
+import { GetProductSalesQuery } from '../application/queries/get-product-sales/get-product-sales.query';
+import { GetTotalSaleProfitQuery } from '../application/queries/get-total-sale-profit/get-total-sale-profit.query';
+import { GetProductSaleQuery } from '../application/queries/get-product-sale/get-product-sale.query';
 
 @Controller('product-sales')
 export class ProductSaleController {
@@ -25,20 +28,20 @@ export class ProductSaleController {
     );
   }
 
-  // @Get()
-  // getAllProductSales() {
-  //   return this.productSaleUseCase.getAllProductSales();
-  // }
+  @Get()
+  getAllProductSales() {
+    return this.queryBus.execute(new GetProductSalesQuery());
+  }
 
-  // @Get('total-profit')
-  // getTotalSaleProfit() {
-  //   return this.productSaleUseCase.getTotalSaleProfit();
-  // }
+  @Get('total-profit')
+  getTotalSaleProfit() {
+    return this.queryBus.execute(new GetTotalSaleProfitQuery());
+  }
 
-  // @Get(':id')
-  // getOneProductSale(@Param('id') id: string) {
-  //   return this.productSaleUseCase.getOneProductSale(id);
-  // }
+  @Get(':id')
+  getOneProductSale(@Param('id') id: string) {
+    return this.queryBus.execute(new GetProductSaleQuery(id));
+  }
 
   @Delete(':id')
   deleteOneProductSale(@Param('id') id: string) {

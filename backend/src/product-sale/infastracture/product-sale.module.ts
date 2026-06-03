@@ -10,9 +10,16 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { DeleteProductSaleHandler } from '../application/commands/delete-product-sale/delete-product-sale.handler';
 import { ProductSaleEntity } from '../domain/entities/product-sale.entity';
 import { ProductEntity } from '../../product/domain/entities/product.entity';
+import { GetProductSaleHandler } from '../application/queries/get-product-sale/get-product-sale.handler';
+import { GetProductSalesHandler } from '../application/queries/get-product-sales/get-product-sales.handler';
+import { GetTotalSaleProfitHandler } from '../application/queries/get-total-sale-profit/get-total-sale-profit.handler';
 
 const commandHandler = [CreateProductSaleHandler, DeleteProductSaleHandler];
-const queryHandler = [];
+const queryHandler = [
+  GetProductSaleHandler,
+  GetProductSalesHandler,
+  GetTotalSaleProfitHandler,
+];
 
 @Module({
   imports: [

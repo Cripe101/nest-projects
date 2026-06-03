@@ -24,13 +24,3 @@ export class UpdateUserDto {
   @IsString()
   role!: UserRole;
 }
-
-export class LoginUserDto {
-  @IsNotEmpty()
-  @IsString()
-  username!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  password!: string;
-}
