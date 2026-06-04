@@ -13,19 +13,17 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
   ) {}
 
   async execute(command: LoginUserCommand): Promise<any> {
-    const user = await this.repository.findByUsername(command.username);
+    const { username, password } = command;
+    const user = await this.repository.getUserByUsername(username);
 
-    const isMatch = await bycrypt.compare(
-      command.password,
-      user?.password as string,
-    );
+    const isMatch = await bycrypt.compare(password, user?.password as string);
 
     if (!isMatch) {
       throw new NotAcceptableException('Invalid credentials');
     }
 
     const payload = {
-      subject: user?._id,
+      sub: user?._id,
       username: user?.username,
       role: user?.role,
     };

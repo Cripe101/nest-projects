@@ -9,18 +9,19 @@ export class UpdateInventoryHandler implements ICommandHandler<UpdateInventoryCo
   constructor(private readonly repository: InventoryRepositpory) {}
 
   async execute(command: UpdateInventoryCommand): Promise<any> {
-    const checkInventory = await this.repository.getOneInventory(command._id);
+    const { _id, productId, minimumStock } = command;
 
-    if (!checkInventory) {
+    const inventoryData = new InventoryEntity(productId, minimumStock);
+
+    const inventory = await this.repository.updateOneInventory(
+      _id,
+      inventoryData,
+    );
+
+    if (!inventory) {
       throw new NotFoundException('Product not found in inventory');
     }
 
-    const data: InventoryEntity = {
-      productId: command.productId,
-      currentStock: command.currentStock,
-      minimumStock: command.minimumStock,
-    };
-
-    return await this.repository.updateInventory(command._id, data);
+    return inventory;
   }
 }

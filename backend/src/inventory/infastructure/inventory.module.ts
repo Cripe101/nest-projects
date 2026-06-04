@@ -11,11 +11,13 @@ import { UpdateInventoryHandler } from '../application/commands/update-inventory
 import { DeleteInventoryHandler } from '../application/commands/delete-inventory/delete-inventory.handler';
 import { GetInventoryHandler } from '../application/queries/get-inventory/get-inventory.handler';
 import { GetInventoriesHandler } from '../application/queries/get-inventories/get-inventories.handler';
+import { AddInventoryStockHandler } from '../application/commands/add-inventory-stock/add-inventory-stock.handler';
 
 const commandHandlers = [
   CreateInventoryHandler,
   UpdateInventoryHandler,
   DeleteInventoryHandler,
+  AddInventoryStockHandler,
 ];
 const queryHandlers = [GetInventoriesHandler, GetInventoryHandler];
 
@@ -35,5 +37,6 @@ const queryHandlers = [GetInventoriesHandler, GetInventoryHandler];
     ...commandHandlers,
     ...queryHandlers,
   ],
+  exports: [InventoryRepositpory],
 })
 export class InventoryModule {}

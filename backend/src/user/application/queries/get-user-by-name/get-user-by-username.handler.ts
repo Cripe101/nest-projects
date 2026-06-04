@@ -1,6 +1,7 @@
 import { QueryHandler } from '@nestjs/cqrs';
 import { GetUserByUsernameQuery } from './get-user-by-username.query';
 import { UserRepository } from '../../../domain/repositories/user.repository';
+import { NotFoundException } from '@nestjs/common';
 
 @QueryHandler(GetUserByUsernameQuery)
 export class GetUserByUsernameHandler {
@@ -8,6 +9,12 @@ export class GetUserByUsernameHandler {
 
   async execute(query: GetUserByUsernameQuery) {
     const { username } = query;
-    return this.repository.findByUsername(username);
+    const user = await this.repository.getUserByUsername(username);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 }

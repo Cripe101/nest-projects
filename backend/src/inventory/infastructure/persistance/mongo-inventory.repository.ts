@@ -11,21 +11,41 @@ export class MongoInventoryRepository implements InventoryRepositpory {
     private readonly inventoryModel: Model<InventoryEntity>,
   ) {}
 
-  async createInventory(inventory: InventoryEntity): Promise<InventoryEntity> {
+  async create(inventory: InventoryEntity): Promise<InventoryEntity> {
     const createdInventory = new this.inventoryModel(inventory);
 
     return await createdInventory.save();
   }
 
-  async updateInventory(
+  async updateOneInventory(
     id: string,
     inventory: InventoryEntity,
   ): Promise<InventoryEntity | null> {
-    return await this.inventoryModel.findByIdAndUpdate(id, inventory);
+    return await this.inventoryModel.findByIdAndUpdate(id, inventory, {
+      new: true,
+    });
   }
 
-  async deleteInventory(id: string): Promise<InventoryEntity | null> {
+  async deleteOneInventory(id: string): Promise<InventoryEntity | null> {
     return await this.inventoryModel.findByIdAndDelete(id);
+  }
+
+  async deductStock(
+    id: string,
+    quantity: number,
+  ): Promise<InventoryEntity | null> {
+    return await this.inventoryModel.findByIdAndUpdate(id, {
+      $inc: { currentStock: quantity },
+    });
+  }
+
+  async addStock(
+    id: string,
+    quantity: number,
+  ): Promise<InventoryEntity | null> {
+    return await this.inventoryModel.findByIdAndUpdate(id, {
+      $inc: { currentStock: quantity },
+    });
   }
 
   async getOneInventory(id: string): Promise<InventoryEntity | null> {
@@ -38,7 +58,7 @@ export class MongoInventoryRepository implements InventoryRepositpory {
     return await this.inventoryModel.findOne({ productId });
   }
 
-  async getAllInventory(): Promise<InventoryEntity[]> {
+  async getAllInventories(): Promise<InventoryEntity[]> {
     return await this.inventoryModel.find();
   }
 }

@@ -8,15 +8,15 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
   constructor(private readonly repository: ProductRepository) {}
 
   async execute(command: CreateProductCommand): Promise<ProductEntity> {
-    const productData: ProductEntity = {
-      productName: command.productName,
-      productCategory: command.productCategory,
-      buyingPrice: command.buyingPrice,
-      sellingPrice: command.sellingPrice,
-      stock: command.stock,
-      description: command.description,
-      imageUrl: command.imageUrl,
-    };
-    return this.repository.createProduct(productData);
+    const product = new ProductEntity(
+      command.productName,
+      command.productCategory,
+      command.buyingPrice,
+      command.sellingPrice,
+      command.description,
+      command.imageUrl,
+    );
+
+    return this.repository.create(product);
   }
 }

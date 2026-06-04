@@ -17,10 +17,6 @@ export class CreateProductDto {
   @IsNumber()
   sellingPrice!: number;
 
-  @IsNotEmpty()
-  @IsNumber()
-  stock!: number;
-
   @IsString()
   description?: string;
 
@@ -44,10 +40,6 @@ export class UpdateProductDto {
   @IsNotEmpty()
   @IsNumber()
   sellingPrice!: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  stock!: number;
 
   @IsString()
   description?: string;

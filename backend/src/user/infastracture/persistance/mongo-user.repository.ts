@@ -12,28 +12,31 @@ export class MongoUserRepository implements UserRepository {
     private readonly userModel: Model<UserEntity>,
   ) {}
 
-  async save(user: UserEntity): Promise<UserEntity> {
+  async create(user: UserEntity): Promise<UserEntity> {
     const createdUser = new this.userModel(user);
     return await createdUser.save();
   }
 
-  async updateUser(id: string, dto: UpdateUserDto): Promise<UserEntity | null> {
+  async updateOneUser(
+    id: string,
+    dto: UpdateUserDto,
+  ): Promise<UserEntity | null> {
     return await this.userModel.findByIdAndUpdate(id, dto, { new: true });
   }
 
-  async deleteUser(id: string): Promise<UserEntity | null> {
+  async deleteOneUser(id: string): Promise<UserEntity | null> {
     return await this.userModel.findByIdAndDelete(id);
   }
 
-  async findAllUsers(): Promise<UserEntity[]> {
+  async getAllUsers(): Promise<UserEntity[]> {
     return await this.userModel.find();
   }
 
-  async findByUsername(username: string): Promise<UserEntity | null> {
+  async getUserByUsername(username: string): Promise<UserEntity | null> {
     return await this.userModel.findOne({ username });
   }
 
-  async findById(id: string): Promise<UserEntity | null> {
+  async getOneUser(id: string): Promise<UserEntity | null> {
     return await this.userModel.findById(id);
   }
 }

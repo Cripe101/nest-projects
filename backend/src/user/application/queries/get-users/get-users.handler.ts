@@ -7,6 +7,6 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
   constructor(private readonly repository: UserRepository) {}
 
   async execute() {
-    return await this.repository.findAllUsers();
+    return await this.repository.getAllUsers();
   }
 }

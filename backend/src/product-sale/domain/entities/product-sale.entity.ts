@@ -1,5 +1,3 @@
-import { NotAcceptableException } from '@nestjs/common';
-
 export class ProductSaleEntity {
   constructor(
     public productId: string,
@@ -10,13 +8,13 @@ export class ProductSaleEntity {
     public profit: number,
   ) {
     if (quantity < 0) {
-      throw new NotAcceptableException('Quantity cannot be negative');
+      throw new Error('Quantity cannot be negative');
     }
     if (totalPrice < 0) {
-      throw new NotAcceptableException('Total Price cannot be negative');
+      throw new Error('Total Price cannot be negative');
     }
     if (profit < 0) {
-      throw new NotAcceptableException('Profit cannot be negative');
+      throw new Error('Profit cannot be negative');
     }
   }
 }

@@ -11,7 +11,7 @@ export class MongoProductRepository implements ProductRepository {
     private readonly productModel: Model<ProductEntity>,
   ) {}
 
-  async createProduct(product: ProductEntity): Promise<ProductEntity> {
+  async create(product: ProductEntity): Promise<ProductEntity> {
     const createdProduct = new this.productModel(product);
 
     return await createdProduct.save();

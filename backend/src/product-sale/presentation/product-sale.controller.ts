@@ -15,7 +15,7 @@ export class ProductSaleController {
   ) {}
 
   @Post()
-  createProductSale(@Body() dto: CreateProductSaleDto) {
+  create(@Body() dto: CreateProductSaleDto) {
     return this.commandBus.execute(
       new CreateProductSaleCommand(dto.productId, dto.quantity),
     );

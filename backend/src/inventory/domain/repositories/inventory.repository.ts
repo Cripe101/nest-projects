@@ -1,16 +1,24 @@
 import { InventoryEntity } from '../entities/inventory.entity';
 
 export abstract class InventoryRepositpory {
-  abstract createInventory(
-    inventory: InventoryEntity,
-  ): Promise<InventoryEntity>;
+  abstract create(inventory: InventoryEntity): Promise<InventoryEntity>;
 
-  abstract updateInventory(
+  abstract updateOneInventory(
     id: string,
     inventory: InventoryEntity,
   ): Promise<InventoryEntity | null>;
 
-  abstract deleteInventory(id: string): Promise<InventoryEntity | null>;
+  abstract deleteOneInventory(id: string): Promise<InventoryEntity | null>;
+
+  abstract deductStock(
+    id: string,
+    quantity: number,
+  ): Promise<InventoryEntity | null>;
+
+  abstract addStock(
+    id: string,
+    quantity: number,
+  ): Promise<InventoryEntity | null>;
 
   abstract getInventoryByProduct(
     productId: string,
@@ -18,5 +26,5 @@ export abstract class InventoryRepositpory {
 
   abstract getOneInventory(id: string): Promise<InventoryEntity | null>;
 
-  abstract getAllInventory(): Promise<InventoryEntity[]>;
+  abstract getAllInventories(): Promise<InventoryEntity[]>;
 }

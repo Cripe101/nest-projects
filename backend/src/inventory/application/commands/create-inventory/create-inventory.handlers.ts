@@ -10,6 +10,7 @@ export class CreateInventoryHandler implements ICommandHandler<CreateInventoryCo
   constructor(private readonly repository: InventoryRepositpory) {}
 
   async execute(command: CreateInventoryCommand) {
+    const { productId, currentStock, minimumStock } = command;
     const checkProduct = await this.repository.getInventoryByProduct(
       command.productId,
     );
@@ -20,11 +21,12 @@ export class CreateInventoryHandler implements ICommandHandler<CreateInventoryCo
       );
     }
 
-    const inventory: InventoryEntity = {
-      productId: command.productId,
-      currentStock: command.currentStock,
-      minimumStock: command.minimumStock,
-    };
-    return this.repository.createInventory(inventory);
+    const inventory = new InventoryEntity(
+      productId,
+      currentStock,
+      minimumStock,
+    );
+
+    return this.repository.create(inventory);
   }
 }
