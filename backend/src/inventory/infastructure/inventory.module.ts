@@ -7,10 +7,17 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { MongooseModule } from '@nestjs/mongoose';
 import { InventoryEntity } from '../domain/entities/inventory.entity';
 import { InventorySchema } from '../../schemas/inventory/inventory.schema';
-import { ProductModule } from '../../product/infastracture/product.module';
+import { UpdateInventoryHandler } from '../application/commands/update-inventory/update-inventory.handler';
+import { DeleteInventoryHandler } from '../application/commands/delete-inventory/delete-inventory.handler';
+import { GetInventoryHandler } from '../application/queries/get-inventory/get-inventory.handler';
+import { GetInventoriesHandler } from '../application/queries/get-inventories/get-inventories.handler';
 
-const commandHandlers = [CreateInventoryHandler];
-const queryHandlers = [];
+const commandHandlers = [
+  CreateInventoryHandler,
+  UpdateInventoryHandler,
+  DeleteInventoryHandler,
+];
+const queryHandlers = [GetInventoriesHandler, GetInventoryHandler];
 
 @Module({
   imports: [
