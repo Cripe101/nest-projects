@@ -31,7 +31,7 @@ const commandHandlers = [LoginUserHandler];
         return {
           secret,
           signOptions: {
-            expiresIn: '1d',
+            expiresIn: '8h',
           },
         };
       },

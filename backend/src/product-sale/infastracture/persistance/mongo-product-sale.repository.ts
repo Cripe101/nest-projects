@@ -29,27 +29,27 @@ export class MongoProductSaleRepository implements ProductSaleRepository {
     );
   };
 
-  async createProductSale(
-    productSale: ProductSaleEntity,
-  ): Promise<ProductSaleEntity> {
-    const getProduct = await this.productModel.findById(productSale.productId);
+  async createProductSale(data: {
+    productId: string;
+    quantity: number;
+  }): Promise<ProductSaleEntity> {
+    const getProduct = await this.productModel.findById(data.productId);
 
     if (!getProduct) {
       throw new NotFoundException('Product not found');
     }
 
-    if (getProduct?.stock < productSale.quantity) {
+    if (getProduct?.stock < data.quantity) {
       throw new BadRequestException('Insufficient stock');
     }
 
-    const totalPrice = getProduct?.sellingPrice * productSale.quantity;
+    const totalPrice = getProduct?.sellingPrice * data.quantity;
     const totalProfit =
-      (getProduct?.sellingPrice - getProduct?.buyingPrice) *
-      productSale.quantity;
+      (getProduct?.sellingPrice - getProduct?.buyingPrice) * data.quantity;
 
     const createdProductSale = await this.productSaleModel.create({
-      productId: productSale.productId,
-      quantity: productSale.quantity,
+      productId: data.productId,
+      quantity: data.quantity,
       sellingPrice: getProduct?.sellingPrice,
       buyingPrice: getProduct?.buyingPrice,
       totalPrice: totalPrice,
@@ -60,7 +60,7 @@ export class MongoProductSaleRepository implements ProductSaleRepository {
       throw new NotAcceptableException('Provide valid datas');
     }
 
-    this.deductStock(productSale.productId, -productSale.quantity);
+    this.deductStock(data.productId, -data.quantity);
 
     await getProduct?.save();
 

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ProductSaleSchema } from '../../schemas/product/product-sale.schema';
 import { ProductSchema } from '../../schemas/product/product.schema';
 import { MongoProductSaleRepository } from './persistance/mongo-product-sale.repository';
 import { ProductSaleRepository } from '../domain/repositories/product-sale.repository';
@@ -13,6 +12,7 @@ import { ProductEntity } from '../../product/domain/entities/product.entity';
 import { GetProductSaleHandler } from '../application/queries/get-product-sale/get-product-sale.handler';
 import { GetProductSalesHandler } from '../application/queries/get-product-sales/get-product-sales.handler';
 import { GetTotalSaleProfitHandler } from '../application/queries/get-total-sale-profit/get-total-sale-profit.handler';
+import { ProductSaleSchema } from '../../schemas/product-sale/product-sale.schema';
 
 const commandHandler = [CreateProductSaleHandler, DeleteProductSaleHandler];
 const queryHandler = [

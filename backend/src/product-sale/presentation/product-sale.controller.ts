@@ -17,14 +17,7 @@ export class ProductSaleController {
   @Post()
   createProductSale(@Body() dto: CreateProductSaleDto) {
     return this.commandBus.execute(
-      new CreateProductSaleCommand(
-        dto.productId,
-        dto.buyingPrice,
-        dto.sellingPrice,
-        dto.totalPrice,
-        dto.profit,
-        dto.quantity,
-      ),
+      new CreateProductSaleCommand(dto.productId, dto.quantity),
     );
   }
 

@@ -8,6 +8,7 @@ import { ProductModule } from './product/infastracture/product.module';
 import { UserModule } from './user/infastracture/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/infastracture/auth.module';
+import { InventoryModule } from './inventory/infastructure/inventory.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/infastracture/auth.module';
     ProductSaleModule,
     UserModule,
     AuthModule,
+    InventoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

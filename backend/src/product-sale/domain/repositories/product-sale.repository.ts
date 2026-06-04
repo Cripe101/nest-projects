@@ -1,9 +1,10 @@
 import { ProductSaleEntity } from '../../../product-sale/domain/entities/product-sale.entity';
 
 export abstract class ProductSaleRepository {
-  abstract createProductSale(
-    productSale: ProductSaleEntity,
-  ): Promise<ProductSaleEntity>;
+  abstract createProductSale(productSale: {
+    productId: string;
+    quantity: number;
+  }): Promise<ProductSaleEntity>;
   abstract getAllProductSales(): Promise<ProductSaleEntity[]>;
   abstract getOneProductSale(id: string): Promise<ProductSaleEntity>;
   abstract deleteOneProductSale(id: string): Promise<ProductSaleEntity>;

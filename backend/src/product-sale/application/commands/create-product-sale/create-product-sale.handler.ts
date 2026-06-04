@@ -7,13 +7,11 @@ import { ProductSaleEntity } from '../../../domain/entities/product-sale.entity'
 export class CreateProductSaleHandler implements ICommandHandler<CreateProductSaleCommand> {
   constructor(private readonly repository: ProductSaleRepository) {}
 
-  async execute(command: CreateProductSaleCommand): Promise<ProductSaleEntity> {
-    const productSaleData: ProductSaleEntity = {
+  async execute(
+    command: CreateProductSaleCommand,
+  ): Promise<{ productId: string; quantity: number }> {
+    const productSaleData = {
       productId: command.productId,
-      buyingPrice: command.buyingPrice,
-      sellingPrice: command.sellingPrice,
-      profit: command.profit,
-      totalPrice: command.totalPrice,
       quantity: command.quantity,
     };
 

@@ -35,5 +35,6 @@ const queryHandlers = [GetProductHandler, GetProductsHandler];
     ...commandHandlers,
     ...queryHandlers,
   ],
+  exports: [ProductRepository],
 })
 export class ProductModule {}
