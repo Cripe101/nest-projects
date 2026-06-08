@@ -9,7 +9,6 @@ const Inventory = () => {
     queryKey: ["products"],
     queryFn: getAllProducts,
   });
-
   return (
     <div className="p-5 md:p-10">
       <div className="grid gap-3 md:gap-5">

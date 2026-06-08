@@ -14,7 +14,7 @@ export interface IProductPost {
   productCategory: string;
   buyingPrice: number;
   sellingPrice: number;
-  stock: number;
+  // stock: number;
   description?: string;
   imageUrl?: string;
 }

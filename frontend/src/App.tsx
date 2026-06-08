@@ -6,6 +6,7 @@ import Profit from "./pages/Profit";
 import Inventory from "./pages/Inventory";
 import Sale from "./pages/Sale";
 import InventoryLayout from "./layouts/InventoryLayout";
+import Login from "./pages/Login";
 
 const router = createBrowserRouter([
   {
@@ -13,18 +14,22 @@ const router = createBrowserRouter([
     element: <HomeLayout />,
     children: [
       {
-        path: "/profit",
-        element: <Profit />,
+        path: "/",
+        element: <Login />,
       },
+    ],
+  },
+  {
+    path: "/",
+    element: <InventoryLayout />,
+    children: [
       {
         path: "/inventory",
-        element: <InventoryLayout />,
-        children: [
-          {
-            path: "/inventory",
-            element: <Inventory />,
-          },
-        ],
+        element: <Inventory />,
+      },
+      {
+        path: "/profit",
+        element: <Profit />,
       },
       {
         path: "/sale",

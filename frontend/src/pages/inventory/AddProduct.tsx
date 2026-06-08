@@ -9,7 +9,6 @@ const AddProduct = ({ fetch }: { fetch: any }) => {
   const [productName, setProductName] = useState<string>("");
   const [buyingPrice, setBuyingPrice] = useState<number>(0);
   const [sellingPrice, setSellingPrice] = useState<number>(0);
-  const [stock, setStock] = useState<number>(0);
   const [productCategory, setProductCategory] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
 
@@ -21,7 +20,6 @@ const AddProduct = ({ fetch }: { fetch: any }) => {
         productCategory: data.productCategory,
         buyingPrice: data.buyingPrice,
         sellingPrice: data.sellingPrice,
-        stock: data.stock,
         imageUrl: data.imageUrl,
       }),
     onSuccess: () => {
@@ -31,7 +29,6 @@ const AddProduct = ({ fetch }: { fetch: any }) => {
       setProductCategory("");
       setBuyingPrice(0);
       setSellingPrice(0);
-      setStock(0);
       setImageUrl("");
     },
   });
@@ -42,7 +39,6 @@ const AddProduct = ({ fetch }: { fetch: any }) => {
       productCategory: productCategory,
       buyingPrice: buyingPrice,
       sellingPrice: sellingPrice,
-      stock: stock,
       imageUrl: imageUrl,
     };
     console.log(data);
@@ -123,7 +119,7 @@ const AddProduct = ({ fetch }: { fetch: any }) => {
               }}
             />
           </section>
-          <section className="grid gap-1">
+          {/* <section className="grid gap-1">
             <label className="pl-3 text-xs font-bold">Quantity:</label>
             <input
               name="stock"
@@ -134,7 +130,7 @@ const AddProduct = ({ fetch }: { fetch: any }) => {
                 setStock(Number(e.target.value));
               }}
             />
-          </section>
+          </section> */}
         </span>
       </section>
 

@@ -1,5 +1,4 @@
 import axios, { type AxiosInstance } from "axios";
-// import { authState } from "../store/auth";
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: "http://192.168.1.27:5000",

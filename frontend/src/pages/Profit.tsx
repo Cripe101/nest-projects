@@ -220,14 +220,14 @@ const Profit = () => {
         />
       </section>
       <section className="grid gap-5">
-        <div className="bg-slate-50 p-5 rounded-xl">
+        <div className="bg-blue-50 p-5 rounded-xl shadow">
           <h1 className="text-lg font-sans">Transaction List</h1>
           <span className="grid gap-3">
             {data
               ?.sort((a: any, b: any) => {
                 return new Date(b.date).getTime() - new Date(a.date).getTime();
               })
-              .slice(0, 5)
+              .slice(0, 10)
               .map((tran: any) => (
                 <section key={tran._id} className="flex justify-between">
                   <span className="flex gap-1 items-center justify-center">
