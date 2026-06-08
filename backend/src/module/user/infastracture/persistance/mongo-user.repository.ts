@@ -21,7 +21,9 @@ export class MongoUserRepository implements UserRepository {
     id: string,
     dto: UpdateUserDto,
   ): Promise<UserEntity | null> {
-    return await this.userModel.findByIdAndUpdate(id, dto, { new: true });
+    return await this.userModel.findByIdAndUpdate(id, dto, {
+      returnDocument: 'after',
+    });
   }
 
   async deleteOneUser(id: string): Promise<UserEntity | null> {
