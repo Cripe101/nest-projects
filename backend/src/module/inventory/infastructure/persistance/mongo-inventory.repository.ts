@@ -53,7 +53,7 @@ export class MongoInventoryRepository implements InventoryRepositpory {
   }
 
   async getOneInventory(id: string): Promise<InventoryEntity | null> {
-    return await this.inventoryModel.findById(id);
+    return await this.inventoryModel.findById(id).populate('productId');
   }
 
   async getInventoryByProduct(
@@ -63,6 +63,6 @@ export class MongoInventoryRepository implements InventoryRepositpory {
   }
 
   async getAllInventories(): Promise<InventoryEntity[]> {
-    return await this.inventoryModel.find();
+    return await this.inventoryModel.find().populate('productId');
   }
 }

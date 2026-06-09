@@ -1,8 +1,9 @@
 export class InventoryEntity {
   constructor(
     public productId: string,
+    public createdBy: string,
     public minimumStock: number,
-    public currentStock?: number,
+    public currentStock: number,
     public _id?: string,
   ) {
     if (currentStock! < 0) {

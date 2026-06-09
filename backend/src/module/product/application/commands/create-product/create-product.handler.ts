@@ -11,6 +11,7 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
     const product = new ProductEntity(
       command.productName,
       command.productCategory,
+      command.addedBy,
       command.buyingPrice,
       command.sellingPrice,
       command.description,

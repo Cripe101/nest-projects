@@ -12,10 +12,11 @@ export class UpdateProductHandler implements ICommandHandler<UpdateProductComman
     const updatedProduct = new ProductEntity(
       command.productName,
       command.productCategory,
+      command._id,
       command.sellingPrice,
       command.buyingPrice,
-      command.description,
       command.imageUrl,
+      command.description,
     );
 
     const product = await this.repository.updateOneProduct(

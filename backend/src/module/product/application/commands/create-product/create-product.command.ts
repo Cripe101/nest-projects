@@ -2,6 +2,7 @@ export class CreateProductCommand {
   constructor(
     public readonly productName: string,
     public readonly productCategory: string,
+    public readonly addedBy: string,
     public readonly buyingPrice: number,
     public readonly sellingPrice: number,
     public readonly description?: string,

@@ -1,9 +1,21 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Inventory {
-  @Prop({ required: true })
-  productId!: string;
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ProductEntity',
+    required: true,
+  })
+  productId!: mongoose.Types.ObjectId;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'UserEntity',
+    required: true,
+  })
+  createdBy!: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
   currentStock!: number;

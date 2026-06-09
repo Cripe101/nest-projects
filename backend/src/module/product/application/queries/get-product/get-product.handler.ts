@@ -13,5 +13,7 @@ export class GetProductHandler implements IQueryHandler<GetProductQuery> {
     if (!product) {
       throw new NotFoundException('Product not found');
     }
+
+    return product;
   }
 }

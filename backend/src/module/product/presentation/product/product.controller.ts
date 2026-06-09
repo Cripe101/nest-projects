@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
@@ -19,6 +20,7 @@ import { JwtAuthGuard } from '../../../../core/guard/jwt.auth.guard';
 import { RolesGuard } from '../../../../core/guard/roles.guard';
 import { Roles } from '../../../../core/decorators/roles.decorator';
 import { UserRole } from '../../../../core/constants/user-role.enum';
+import type { RequestWithUser } from '../../../../core/interfaces/request-with-user.interface';
 
 @Controller('products')
 export class ProductController {
@@ -30,11 +32,12 @@ export class ProductController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  create(@Body() dto: CreateProductDto) {
+  create(@Body() dto: CreateProductDto, @Req() req: RequestWithUser) {
     return this.commandBus.execute(
       new CreateProductCommand(
         dto.productName,
         dto.productCategory,
+        req.user.id,
         dto.buyingPrice,
         dto.sellingPrice,
         dto.description,
@@ -44,12 +47,10 @@ export class ProductController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   getAllProducts() {
     return this.queryBus.execute(new GetProductsQuery());
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   getOneProduct(@Param('id') id: string) {
     return this.queryBus.execute(new GetProductQuery(id));

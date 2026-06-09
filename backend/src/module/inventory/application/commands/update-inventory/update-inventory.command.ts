@@ -4,5 +4,6 @@ export class UpdateInventoryCommand {
     public readonly productId: string,
     public readonly currentStock: number,
     public readonly minimumStock: number,
+    public readonly createdBy: string,
   ) {}
 }

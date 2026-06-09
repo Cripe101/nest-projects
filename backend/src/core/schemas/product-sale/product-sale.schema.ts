@@ -12,6 +12,13 @@ export class ProductSale {
   })
   productId!: mongoose.Types.ObjectId;
 
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'UserEntity',
+    required: true,
+  })
+  cashier!: mongoose.Types.ObjectId;
+
   @Prop({ required: true })
   quantity!: number;
 

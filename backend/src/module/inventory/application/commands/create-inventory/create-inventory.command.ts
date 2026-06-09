@@ -1,7 +1,8 @@
 export class CreateInventoryCommand {
   constructor(
     public readonly productId: string,
-    public currentStock: number,
-    public minimumStock: number,
+    public readonly createdBy: string,
+    public readonly currentStock: number,
+    public readonly minimumStock: number,
   ) {}
 }

@@ -9,9 +9,14 @@ export class UpdateInventoryHandler implements ICommandHandler<UpdateInventoryCo
   constructor(private readonly repository: InventoryRepositpory) {}
 
   async execute(command: UpdateInventoryCommand): Promise<any> {
-    const { _id, productId, minimumStock } = command;
+    const { _id, productId, minimumStock, createdBy, currentStock } = command;
 
-    const inventoryData = new InventoryEntity(productId, minimumStock);
+    const inventoryData = new InventoryEntity(
+      productId,
+      createdBy,
+      minimumStock,
+      currentStock,
+    );
 
     const inventory = await this.repository.updateOneInventory(
       _id,
