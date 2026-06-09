@@ -6,7 +6,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="grid grid-cols-[2fr_3fr] justify-between items-center p-5 shadow-sm">
+    <div className="grid grid-cols-[2fr_3fr_1fr] justify-between items-center p-5 shadow-sm">
       <section className="md:text-3xl font-serif font-medium text-blue-700">
         Profit Tracker
       </section>
@@ -35,6 +35,17 @@ const Navbar = () => {
             <p>{nav?.label}</p>
           </button>
         ))}
+      </section>
+      <section className="flex justify-end">
+        <button
+          onClick={() => {
+            localStorage.clear();
+            navigate("/");
+          }}
+          className="px-3 py-1 bg-red-600 text-white rounded-xl cursor-pointer active:scale-90 duration-200"
+        >
+          Logout
+        </button>
       </section>
     </div>
   );

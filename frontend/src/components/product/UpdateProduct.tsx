@@ -1,39 +1,48 @@
 import { BiPlus } from "react-icons/bi";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import type { IProductPost } from "../../interfaces/ProductInterface";
-import { createProduct } from "../../api/ProductApi";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type {
+  IProductGet,
+  IProductPost,
+} from "../../interfaces/ProductInterface";
+import {
+  createProduct,
+  getOneProduct,
+  updateOneProduct,
+} from "../../api/ProductApi";
 import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
-const AddProduct = ({ fetch }: { fetch: any }) => {
+const UpdateProduct = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const { data } = useQuery<IProductGet>({
+    queryKey: ["get-product", id],
+    queryFn: () => getOneProduct(id!),
+    enabled: !!id,
+  });
+
   const [productName, setProductName] = useState<string>("");
   const [buyingPrice, setBuyingPrice] = useState<number>(0);
   const [sellingPrice, setSellingPrice] = useState<number>(0);
   const [productCategory, setProductCategory] = useState<string>("");
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string | undefined>("");
 
-  const addProductMutation = useMutation({
-    mutationKey: ["Product"],
-    mutationFn: (data: IProductPost) =>
-      createProduct({
-        productName: data.productName,
-        productCategory: data.productCategory,
-        buyingPrice: data.buyingPrice,
-        sellingPrice: data.sellingPrice,
-        imageUrl: data.imageUrl,
-      }),
+  const updateMutation = useMutation({
+    mutationKey: ["update-product"],
+    mutationFn: ({ id, data }: { id: string; data: IProductPost }) =>
+      updateOneProduct(id, data),
     onSuccess: () => {
-      toast.success("Product added successfully");
-      fetch();
-      setProductName("");
-      setProductCategory("");
-      setBuyingPrice(0);
-      setSellingPrice(0);
-      setImageUrl("");
+      toast.success("Product updated successfully");
+      navigate("/product");
+    },
+    onError: (err) => {
+      toast.error(err.message);
     },
   });
 
-  const handleSubmit = () => {
+  const handleUpdate = () => {
     const data: IProductPost = {
       productName: productName,
       productCategory: productCategory,
@@ -41,12 +50,20 @@ const AddProduct = ({ fetch }: { fetch: any }) => {
       sellingPrice: sellingPrice,
       imageUrl: imageUrl,
     };
+
     console.log(data);
-    addProductMutation.mutate(data);
+    updateMutation.mutate({ id: id!, data: data });
   };
 
+  useEffect(() => {
+    setProductName(data?.productName ?? "");
+    setBuyingPrice(data?.buyingPrice ?? 0);
+    setSellingPrice(data?.sellingPrice ?? 0);
+    setProductCategory(data?.productCategory ?? "");
+    setImageUrl(data?.imageUrl ?? "");
+  }, [data]);
   return (
-    <form className="flex flex-col gap-5 p-5 bg-slate-50 rounded-xl shadow">
+    <form className="flex flex-col gap-5 p-5 mx-5 my-5 md:mx-60 md:my-20 bg-slate-50 rounded-xl shadow">
       <h1 className="flex items-center gap-1">
         <BiPlus size={26} />
         <p className="font-medium">Add Product</p>
@@ -119,23 +136,11 @@ const AddProduct = ({ fetch }: { fetch: any }) => {
               }}
             />
           </section>
-          {/* <section className="grid gap-1">
-            <label className="pl-3 text-xs font-bold">Quantity:</label>
-            <input
-              name="stock"
-              className="outline-none border border-slate-400 p-2 px-4 rounded-xl"
-              type="number"
-              value={stock}
-              onChange={(e) => {
-                setStock(Number(e.target.value));
-              }}
-            />
-          </section> */}
         </span>
       </section>
 
       <button
-        onClick={handleSubmit}
+        onClick={handleUpdate}
         type="button"
         className="py-2 rounded-xl bg-[#2191FB] text-white text-lg font-bold cursor-pointer hover:bg-blue-700 active:scale-95 duration-200"
       >
@@ -145,4 +150,4 @@ const AddProduct = ({ fetch }: { fetch: any }) => {
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;

@@ -1,13 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
-import AddSale from "./inventory/AddSale";
 import { getAllProductSale } from "../api/ProductSaleApi";
 import type { IProductSaleGet } from "../interfaces/ProductInterface";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import AddSale from "../components/sale/AddSale";
 
 const Sale = () => {
   const { data, refetch } = useQuery({
     queryKey: ["product-sale"],
     queryFn: getAllProductSale,
   });
+
+  const token = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="p-5 md:p-10 grid md:grid-cols-2 gap-5">

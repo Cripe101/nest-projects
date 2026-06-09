@@ -18,3 +18,27 @@ export const getAllProducts = async () => {
 
   return response.data;
 };
+
+export const getOneProduct = async (id: string) => {
+  const response = await apiClient.get("/products/" + id, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return response.data;
+};
+
+export const updateOneProduct = async (id: string, data: IProductPost) => {
+  const response = await apiClient.put("/products/" + id, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return response.data;
+};
+
+export const deleteOneProduct = async (id: string) => {
+  const response = await apiClient.delete("/products/" + id, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return response.data;
+};

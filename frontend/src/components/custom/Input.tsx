@@ -19,7 +19,7 @@ const Input = ({
         placeholder={placeholder}
         value={value}
         onChange={(e) => setter(e.target.value)}
-        className="outline-none px-4 py-2 rounded-xl bg-white shadow-xs"
+        className="outline-none px-4 py-2 rounded-xl bg-white shadow-sm"
       />
     </div>
   );

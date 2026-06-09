@@ -7,6 +7,12 @@ import Inventory from "./pages/Inventory";
 import Sale from "./pages/Sale";
 import InventoryLayout from "./layouts/InventoryLayout";
 import Login from "./pages/Login";
+import AddInventory from "./components/inventory/AddInventory";
+import AddProduct from "./components/product/AddProduct";
+import Product from "./pages/Product";
+import UpdateProduct from "./components/product/UpdateProduct";
+import UpdateInventory from "./components/inventory/UpdateInventory";
+import User from "./pages/User";
 
 const router = createBrowserRouter([
   {
@@ -28,12 +34,36 @@ const router = createBrowserRouter([
         element: <Inventory />,
       },
       {
+        path: "/product",
+        element: <Product />,
+      },
+      {
+        path: "/user",
+        element: <User />,
+      },
+      {
         path: "/profit",
         element: <Profit />,
       },
       {
         path: "/sale",
         element: <Sale />,
+      },
+      {
+        path: "/add-inventory",
+        element: <AddInventory />,
+      },
+      {
+        path: "/update-inventory/:id",
+        element: <UpdateInventory />,
+      },
+      {
+        path: "/add-product",
+        element: <AddProduct />,
+      },
+      {
+        path: "/update-product/:id",
+        element: <UpdateProduct />,
       },
     ],
   },
