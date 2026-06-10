@@ -23,6 +23,8 @@ import { Roles } from '../../../core/decorators/roles.decorator';
 import { UserRole } from '../../../core/constants/user-role.enum';
 import { JwtAuthGuard } from '../../../core/guard/jwt.auth.guard';
 import { RolesGuard } from '../../../core/guard/roles.guard';
+import { AddInventoryStockCommand } from '../application/commands/add-inventory-stock/add-inventory-stock.command';
+import { AddStockDto } from './dto/add-stock.dto';
 
 @Controller('inventories')
 export class InventoryController {
@@ -61,6 +63,15 @@ export class InventoryController {
         dto.minimumStock,
         req.body._id,
       ),
+    );
+  }
+
+  @Put('add-stock/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  addStock(@Param('id') id: string, dto: AddStockDto) {
+    return this.commandBus.execute(
+      new AddInventoryStockCommand(id, dto.quantity),
     );
   }
 

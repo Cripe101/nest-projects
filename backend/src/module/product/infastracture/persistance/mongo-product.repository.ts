@@ -30,7 +30,7 @@ export class MongoProductRepository implements ProductRepository {
     product: ProductEntity,
   ): Promise<ProductEntity | null> {
     return await this.productModel.findByIdAndUpdate(id, product, {
-      new: true,
+      returnDocument: 'after',
     });
   }
 

@@ -22,7 +22,7 @@ export class MongoInventoryRepository implements InventoryRepositpory {
     inventory: InventoryEntity,
   ): Promise<InventoryEntity | null> {
     return await this.inventoryModel.findByIdAndUpdate(id, inventory, {
-      new: true,
+      returnDocument: 'after',
     });
   }
 
@@ -37,7 +37,9 @@ export class MongoInventoryRepository implements InventoryRepositpory {
     return await this.inventoryModel.findByIdAndUpdate(
       { _id: id, currentStock: { $gte: quantity } },
       { $inc: { currentStock: -quantity } },
-      { new: true },
+      {
+        returnDocument: 'after',
+      },
     );
   }
 
@@ -48,7 +50,9 @@ export class MongoInventoryRepository implements InventoryRepositpory {
     return await this.inventoryModel.findByIdAndUpdate(
       id,
       { $inc: { currentStock: quantity } },
-      { new: true },
+      {
+        returnDocument: 'after',
+      },
     );
   }
 

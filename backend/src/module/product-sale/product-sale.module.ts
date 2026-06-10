@@ -13,12 +13,14 @@ import { GetTotalSaleProfitHandler } from './application/queries/get-total-sale-
 import { ProductSaleSchema } from '../../core/schemas/product-sale/product-sale.schema';
 import { InventoryModule } from '../inventory/inventory.module';
 import { ProductModule } from '../product/product.module';
+import { GetTotalSaleHandler } from './application/queries/get-total-sale/get-total-sale.handler';
 
 const commandHandler = [CreateProductSaleHandler, DeleteProductSaleHandler];
 const queryHandler = [
   GetProductSaleHandler,
   GetProductSalesHandler,
   GetTotalSaleProfitHandler,
+  GetTotalSaleHandler,
 ];
 
 @Module({

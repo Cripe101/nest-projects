@@ -42,6 +42,21 @@ export class MongoProductSaleRepository implements ProductSaleRepository {
     };
   }
 
+  async getTotalSale(): Promise<{ totalSale: number }> {
+    const [summary] = await this.productSaleModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalSale: { $sum: '$totalPrice' },
+        },
+      },
+    ]);
+
+    return {
+      totalSale: summary?.totalSale ?? 0,
+    };
+  }
+
   async deleteOneProductSale(id: string): Promise<ProductSaleEntity | null> {
     return await this.productSaleModel.findByIdAndDelete(id);
   }

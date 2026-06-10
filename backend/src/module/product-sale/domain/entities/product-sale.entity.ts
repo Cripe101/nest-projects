@@ -2,6 +2,7 @@ export class ProductSaleEntity {
   constructor(
     public productId: string,
     public quantity: number,
+    public cashier: string,
     public sellingPrice: number,
     public buyingPrice: number,
     public totalPrice: number,

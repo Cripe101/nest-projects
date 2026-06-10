@@ -3,11 +3,7 @@ import { CreateProductSaleCommand } from './create-product-sale.command';
 import { ProductSaleRepository } from '../../../domain/repositories/product-sale.repository';
 import { ProductSaleEntity } from '../../../domain/entities/product-sale.entity';
 import { ProductRepository } from '../../../../product/domain/repositories/product.repository';
-import {
-  BadRequestException,
-  NotAcceptableException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InventoryRepositpory } from '../../../../inventory/domain/repositories/inventory.repository';
 
 @CommandHandler(CreateProductSaleCommand)
@@ -19,7 +15,7 @@ export class CreateProductSaleHandler implements ICommandHandler<CreateProductSa
   ) {}
 
   async execute(command: CreateProductSaleCommand): Promise<ProductSaleEntity> {
-    const { productId, quantity } = command;
+    const { productId, quantity, cashier } = command;
 
     const product = await this.productRepo.getOneProduct(productId);
 
@@ -33,26 +29,24 @@ export class CreateProductSaleHandler implements ICommandHandler<CreateProductSa
       throw new NotFoundException('Product not found in inventory');
     }
 
+    if (inventory.currentStock < quantity) {
+      throw new BadRequestException('Insuffecient stock');
+    }
+
     const totalPrice = product.sellingPrice * quantity;
     const profit = product.sellingPrice - product.buyingPrice;
 
     const saleData = new ProductSaleEntity(
       productId,
       quantity,
+      cashier,
       product.sellingPrice,
       product.buyingPrice,
       totalPrice,
       profit,
     );
 
-    const updateStock = await this.inventoryRepo.deductStock(
-      inventory._id as string,
-      quantity,
-    );
-
-    if (!updateStock) {
-      throw new BadRequestException('Insuffecient stock');
-    }
+    await this.inventoryRepo.deductStock(inventory._id as string, quantity);
 
     return await this.repository.create(saleData);
   }

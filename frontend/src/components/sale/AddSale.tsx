@@ -1,14 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getAllProducts } from "../../api/ProductApi";
-import type { IProductGet } from "../../interfaces/ProductInterface";
 import { useState } from "react";
 import { createProductSale } from "../../api/ProductSaleApi";
 import { toast } from "react-toastify";
+import { getAllInventory } from "../../api/InventoryApi";
+import type { IInventoryGet } from "../../interfaces/IInventory";
 
 const AddSale = ({ refetch }: { refetch: any }) => {
   const productsQuery = useQuery({
-    queryKey: ["Products"],
-    queryFn: getAllProducts,
+    queryKey: ["inventory-products"],
+    queryFn: getAllInventory,
   });
 
   const [productId, setProductId] = useState<string>("");
@@ -30,6 +30,9 @@ const AddSale = ({ refetch }: { refetch: any }) => {
       toast.success("Sale Added");
       refetch();
     },
+    onError: (err) => {
+      toast.error(err.message);
+    },
   });
 
   const handleSubmit = () => {
@@ -47,14 +50,19 @@ const AddSale = ({ refetch }: { refetch: any }) => {
       <span className="grid gap-2">
         <h1 className="lp-3 text-xs font-bold">Select Product:</h1>
         <section className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 justify-center">
-          {productsQuery?.data?.map((product: IProductGet) => (
+          {productsQuery?.data?.map((product: IInventoryGet) => (
             <span
-              onClick={() => setProductId(product._id)}
+              onClick={() => setProductId(product.productId._id)}
               key={product._id}
-              className={`${checkProduct(product._id) ? "bg-green-300" : ""} grid gap-1 cursor-pointer p-5 rounded-xl shadow active:scale-90 duration-200`}
+              className={`${checkProduct(product.productId._id) ? "bg-green-200" : "bg-blue-50"} grid gap-1 cursor-pointer p-5 rounded-xl shadow active:scale-90 duration-200`}
             >
-              <img src={product.imageUrl} className="" />
-              <h1 className="text-xs font-medium">{product.productName}</h1>
+              <img src={product.productId.imageUrl} className="" />
+              <h1 className="text-xs font-medium">
+                {product.productId.productName}
+              </h1>
+              <h1 className="text-xs font-medium">
+                Stock: {product.currentStock}
+              </h1>
             </span>
           ))}
         </section>

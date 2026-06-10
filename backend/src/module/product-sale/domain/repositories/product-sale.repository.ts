@@ -9,4 +9,5 @@ export abstract class ProductSaleRepository {
   abstract getOneProductSale(id: string): Promise<ProductSaleEntity | null>;
   abstract deleteOneProductSale(id: string): Promise<ProductSaleEntity | null>;
   abstract getTotalSaleProfit(): Promise<{ totalProfit: number }>;
+  abstract getTotalSale(): Promise<{ totalSale: number }>;
 }

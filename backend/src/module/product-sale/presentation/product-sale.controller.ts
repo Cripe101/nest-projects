@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CreateProductSaleDto } from './dto/product-sale.dto';
@@ -18,6 +19,8 @@ import { JwtAuthGuard } from '../../../core/guard/jwt.auth.guard';
 import { RolesGuard } from '../../../core/guard/roles.guard';
 import { UserRole } from '../../../core/constants/user-role.enum';
 import { Roles } from '../../../core/decorators/roles.decorator';
+import type { RequestWithUser } from '../../../core/interfaces/request-with-user.interface';
+import { GetTotalSaleQuery } from '../application/queries/get-total-sale/get-total-sale.query';
 
 @Controller('product-sales')
 export class ProductSaleController {
@@ -28,16 +31,15 @@ export class ProductSaleController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.CASHIER)
-  create(@Body() dto: CreateProductSaleDto) {
+  @Roles(UserRole.CASHIER, UserRole.ADMIN)
+  create(@Body() dto: CreateProductSaleDto, @Req() req: RequestWithUser) {
     return this.commandBus.execute(
-      new CreateProductSaleCommand(dto.productId, dto.quantity),
+      new CreateProductSaleCommand(dto.productId, dto.quantity, req.user.id),
     );
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.CASHIER)
+  @UseGuards(JwtAuthGuard)
   getAllProductSales() {
     return this.queryBus.execute(new GetProductSalesQuery());
   }
@@ -48,16 +50,21 @@ export class ProductSaleController {
     return this.queryBus.execute(new GetTotalSaleProfitQuery());
   }
 
+  @Get('total-sale')
+  @UseGuards(JwtAuthGuard)
+  getTotalSalet() {
+    return this.queryBus.execute(new GetTotalSaleQuery());
+  }
+
   @Get(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.CASHIER)
+  @UseGuards(JwtAuthGuard)
   getOneProductSale(@Param('id') id: string) {
     return this.queryBus.execute(new GetProductSaleQuery(id));
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.CASHIER)
+  @Roles(UserRole.CASHIER, UserRole.ADMIN)
   deleteOneProductSale(@Param('id') id: string) {
     return this.commandBus.execute(new DeleteProductSaleCommand(id));
   }

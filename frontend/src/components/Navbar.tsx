@@ -39,7 +39,8 @@ const Navbar = () => {
       <section className="flex justify-end">
         <button
           onClick={() => {
-            localStorage.clear();
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("user");
             navigate("/");
           }}
           className="px-3 py-1 bg-red-600 text-white rounded-xl cursor-pointer active:scale-90 duration-200"
