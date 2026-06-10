@@ -8,7 +8,6 @@ const Navbar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [openMenu, setOpenMenu] = useState<boolean>(false);
 
   return (
     <div className="flex justify-between items-center p-5 shadow-sm relative">

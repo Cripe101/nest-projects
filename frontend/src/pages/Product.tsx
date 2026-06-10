@@ -1,10 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  deleteOneProduct,
-  getAllProducts,
-  updateOneProduct,
-} from "../api/ProductApi";
-import type { IProductGet, IProductPost } from "../interfaces/ProductInterface";
+import { deleteOneProduct, getAllProducts } from "../api/ProductApi";
+import type { IProductGet } from "../interfaces/ProductInterface";
 import ProductCard from "../components/cards/ProductCard";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";

@@ -5,11 +5,7 @@ import type {
   IProductGet,
   IProductPost,
 } from "../../interfaces/ProductInterface";
-import {
-  createProduct,
-  getOneProduct,
-  updateOneProduct,
-} from "../../api/ProductApi";
+import { getOneProduct, updateOneProduct } from "../../api/ProductApi";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 
