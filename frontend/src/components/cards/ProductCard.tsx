@@ -19,7 +19,7 @@ const ProductCard = ({
   return (
     <section
       key={product._id}
-      className="bg-blue-50 py-2 rounded-xl shadow flex flex-col justify-center gap-2 items-center relative group"
+      className="bg-blue-50 p-2 rounded-xl shadow flex flex-col justify-center gap-2 items-center relative group"
     >
       <span className="absolute w-full top-1 justify-between px-2 hidden group-hover:flex duration-200">
         <button

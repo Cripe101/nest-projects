@@ -26,8 +26,15 @@ export const updateOneInventory = async ({
 
 export const addInventoryStock = async (id: string, quantity: number) => {
   const response = await apiClient.put(
-    "/inventories/add-stock/" + id,
-    quantity,
+    `/inventories/add-stock/${id}`,
+    {
+      quantity,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
   );
 
   return response.data;

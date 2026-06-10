@@ -11,7 +11,7 @@ const User = () => {
   return (
     <div className="p-5">
       <h1>User</h1>
-      <section className="p-5 grid grid-cols-6 gap-5">
+      <section className="p-5 grid grid-cols-2 md:grid-cols-6 gap-5">
         {data?.map((user: IUserGet) => (
           <span
             key={user._id}

@@ -43,10 +43,7 @@ export class MongoInventoryRepository implements InventoryRepositpory {
     );
   }
 
-  async addStock(
-    id: string,
-    quantity: number,
-  ): Promise<InventoryEntity | null> {
+  async addStock(id: string, quantity: number): Promise<any | null> {
     return await this.inventoryModel.findByIdAndUpdate(
       id,
       { $inc: { currentStock: quantity } },

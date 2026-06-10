@@ -15,10 +15,7 @@ export abstract class InventoryRepositpory {
     quantity: number,
   ): Promise<InventoryEntity | null>;
 
-  abstract addStock(
-    id: string,
-    quantity: number,
-  ): Promise<InventoryEntity | null>;
+  abstract addStock(id: string, quantity: number): Promise<any | null>;
 
   abstract getInventoryByProduct(
     productId: string,

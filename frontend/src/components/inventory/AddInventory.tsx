@@ -55,7 +55,7 @@ const AddInventory = () => {
   return (
     <div className="flex justify-center items-center">
       <section className="mt-20 flex flex-col gap-3 p-5 m-2">
-        <h1 className="text-center">Add to Inventory</h1>
+        <h1 className="text-center font-bold">Add to Inventory</h1>
 
         <h1 className="text-sm pl-2 font-medium">Select product:</h1>
         <span className="grid grid-cols-2 md:grid-cols-3 gap-3">

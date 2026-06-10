@@ -54,10 +54,10 @@ const AddSale = ({ refetch }: { refetch: any }) => {
             <span
               onClick={() => setProductId(product.productId._id)}
               key={product._id}
-              className={`${checkProduct(product.productId._id) ? "bg-green-200" : "bg-blue-50"} grid gap-1 cursor-pointer p-5 rounded-xl shadow active:scale-90 duration-200`}
+              className={`${checkProduct(product.productId._id) ? "bg-green-200" : "bg-blue-50"} flex flex-col items-center justify-center gap-1 cursor-pointer py-3 px-2 rounded-xl shadow active:scale-90 duration-200`}
             >
-              <img src={product.productId.imageUrl} className="" />
-              <h1 className="text-xs font-medium">
+              <img src={product.productId.imageUrl} className="h-12" />
+              <h1 className="text-xs font-bold">
                 {product.productId.productName}
               </h1>
               <h1 className="text-xs font-medium">

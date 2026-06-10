@@ -13,6 +13,7 @@ import Product from "./pages/Product";
 import UpdateProduct from "./components/product/UpdateProduct";
 import UpdateInventory from "./components/inventory/UpdateInventory";
 import User from "./pages/User";
+import AddInventoryStock from "./components/inventory/AddInventoryStock";
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: "/add-product",
         element: <AddProduct />,
+      },
+      {
+        path: "/add-stock/:id",
+        element: <AddInventoryStock />,
       },
       {
         path: "/update-product/:id",

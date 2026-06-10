@@ -47,6 +47,15 @@ export class InventoryController {
     );
   }
 
+  @Put('add-stock/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  addStock(@Param('id') id: string, @Body() dto: AddStockDto) {
+    return this.commandBus.execute(
+      new AddInventoryStockCommand(id, dto.quantity),
+    );
+  }
+
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
@@ -63,15 +72,6 @@ export class InventoryController {
         dto.minimumStock,
         req.body._id,
       ),
-    );
-  }
-
-  @Put('add-stock/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  addStock(@Param('id') id: string, dto: AddStockDto) {
-    return this.commandBus.execute(
-      new AddInventoryStockCommand(id, dto.quantity),
     );
   }
 

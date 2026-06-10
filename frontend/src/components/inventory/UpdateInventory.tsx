@@ -62,7 +62,17 @@ const UpdateInventory = () => {
   return (
     <div className="flex justify-center p-5">
       <section className="mt-20 p-5 flex flex-col gap-3">
-        <h1 className="text-center">Update Inventory</h1>
+        <section className="flex justify-between gap-10 items-center mb-5">
+          <h1 className="text-center font-bold">Update Inventory</h1>
+          <button
+            onClick={() => {
+              navigate("/add-stock/" + id);
+            }}
+            className="bg-blue-600 px-3 py-1 rounded-xl text-white font-bold cursor-pointer active:scale-90 duration-200"
+          >
+            Add Stock
+          </button>
+        </section>
 
         {/* <h1 className="text-sm pl-2 font-medium">Select product:</h1>
         <span className="grid grid-cols-2 md:grid-cols-4 gap-3">
