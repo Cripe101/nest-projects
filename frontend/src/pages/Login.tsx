@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
   const navigate = useNavigate();
 
   const loginMutation = useMutation({
@@ -20,9 +19,17 @@ const Login = () => {
       username: string;
       password: string;
     }) => login({ username, password }),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const role = data.user.role;
+      role === "admin"
+        ? navigate("/inventory")
+        : role === "manager"
+          ? navigate("/inventory")
+          : role === "cashier"
+            ? navigate("/sale")
+            : "";
+
       toast.success(`${username} successfully login`);
-      navigate("/inventory");
     },
     onError: (err) => {
       toast.error("Login failed: " + err.message);

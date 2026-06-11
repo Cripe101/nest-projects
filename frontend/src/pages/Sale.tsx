@@ -34,10 +34,6 @@ const Sale = () => {
     },
   });
 
-  useEffect(() => {
-    refetch();
-  }, [data]);
-
   return (
     <div className="p-5 md:p-10 grid md:grid-cols-[3fr_2fr] gap-5">
       <section className="grid gap-3 md:gap-5 bg-slate-50 p-3 md:p-5 rounded-xl">
