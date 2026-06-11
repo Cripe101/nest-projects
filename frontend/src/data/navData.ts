@@ -1,4 +1,10 @@
-import { CiBowlNoodles, CiBoxList, CiDollar, CiUser } from "react-icons/ci";
+import {
+  CiBowlNoodles,
+  CiBoxList,
+  CiDatabase,
+  CiDollar,
+  CiUser,
+} from "react-icons/ci";
 
 export const navData = [
   // {
@@ -6,6 +12,11 @@ export const navData = [
   //   label: "Profit",
   //   icon: CiMobile1,
   // },
+  {
+    path: "/dashboard",
+    label: "Dashboard",
+    icon: CiDatabase,
+  },
   {
     path: "/inventory",
     label: "Inventory",

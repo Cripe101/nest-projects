@@ -10,16 +10,15 @@ const apiClient: AxiosInstance = axios.create({
 });
 
 // Interceptors for request/response
-// apiClient.interceptors.request.use((config) => {
-//   const token = authState.token;
-//   console.log(token);
-//   if (token) {
-//     config.headers.Authorization = `${token}`;
-//   }
-//   console.log("returning");
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken");
 
-//   return config;
-// });
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
 
 apiClient.interceptors.response.use(
   (response) => response,

@@ -52,10 +52,9 @@ const Navbar = () => {
             type="button"
             onClick={() => {
               navigate(nav?.path);
-              setIsOpen(!isOpen);
             }}
             key={index}
-            className={`${nav?.label === "Phone" ? "gap-.5" : "gap-1"} ${pathname === nav?.path ? "text-[#2191FB] scale-110" : ""} text-lg flex items-center cursor-pointer duration-200`}
+            className={`${nav?.label === "Phone" ? "gap-.5" : "gap-1"} ${pathname === nav?.path ? "text-blue-600" : ""} flex items-center cursor-pointer duration-200`}
           >
             <nav.icon size={20} />
             <p>{nav?.label}</p>

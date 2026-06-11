@@ -21,7 +21,9 @@ const ProductCard = ({
       key={product._id}
       className="bg-blue-50 p-2 rounded-xl shadow flex flex-col justify-center gap-2 items-center relative group"
     >
-      <span className="absolute w-full top-1 justify-between px-2 hidden group-hover:flex duration-200">
+      <span
+        className={`absolute w-full top-1 justify-between gap-5 px-2 md:hidden md:group-hover:flex flex duration-200`}
+      >
         <button
           onClick={handleUpdate}
           className="bg-blue-600 rounded-lg p-1 font-bold text-white cursor-pointer active:scale-90 duration-200"

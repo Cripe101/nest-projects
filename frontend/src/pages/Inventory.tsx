@@ -76,6 +76,7 @@ const Inventory = () => {
           <div className="grid grid-cols-2 md:grid-cols-7 gap-5">
             {inventoryQuery.data?.map((product: IInventoryGet) => (
               <ProductCard
+                key={product._id}
                 product={product.productId}
                 stock={product.currentStock}
                 type="inventory"
