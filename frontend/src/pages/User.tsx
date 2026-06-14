@@ -21,6 +21,7 @@ const User = () => {
           >
             <h1>{user.username}</h1>
             <h1>{user.role}</h1>
+            <h1>{user._id}</h1>
           </span>
         ))}
       </section>
