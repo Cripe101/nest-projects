@@ -8,6 +8,8 @@ const User = () => {
     queryFn: getAllUsers,
   });
 
+  console.log(data);
+
   return (
     <div className="p-5">
       <h1>User</h1>
