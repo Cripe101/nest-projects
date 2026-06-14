@@ -1,8 +1,6 @@
 import type { IProductPost } from "../interfaces/ProductInterface";
 import apiClient from "./ApiClient";
 
-const token = localStorage.getItem("accessToken");
-
 export const createProduct = async (data: IProductPost) => {
   const response = await apiClient.post("/products", data);
 
