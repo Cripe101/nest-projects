@@ -3,15 +3,11 @@ import Navbar from "../components/Navbar";
 
 const InventoryLayout = () => {
   return (
-    <div>
-      <div className="">
-        <section>
-          <Navbar />
-        </section>
-        <section className="">
-          <Outlet />
-        </section>
-      </div>
+    <div className="md:grid flex grid-cols-[1fr_6fr]">
+      <Navbar />
+      <section className="">
+        <Outlet />
+      </section>
     </div>
   );
 };

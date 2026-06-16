@@ -26,3 +26,15 @@ export const getAllProductSale = async () => {
 
   return response.data;
 };
+
+export const getTotalSale = async () => {
+  const response = await apiClient.get("/product-sales/total-sale");
+
+  return response.data;
+};
+
+export const getTotalSaleProfit = async () => {
+  const response = await apiClient.get("/product-sales/total-profit");
+
+  return response.data;
+};

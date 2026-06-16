@@ -15,6 +15,7 @@ import UpdateInventory from "./components/inventory/UpdateInventory";
 import User from "./pages/User";
 import AddInventoryStock from "./components/inventory/AddInventoryStock";
 import Dashboard from "./pages/Dashboard";
+import AddUser from "./components/user/AddUser";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/user",
         element: <User />,
+      },
+      {
+        path: "/add-user",
+        element: <AddUser />,
       },
       {
         path: "/profit",
