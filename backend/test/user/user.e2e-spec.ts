@@ -1,0 +1,116 @@
+import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import { AppModule } from '../../src/app.module';
+import request from 'supertest';
+import { UserRole } from '../../src/core/constants/user-role.enum';
+
+describe('UserController (e2e)', () => {
+  let app: INestApplication;
+
+  let token: string;
+  let createdUserId: string;
+  let createdUserUsername: string;
+
+  beforeAll(async () => {
+    const module = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = module.createNestApplication();
+    await app.init();
+
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        username: 'Mhegz',
+        password: 'Mhegz2003',
+      });
+
+    token = loginResponse.body.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should create a user', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/users')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        username: 'test-user',
+        password: 'Password123',
+        role: UserRole.STAFF,
+      });
+
+    expect(response.status).toEqual(201);
+    expect(response.body).toBeDefined();
+    expect(response.body.username).toEqual('test-user');
+    expect(response.body.role).toEqual(UserRole.STAFF);
+
+    createdUserId = response.body._id;
+    createdUserUsername = response.body.username;
+  });
+
+  it('should get all users', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/users')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toEqual(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0);
+
+    const found = response.body.find((u: any) => u._id === createdUserId);
+
+    expect(found).toBeDefined();
+    expect(found.username).toEqual('test-user');
+  });
+
+  it('should get user by id', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/users/' + createdUserId)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toBeDefined();
+    expect(response.body._id).toEqual(createdUserId);
+    expect(response.body.username).toEqual('test-user');
+    expect(response.body.role).toEqual(UserRole.STAFF);
+  });
+
+  it('should get user by username', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/users/username/' + createdUserUsername)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toBeDefined();
+    expect(response.body.username).toEqual(createdUserUsername);
+    expect(response.body.role).toEqual(UserRole.STAFF);
+  });
+
+  it('should update user', async () => {
+    const response = await request(app.getHttpServer())
+      .put('/users/' + createdUserId)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        username: 'updated-user',
+        role: UserRole.ADMIN,
+      });
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toBeDefined();
+    expect(response.body.username).toEqual('updated-user');
+    expect(response.body.role).toEqual(UserRole.ADMIN);
+  });
+
+  it('should delete user', async () => {
+    const response = await request(app.getHttpServer())
+      .delete('/users/' + createdUserId)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toBeDefined();
+  });
+});

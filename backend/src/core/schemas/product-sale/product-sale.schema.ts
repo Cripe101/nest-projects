@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 export class ProductSale {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ProductEntity',
+    ref: 'Product',
     required: true,
   })
   productId!: mongoose.Types.ObjectId;
@@ -31,8 +31,8 @@ export class ProductSale {
   @Prop({ required: true, type: Number })
   totalPrice!: number;
 
-  @Prop({ required: false })
-  profit?: number;
+  @Prop({ required: false, type: Number })
+  profit!: number;
 }
 
 export const ProductSaleSchema = SchemaFactory.createForClass(ProductSale);

@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 export class Inventory {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ProductEntity',
+    ref: 'Product',
     required: true,
   })
   productId!: mongoose.Types.ObjectId;

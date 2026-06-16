@@ -13,7 +13,7 @@ export class Product {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'UserEntity',
+    ref: 'User',
     required: true,
   })
   addedBy!: mongoose.Types.ObjectId;
