@@ -41,7 +41,11 @@ const AddSale = ({ refetch }: { refetch: any }) => {
       quantity: quantity,
     };
 
-    addProductSaleMutation.mutate(data);
+    if (quantity <= 0) {
+      toast.error("Enter a quantity");
+    } else {
+      addProductSaleMutation.mutate(data);
+    }
   };
 
   return (
@@ -54,7 +58,7 @@ const AddSale = ({ refetch }: { refetch: any }) => {
             <span
               onClick={() => setProductId(product.productId._id)}
               key={product._id}
-              className={`${checkProduct(product.productId._id) ? "bg-green-200" : "bg-blue-50"} flex flex-col items-center justify-center gap-1 cursor-pointer py-3 px-2 rounded-xl shadow active:scale-90 duration-200`}
+              className={`${checkProduct(product.productId._id) ? "bg-green-200" : "bg-slate-50"} flex flex-col items-center justify-center gap-1 cursor-pointer py-3 px-2 rounded-xl shadow active:scale-90 duration-200`}
             >
               <img src={product.productId.imageUrl} className="h-12" />
               <h1 className="text-xs font-bold">
@@ -81,6 +85,7 @@ const AddSale = ({ refetch }: { refetch: any }) => {
         />
       </section>
       <button
+        disabled={addProductSaleMutation.isPending}
         onClick={handleSubmit}
         className="bg-blue-500 py-2 px-3 text-white rounded-xl font-bold cursor-pointer active:scale-90 duration-200"
       >

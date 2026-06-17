@@ -59,7 +59,7 @@ const UpdateProduct = () => {
     setImageUrl(data?.imageUrl ?? "");
   }, [data]);
   return (
-    <form className="flex flex-col gap-5 p-5 mx-5 my-5 md:mx-60 md:my-20 bg-slate-50 rounded-xl shadow">
+    <form className="flex flex-col gap-5 p-5 mx-5 my-5 md:mx-60 md:my-20 rounded-xl">
       <h1 className="flex items-center gap-1">
         <BiPlus size={26} />
         <p className="font-medium">Add Product</p>

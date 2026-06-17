@@ -62,7 +62,7 @@ const AddInventory = () => {
           {data?.map((product: IProductGet) => (
             <section
               key={product._id}
-              className={`${product._id === productId ? "bg-green-200" : ""} bg-blue-100 p-3 flex flex-col items-center shadow-sm gap-2 rounded-xl cursor-pointer duration-200`}
+              className={`${product._id === productId ? "bg-green-200" : ""} bg-blue-50 p-3 flex flex-col items-center shadow-sm gap-2 rounded-xl cursor-pointer duration-200`}
               onClick={() => {
                 setProductId(product._id);
               }}
