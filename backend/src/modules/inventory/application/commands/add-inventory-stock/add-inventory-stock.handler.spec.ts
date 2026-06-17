@@ -46,7 +46,6 @@ describe('AddInventoryStockHandler', () => {
     );
 
     expect(result).toEqual(inventory);
-
     expect(mockRepository.addStock).toHaveBeenCalledWith('inventory-id', 50);
   });
 
@@ -56,7 +55,6 @@ describe('AddInventoryStockHandler', () => {
     await expect(
       handler.execute(new AddInventoryStockCommand('inventory-id', 50)),
     ).rejects.toThrow(NotFoundException);
-
     expect(mockRepository.addStock).toHaveBeenCalledWith('inventory-id', 50);
   });
 });

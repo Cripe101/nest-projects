@@ -40,7 +40,6 @@ describe('AuthController', () => {
     const result = await controller.login(dto);
 
     expect(result).toEqual(loginResponse);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 });

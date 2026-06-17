@@ -54,7 +54,6 @@ describe('ProductController', () => {
     const result = await controller.create(dto, req as any);
 
     expect(result).toEqual(createdProduct);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -85,7 +84,6 @@ describe('ProductController', () => {
     const result = await controller.updateOneProduct('123', dto, req as any);
 
     expect(result).toEqual(updatedProduct);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -100,7 +98,6 @@ describe('ProductController', () => {
     const result = await controller.deleteOneProduct('123');
 
     expect(result).toEqual(deletedProduct);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -117,7 +114,6 @@ describe('ProductController', () => {
     const result = await controller.getAllProducts();
 
     expect(result).toEqual(products);
-
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 
@@ -132,7 +128,6 @@ describe('ProductController', () => {
     const result = await controller.getOneProduct('123');
 
     expect(result).toEqual(product);
-
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 });

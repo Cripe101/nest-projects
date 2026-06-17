@@ -2,7 +2,6 @@ import { Test } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { NotAcceptableException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
-
 import { LoginUserHandler } from './login-user.handler';
 import { LoginUserCommand } from './login-user.command';
 import {
@@ -71,7 +70,6 @@ describe('LoginUserHandler', () => {
         role: 'admin',
       },
     });
-
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
     expect(bcrypt.compare).toHaveBeenCalledWith('password', 'hashed-password');
     expect(mockJwtService.sign).toHaveBeenCalled();
@@ -94,7 +92,6 @@ describe('LoginUserHandler', () => {
     await expect(handler.execute(command)).rejects.toThrow(
       NotAcceptableException,
     );
-
     expect(mockJwtService.sign).not.toHaveBeenCalled();
   });
 });

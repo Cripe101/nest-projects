@@ -46,7 +46,6 @@ describe('GetUserHandler', () => {
     const result = await handler.execute(new GetUserQuery('123'));
 
     expect(result).toEqual(user);
-
     expect(mockRepository.getOneUser).toHaveBeenCalledWith('123');
   });
 });

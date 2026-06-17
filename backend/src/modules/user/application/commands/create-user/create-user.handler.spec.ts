@@ -40,7 +40,6 @@ describe('CreateUserHandler', () => {
         new CreateUserCommand('Mheg', 'password', UserRole.ADMIN),
       ),
     ).rejects.toThrow(NotAcceptableException);
-
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
   });
 
@@ -61,9 +60,7 @@ describe('CreateUserHandler', () => {
     );
 
     expect(result).toEqual(user);
-
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-
     expect(mockRepository.create).toHaveBeenCalled();
   });
 });

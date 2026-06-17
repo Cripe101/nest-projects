@@ -55,7 +55,6 @@ describe('UpdateInventoryHandler', () => {
     );
 
     expect(result).toEqual(updatedInventory);
-
     expect(mockRepository.updateOneInventory).toHaveBeenCalled();
   });
 
@@ -73,7 +72,6 @@ describe('UpdateInventoryHandler', () => {
         ),
       ),
     ).rejects.toThrow(NotFoundException);
-
     expect(mockRepository.updateOneInventory).toHaveBeenCalled();
   });
 });

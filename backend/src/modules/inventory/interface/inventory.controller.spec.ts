@@ -51,7 +51,6 @@ describe('InventoryController', () => {
     const result = await controller.createInventory(dto, req as any);
 
     expect(result).toEqual(inventory);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -70,7 +69,6 @@ describe('InventoryController', () => {
     const result = await controller.addStock('inventory-id', dto);
 
     expect(result).toEqual(inventory);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -101,7 +99,6 @@ describe('InventoryController', () => {
     );
 
     expect(result).toEqual(updatedInventory);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -116,7 +113,6 @@ describe('InventoryController', () => {
     const result = await controller.deleteInventory('inventory-id');
 
     expect(result).toEqual(deletedInventory);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -134,7 +130,6 @@ describe('InventoryController', () => {
     const result = await controller.getAllInventory();
 
     expect(result).toEqual(inventories);
-
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 
@@ -150,7 +145,6 @@ describe('InventoryController', () => {
     const result = await controller.getOneInventory('inventory-id');
 
     expect(result).toEqual(inventory);
-
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 });

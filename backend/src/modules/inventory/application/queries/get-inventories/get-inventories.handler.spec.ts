@@ -67,7 +67,6 @@ describe('GetInventoriesHandler', () => {
         minimumStock: 20,
       },
     ]);
-
     expect(mockRepository.getAllInventories).toHaveBeenCalled();
   });
 });

@@ -45,7 +45,6 @@ describe('GetProductHandler', () => {
     const result = await handler.execute(new GetProductQuery('product-id'));
 
     expect(result).toEqual(product);
-
     expect(mockRepository.getOneProduct).toHaveBeenCalledWith('product-id');
   });
 

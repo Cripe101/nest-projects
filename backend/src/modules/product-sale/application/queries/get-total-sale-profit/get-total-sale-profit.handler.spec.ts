@@ -36,7 +36,6 @@ describe('GetTotalSaleProfitHandler', () => {
     const result = await handler.execute();
 
     expect(result).toEqual(totalProfit);
-
     expect(mockRepository.getTotalSaleProfit).toHaveBeenCalled();
   });
 
@@ -50,7 +49,6 @@ describe('GetTotalSaleProfitHandler', () => {
     const result = await handler.execute();
 
     expect(result).toEqual(totalProfit);
-
     expect(mockRepository.getTotalSaleProfit).toHaveBeenCalled();
   });
 });

@@ -31,7 +31,6 @@ describe('DeleteProductHandler', () => {
     await expect(
       handler.execute(new DeleteProductCommand('6a226ef26b64a0e432214543')),
     ).rejects.toThrow(NotFoundException);
-
     expect(mockRepository.deleteOneProduct).toHaveBeenCalledWith(
       '6a226ef26b64a0e432214543',
     );
@@ -49,7 +48,6 @@ describe('DeleteProductHandler', () => {
     );
 
     expect(result).toEqual(product);
-
     expect(mockRepository.deleteOneProduct).toHaveBeenCalledWith(
       '6a226ef26b64a0e432214543',
     );

@@ -40,7 +40,6 @@ describe('UpdateProductHandler', () => {
         ),
       ),
     ).rejects.toThrow(NotFoundException);
-
     expect(mockRepository.updateOneProduct).toHaveBeenCalled();
   });
 
@@ -70,7 +69,6 @@ describe('UpdateProductHandler', () => {
     );
 
     expect(result).toEqual(product);
-
     expect(mockRepository.updateOneProduct).toHaveBeenCalled();
   });
 });

@@ -52,7 +52,6 @@ describe('GetProductsHandler', () => {
     const result = await handler.execute();
 
     expect(result).toEqual(products);
-
     expect(mockRepository.getAllProducts).toHaveBeenCalled();
   });
 });

@@ -45,7 +45,6 @@ describe('UserController', () => {
     const result = await controller.createUser(dto);
 
     expect(result).toEqual(createdUser);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -68,7 +67,6 @@ describe('UserController', () => {
     });
 
     expect(result).toEqual(updatedUser);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -83,7 +81,6 @@ describe('UserController', () => {
     const result = await controller.deleteUser('123');
 
     expect(result).toEqual(deletedUser);
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -101,7 +98,6 @@ describe('UserController', () => {
     const result = await controller.getUsers();
 
     expect(result).toEqual(users);
-
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 
@@ -117,7 +113,6 @@ describe('UserController', () => {
     const result = await controller.getUser('123');
 
     expect(result).toEqual(user);
-
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 
@@ -133,7 +128,6 @@ describe('UserController', () => {
     const result = await controller.getUserByUsername('Mheg');
 
     expect(result).toEqual(user);
-
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 });

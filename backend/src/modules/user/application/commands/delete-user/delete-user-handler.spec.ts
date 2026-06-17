@@ -33,7 +33,6 @@ describe('DeleteUserHandler', () => {
     await expect(handler.execute(new DeleteUserCommand('123'))).rejects.toThrow(
       NotFoundException,
     );
-
     expect(mockRepository.deleteOneUser).toHaveBeenCalledWith('123');
   });
 
@@ -47,7 +46,6 @@ describe('DeleteUserHandler', () => {
     const result = await handler.execute(new DeleteUserCommand('123'));
 
     expect(result).toEqual(user);
-
     expect(mockRepository.deleteOneUser).toHaveBeenCalledWith('123');
   });
 });

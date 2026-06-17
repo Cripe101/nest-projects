@@ -49,7 +49,6 @@ describe('GetProductSalesHandler', () => {
     const result = await handler.execute();
 
     expect(result).toEqual(sales);
-
     expect(mockRepository.getAllProductSales).toHaveBeenCalled();
   });
 
@@ -59,7 +58,6 @@ describe('GetProductSalesHandler', () => {
     const result = await handler.execute();
 
     expect(result).toEqual([]);
-
     expect(mockRepository.getAllProductSales).toHaveBeenCalled();
   });
 });

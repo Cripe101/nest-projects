@@ -44,7 +44,6 @@ describe('DeleteProductSaleHandler', () => {
     );
 
     expect(result).toEqual(sale);
-
     expect(mockRepository.deleteOneProductSale).toHaveBeenCalledWith('sale-id');
   });
 
@@ -54,7 +53,6 @@ describe('DeleteProductSaleHandler', () => {
     await expect(
       handler.execute(new DeleteProductSaleCommand('sale-id')),
     ).rejects.toThrow(NotFoundException);
-
     expect(mockRepository.deleteOneProductSale).toHaveBeenCalledWith('sale-id');
   });
 });

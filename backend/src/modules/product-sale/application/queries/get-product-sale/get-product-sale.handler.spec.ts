@@ -42,7 +42,6 @@ describe('GetProductSaleHandler', () => {
     const result = await handler.execute(new GetProductSaleQuery('sale-id'));
 
     expect(result).toEqual(sale);
-
     expect(mockRepository.getOneProductSale).toHaveBeenCalledWith('sale-id');
   });
 
@@ -52,7 +51,6 @@ describe('GetProductSaleHandler', () => {
     await expect(
       handler.execute(new GetProductSaleQuery('sale-id')),
     ).rejects.toThrow(NotFoundException);
-
     expect(mockRepository.getOneProductSale).toHaveBeenCalledWith('sale-id');
   });
 });

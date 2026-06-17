@@ -48,7 +48,6 @@ describe('DeleteInventoryHandler', () => {
     );
 
     expect(result).toEqual(inventory);
-
     expect(mockRepository.deleteOneInventory).toHaveBeenCalledWith(
       'inventory-id',
     );
@@ -60,7 +59,6 @@ describe('DeleteInventoryHandler', () => {
     await expect(
       handler.execute(new DeleteInventoryCommand('inventory-id')),
     ).rejects.toThrow(NotFoundException);
-
     expect(mockRepository.deleteOneInventory).toHaveBeenCalledWith(
       'inventory-id',
     );

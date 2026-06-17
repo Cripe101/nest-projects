@@ -35,9 +35,7 @@ describe('UpdateUserHandler', () => {
     await expect(
       handler.execute(new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN)),
     ).rejects.toThrow(ConflictException);
-
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-
     expect(mockRepository.updateOneUser).not.toHaveBeenCalledWith('123');
   });
 
@@ -49,13 +47,11 @@ describe('UpdateUserHandler', () => {
     await expect(
       handler.execute(new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN)),
     ).rejects.toThrow(NotFoundException);
-
     expect(mockRepository.updateOneUser).toHaveBeenCalledWith('123', {
       _id: '123',
       role: 'admin',
       username: 'Mheg',
     });
-
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
   });
 
@@ -74,9 +70,7 @@ describe('UpdateUserHandler', () => {
     );
 
     expect(result).toEqual(updatedUser);
-
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-
     expect(mockRepository.updateOneUser).toHaveBeenCalled();
   });
 });

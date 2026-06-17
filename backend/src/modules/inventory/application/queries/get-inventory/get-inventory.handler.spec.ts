@@ -44,7 +44,6 @@ describe('GetInventoryHandler', () => {
     const result = await handler.execute(new GetInventoryQuery('inventory-id'));
 
     expect(result).toEqual(inventory);
-
     expect(mockRepository.getOneInventory).toHaveBeenCalledWith('inventory-id');
   });
 
@@ -54,7 +53,6 @@ describe('GetInventoryHandler', () => {
     await expect(
       handler.execute(new GetInventoryQuery('inventory-id')),
     ).rejects.toThrow(NotFoundException);
-
     expect(mockRepository.getOneInventory).toHaveBeenCalledWith('inventory-id');
   });
 });

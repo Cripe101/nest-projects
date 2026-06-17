@@ -84,20 +84,16 @@ describe('CreateProductSaleHandler', () => {
     );
 
     expect(result).toEqual(sale);
-
     expect(mockProductRepository.getOneProduct).toHaveBeenCalledWith(
       'product-id',
     );
-
     expect(mockInventoryRepository.getInventoryByProduct).toHaveBeenCalledWith(
       'product-id',
     );
-
     expect(mockInventoryRepository.deductStock).toHaveBeenCalledWith(
       'inventory-id',
       2,
     );
-
     expect(mockSaleRepository.create).toHaveBeenCalled();
   });
 
@@ -144,9 +140,7 @@ describe('CreateProductSaleHandler', () => {
         new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
       ),
     ).rejects.toThrow(BadRequestException);
-
     expect(mockInventoryRepository.deductStock).not.toHaveBeenCalled();
-
     expect(mockSaleRepository.create).not.toHaveBeenCalled();
   });
 });

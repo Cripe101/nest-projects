@@ -50,11 +50,9 @@ describe('CreateInventoryHandler', () => {
     );
 
     expect(result).toEqual(inventory);
-
     expect(mockRepository.getInventoryByProduct).toHaveBeenCalledWith(
       'product-id',
     );
-
     expect(mockRepository.create).toHaveBeenCalled();
   });
 
@@ -68,7 +66,6 @@ describe('CreateInventoryHandler', () => {
         new CreateInventoryCommand('product-id', 'user-id', 100, 10),
       ),
     ).rejects.toThrow(NotAcceptableException);
-
     expect(mockRepository.create).not.toHaveBeenCalled();
   });
 });

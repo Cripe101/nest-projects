@@ -45,7 +45,6 @@ describe('GetUserByUsernameHandler', () => {
     const result = await handler.execute(new GetUserByUsernameQuery('Mheg'));
 
     expect(result).toEqual(user);
-
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
   });
 });

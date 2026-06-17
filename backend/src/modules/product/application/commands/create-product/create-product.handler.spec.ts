@@ -48,7 +48,6 @@ describe('CreateProductHandler', () => {
     );
 
     expect(result).toEqual(product);
-
     expect(mockRepository.create).toHaveBeenCalled();
   });
 });
