@@ -3,11 +3,12 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '../../src/app.module';
 import request from 'supertest';
 
-describe('InventoryController (e2e)', () => {
+describe('ProductSaleController (e2e)', () => {
   let app: INestApplication;
   let token: string;
-  let inventoryId: string;
   let productId: string;
+  let inventoryId: string;
+  let saleId: string;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -30,23 +31,17 @@ describe('InventoryController (e2e)', () => {
       .post('/products')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        productName: 'Inventory Test Product',
+        productName: 'Sale Product',
         productCategory: 'Drinks',
         buyingPrice: 20,
-        sellingPrice: 30,
-        description: 'Test product',
-        imageUrl: 'http://example.com/image.png',
+        sellingPrice: 50,
+        description: 'Test',
+        imageUrl: 'http://example.com/img.png',
       });
 
     productId = productResponse.body._id;
-  });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
-  it('should create inventory', async () => {
-    const response = await request(app.getHttpServer())
+    const inventoryResponse = await request(app.getHttpServer())
       .post('/inventories')
       .set('Authorization', `Bearer ${token}`)
       .send({
@@ -55,61 +50,73 @@ describe('InventoryController (e2e)', () => {
         minimumStock: 10,
       });
 
+    inventoryId = inventoryResponse.body._id;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should create a product sale', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/product-sales')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        productId,
+        quantity: 2,
+      });
+
     expect(response.body).toBeDefined();
     expect(response.body.productId).toEqual(productId);
 
-    inventoryId = response.body._id;
+    saleId = response.body._id;
   });
 
-  it('should get all inventories', async () => {
+  it('should get all product sales', async () => {
     const response = await request(app.getHttpServer())
-      .get('/inventories')
+      .get('/product-sales')
       .set('Authorization', `Bearer ${token}`);
 
     expect(Array.isArray(response.body)).toBe(true);
     expect(response.body.length).toBeGreaterThan(0);
   });
 
-  it('should get inventory by id', async () => {
+  it('should get one product sale', async () => {
     const response = await request(app.getHttpServer())
-      .get('/inventories/' + inventoryId)
+      .get('/product-sales/' + saleId)
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.body).toBeDefined();
-    expect(response.body._id).toEqual(inventoryId);
+    expect(response.body._id).toEqual(saleId);
   });
 
-  it('should add stock to inventory', async () => {
+  it('should get total sales', async () => {
     const response = await request(app.getHttpServer())
-      .put('/inventories/add-stock/' + inventoryId)
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        quantity: 50,
-      });
+      .get('/product-sales/total-sale')
+      .set('Authorization', `Bearer ${token}`);
 
-    expect(response.body).toBeDefined();
+    expect(response.body).toHaveProperty('totalSale');
   });
 
-  it('should update inventory', async () => {
+  it('should get total profit', async () => {
     const response = await request(app.getHttpServer())
-      .put('/inventories/' + inventoryId)
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        productId,
-        minimumStock: 20,
-      });
+      .get('/product-sales/total-profit')
+      .set('Authorization', `Bearer ${token}`);
 
-    expect(response.body).toBeDefined();
-    expect(response.body.productId._id).toEqual(productId);
+    expect(response.body).toHaveProperty('totalProfit');
   });
 
-  it('should delete inventory', async () => {
+  it('should delete product sale', async () => {
     await request(app.getHttpServer())
       .delete('/products/' + productId)
       .set('Authorization', `Bearer ${token}`);
 
-    const response = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .delete('/inventories/' + inventoryId)
+      .set('Authorization', `Bearer ${token}`);
+
+    const response = await request(app.getHttpServer())
+      .delete('/product-sales/' + saleId)
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.body).toBeDefined();
