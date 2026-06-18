@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance } from "axios";
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL: "http://192.168.1.27:5000",
+  baseURL: "https://nest-projects-qv3i.onrender.com",
   // http://localhost:5000
   // http://192.168.1.27:5000
   // https://nest-projects-qv3i.onrender.com
