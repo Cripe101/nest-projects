@@ -2,8 +2,8 @@ import { Test } from '@nestjs/testing';
 import { UpdateUserHandler } from './update-user.handler';
 import { UpdateUserCommand } from './update-user.command';
 import { UserRole } from '@core/constants/user-role.enum';
-import { ConflictException, NotFoundException } from '@nestjs/common';
 import { USER_REPOSITORY } from '../../ports/user.repository.port';
+import { UserError } from '@modules/user/domain/errors/user.error';
 
 describe('UpdateUserHandler', () => {
   let handler: UpdateUserHandler;
@@ -26,30 +26,43 @@ describe('UpdateUserHandler', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw an ConflictException when username already exist', async () => {
+  it('should return DUPLICATE_USERNAME when username already exists', async () => {
     mockRepository.getUserByUsername.mockResolvedValue({
-      id: '1234',
-      uesrname: 'Mheg',
+      _id: '456',
+      username: 'Mheg',
     });
 
-    await expect(
-      handler.execute(new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN)),
-    ).rejects.toThrow(ConflictException);
+    const result = await handler.execute(
+      new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN),
+    );
+
+    expect(result.isErr()).toBe(true);
+
+    if (result.isErr()) {
+      expect(result.error).toBe(UserError.DUPLICATE_USERNAME);
+    }
+
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-    expect(mockRepository.updateOneUser).not.toHaveBeenCalledWith('123');
+    expect(mockRepository.updateOneUser).not.toHaveBeenCalled();
   });
 
-  it('should throw NotFoundException when user does not exist', async () => {
+  it('should return NOT_FOUND when user does not exist', async () => {
     mockRepository.getUserByUsername.mockResolvedValue(null);
-
     mockRepository.updateOneUser.mockResolvedValue(null);
 
-    await expect(
-      handler.execute(new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN)),
-    ).rejects.toThrow(NotFoundException);
+    const result = await handler.execute(
+      new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN),
+    );
+
+    expect(result.isErr()).toBe(true);
+
+    if (result.isErr()) {
+      expect(result.error).toBe(UserError.NOT_FOUND);
+    }
+
     expect(mockRepository.updateOneUser).toHaveBeenCalledWith('123', {
       _id: '123',
-      role: 'admin',
+      role: UserRole.ADMIN,
       username: 'Mheg',
     });
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
@@ -61,16 +74,45 @@ describe('UpdateUserHandler', () => {
     const updatedUser = {
       _id: '123',
       username: 'Mheg',
-      role: 'admin',
+      role: UserRole.ADMIN,
     };
+
     mockRepository.updateOneUser.mockResolvedValue(updatedUser);
 
     const result = await handler.execute(
       new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN),
     );
 
-    expect(result).toEqual(updatedUser);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(updatedUser);
+    }
+
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
+    expect(mockRepository.updateOneUser).toHaveBeenCalled();
+  });
+
+  it('should allow updating user with the same username', async () => {
+    const updatedUser = {
+      _id: '123',
+      username: 'Mheg',
+      role: UserRole.ADMIN,
+    };
+
+    mockRepository.getUserByUsername.mockResolvedValue(updatedUser);
+    mockRepository.updateOneUser.mockResolvedValue(updatedUser);
+
+    const result = await handler.execute(
+      new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN),
+    );
+
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(updatedUser);
+    }
+
     expect(mockRepository.updateOneUser).toHaveBeenCalled();
   });
 });

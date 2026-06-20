@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { DeleteUserHandler } from './delete-user.handler';
 import { DeleteUserCommand } from './delete-user.command';
-import { NotFoundException } from '@nestjs/common';
 import { USER_REPOSITORY } from '../../ports/user.repository.port';
+import { UserError } from '@modules/user/domain/errors/user.error';
+import { UserRole } from '@core/constants/user-role.enum';
 
 describe('DeleteUserHandler', () => {
   let handler: DeleteUserHandler;
@@ -27,25 +28,37 @@ describe('DeleteUserHandler', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw an NotFoundException when no user is found with id: 123', async () => {
+  it('should return NOT_FOUND when no user is found with id: 123', async () => {
     mockRepository.deleteOneUser.mockResolvedValue(null);
 
-    await expect(handler.execute(new DeleteUserCommand('123'))).rejects.toThrow(
-      NotFoundException,
-    );
+    const result = await handler.execute(new DeleteUserCommand('123'));
+
+    expect(result.isErr()).toBe(true);
+
+    if (result.isErr()) {
+      expect(result.error).toBe(UserError.NOT_FOUND);
+    }
+
     expect(mockRepository.deleteOneUser).toHaveBeenCalledWith('123');
   });
 
   it('should delete one user', async () => {
     const user = {
-      id: '123',
+      _id: '123',
       username: 'Mheg',
+      role: UserRole.ADMIN,
     };
+
     mockRepository.deleteOneUser.mockResolvedValue(user);
 
     const result = await handler.execute(new DeleteUserCommand('123'));
 
-    expect(result).toEqual(user);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(user);
+    }
+
     expect(mockRepository.deleteOneUser).toHaveBeenCalledWith('123');
   });
 });

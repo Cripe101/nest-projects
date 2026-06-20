@@ -6,6 +6,9 @@ import {
   type UserRepositoryPort,
 } from '../../ports/user.repository.port';
 import { Inject } from '@nestjs/common';
+import { Result, err, ok } from '@core/interfaces/result';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
+import { UserError } from '@modules/user/domain/errors/user.error';
 
 @QueryHandler(GetUserQuery)
 export class GetUserHandler implements IQueryHandler<GetUserQuery> {
@@ -14,15 +17,15 @@ export class GetUserHandler implements IQueryHandler<GetUserQuery> {
     private readonly repository: UserRepositoryPort,
   ) {}
 
-  async execute(query: GetUserQuery) {
+  async execute(query: GetUserQuery): Promise<Result<UserEntity, UserError>> {
     const { id } = query;
 
     const user = await this.repository.getOneUser(id);
 
     if (!user) {
-      throw new NotFoundException(`User not found`);
+      return err(UserError.NOT_FOUND);
     }
 
-    return user;
+    return ok(user);
   }
 }

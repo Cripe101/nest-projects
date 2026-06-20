@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { GetUsersHandler } from './get-users.handler';
 import { USER_REPOSITORY } from '../../ports/user.repository.port';
+import { UserRole } from '@core/constants/user-role.enum';
 
 describe('GetUsersHanlder', () => {
   let handler: GetUsersHandler;
@@ -28,12 +29,14 @@ describe('GetUsersHanlder', () => {
   it('should return all users in the repository', async () => {
     const users = [
       {
-        id: '123',
+        _id: '123',
         username: 'Mheg',
+        role: UserRole.ADMIN,
       },
       {
-        id: '1234',
+        _id: '1234',
         username: 'Ryan',
+        role: UserRole.ADMIN,
       },
     ];
 
@@ -41,7 +44,11 @@ describe('GetUsersHanlder', () => {
 
     const result = await handler.execute();
 
-    expect(result).toEqual(users);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(users);
+    }
     expect(mockRepository.getAllUsers).toHaveBeenCalled();
   });
 });

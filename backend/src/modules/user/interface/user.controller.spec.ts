@@ -1,7 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { UserRole } from '@core/constants/user-role.enum';
+import { ok, err } from '@core/interfaces/result';
+import { UserError } from '@modules/user/domain/errors/user.error';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -35,16 +38,29 @@ describe('UserController', () => {
       role: UserRole.ADMIN,
     };
 
-    const createdUser = {
-      _id: '123',
-      ...dto,
-    };
-
-    mockCommandBus.execute.mockResolvedValue(createdUser);
+    mockCommandBus.execute.mockResolvedValue(ok('123'));
 
     const result = await controller.createUser(dto);
 
-    expect(result).toEqual(createdUser);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toBe('123');
+    }
+
+    expect(mockCommandBus.execute).toHaveBeenCalled();
+  });
+
+  it('should throw ConflictException when username already exists', async () => {
+    const dto = {
+      username: 'Mheg',
+      password: 'password',
+      role: UserRole.ADMIN,
+    };
+
+    mockCommandBus.execute.mockResolvedValue(err(UserError.DUPLICATE_USERNAME));
+
+    await expect(controller.createUser(dto)).rejects.toThrow(ConflictException);
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -60,13 +76,44 @@ describe('UserController', () => {
       role: UserRole.ADMIN,
     };
 
-    mockCommandBus.execute.mockResolvedValue(updatedUser);
+    mockCommandBus.execute.mockResolvedValue(ok(updatedUser));
 
-    const result = await controller.updateUser('123', {
-      ...dto,
-    });
+    const result = await controller.updateUser('123', { ...dto });
 
-    expect(result).toEqual(updatedUser);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(updatedUser);
+    }
+
+    expect(mockCommandBus.execute).toHaveBeenCalled();
+  });
+
+  it('should throw ConflictException when updating to an existing username', async () => {
+    const dto = {
+      username: 'Mheg',
+      role: UserRole.ADMIN,
+    };
+
+    mockCommandBus.execute.mockResolvedValue(err(UserError.DUPLICATE_USERNAME));
+
+    await expect(controller.updateUser('123', dto)).rejects.toThrow(
+      ConflictException,
+    );
+    expect(mockCommandBus.execute).toHaveBeenCalled();
+  });
+
+  it('should throw NotFoundException when updating a non-existent user', async () => {
+    const dto = {
+      username: 'Mheg',
+      role: UserRole.ADMIN,
+    };
+
+    mockCommandBus.execute.mockResolvedValue(err(UserError.NOT_FOUND));
+
+    await expect(controller.updateUser('123', dto)).rejects.toThrow(
+      NotFoundException,
+    );
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -74,13 +121,28 @@ describe('UserController', () => {
     const deletedUser = {
       _id: '123',
       username: 'Mheg',
-      role: 'cashier',
+      role: UserRole.ADMIN,
     };
-    mockCommandBus.execute.mockResolvedValue(deletedUser);
+
+    mockCommandBus.execute.mockResolvedValue(ok(deletedUser));
 
     const result = await controller.deleteUser('123');
 
-    expect(result).toEqual(deletedUser);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toBe('123');
+    }
+
+    expect(mockCommandBus.execute).toHaveBeenCalled();
+  });
+
+  it('should throw NotFoundException when deleting a non-existent user', async () => {
+    mockCommandBus.execute.mockResolvedValue(err(UserError.NOT_FOUND));
+
+    await expect(controller.deleteUser('123')).rejects.toThrow(
+      NotFoundException,
+    );
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -89,15 +151,19 @@ describe('UserController', () => {
       {
         _id: '123',
         username: 'Mheg',
-        role: 'admin',
+        role: UserRole.ADMIN,
       },
     ];
 
-    mockQueryBus.execute.mockResolvedValue(users);
+    mockQueryBus.execute.mockResolvedValue(ok(users));
 
     const result = await controller.getUsers();
 
-    expect(result).toEqual(users);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(users);
+    }
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 
@@ -105,14 +171,18 @@ describe('UserController', () => {
     const user = {
       _id: '123',
       username: 'Mheg',
-      role: 'admin',
+      role: UserRole.ADMIN,
     };
 
-    mockQueryBus.execute.mockResolvedValue(user);
+    mockQueryBus.execute.mockResolvedValue(ok(user));
 
     const result = await controller.getUser('123');
 
-    expect(result).toEqual(user);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(user);
+    }
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 
@@ -120,14 +190,18 @@ describe('UserController', () => {
     const user = {
       _id: '123',
       username: 'Mheg',
-      role: 'admin',
+      role: UserRole.ADMIN,
     };
 
-    mockQueryBus.execute.mockResolvedValue(user);
+    mockQueryBus.execute.mockResolvedValue(ok(user));
 
     const result = await controller.getUserByUsername('Mheg');
 
-    expect(result).toEqual(user);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(user);
+    }
     expect(mockQueryBus.execute).toHaveBeenCalled();
   });
 });

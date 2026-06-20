@@ -1,8 +1,9 @@
-import { NotFoundException } from '@nestjs/common';
 import { GetUserHandler } from './get-user.handler';
 import { GetUserQuery } from './get-user.query';
 import { Test } from '@nestjs/testing';
 import { USER_REPOSITORY } from '../../ports/user.repository.port';
+import { UserError } from '@modules/user/domain/errors/user.error';
+import { UserRole } from '@core/constants/user-role.enum';
 
 describe('GetUserHandler', () => {
   let handler: GetUserHandler;
@@ -27,25 +28,37 @@ describe('GetUserHandler', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw NotFoundException when user does not exist', async () => {
+  it('should return NOT_FOUND when user does not exist', async () => {
     mockRepository.getOneUser.mockResolvedValue(null);
 
-    await expect(handler.execute(new GetUserQuery('123'))).rejects.toThrow(
-      NotFoundException,
-    );
+    const result = await handler.execute(new GetUserQuery('123'));
+
+    expect(result.isErr()).toBe(true);
+
+    if (result.isErr()) {
+      expect(result.error).toBe(UserError.NOT_FOUND);
+    }
+
+    expect(mockRepository.getOneUser).toHaveBeenCalledWith('123');
   });
 
   it('should return a user', async () => {
     const user = {
-      id: '123',
-      username: 'mheg',
+      _id: '123',
+      username: 'Mheg',
+      role: UserRole.ADMIN,
     };
 
     mockRepository.getOneUser.mockResolvedValue(user);
 
     const result = await handler.execute(new GetUserQuery('123'));
 
-    expect(result).toEqual(user);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(user);
+    }
+
     expect(mockRepository.getOneUser).toHaveBeenCalledWith('123');
   });
 });

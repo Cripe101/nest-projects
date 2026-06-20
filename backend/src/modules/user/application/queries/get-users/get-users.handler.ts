@@ -5,6 +5,8 @@ import {
   type UserRepositoryPort,
 } from '../../ports/user.repository.port';
 import { Inject } from '@nestjs/common';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
+import { Result, ok } from '@core/interfaces/result';
 
 @QueryHandler(GetUsersQuery)
 export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
@@ -13,7 +15,9 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
     private readonly repository: UserRepositoryPort,
   ) {}
 
-  async execute() {
-    return await this.repository.getAllUsers();
+  async execute(): Promise<Result<UserEntity[], null>> {
+    const result = await this.repository.getAllUsers();
+
+    return ok(result);
   }
 }

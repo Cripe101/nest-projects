@@ -1,4 +1,6 @@
+import { Result } from '@core/interfaces/result';
 import { UserEntity } from '../../domain/entities/user.entity';
+import { UserError } from '@modules/user/domain/errors/user.error';
 
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY');
 

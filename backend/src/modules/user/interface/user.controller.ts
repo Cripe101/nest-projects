@@ -1,8 +1,10 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -20,6 +22,8 @@ import { RolesGuard } from '@core/guard/roles.guard';
 import { Roles } from '@core/decorators/roles.decorator';
 import { UserRole } from '@core/constants/user-role.enum';
 import { DeleteUserCommand } from '../application/commands/delete-user/delete-user.command';
+import { ok } from '@core/interfaces/result';
+import { UserError } from '@modules/user/domain/errors/user.error';
 
 @Controller('users')
 export class UserController {
@@ -32,25 +36,50 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async createUser(@Body() dto: CreateUserDto) {
-    return this.commandBus.execute(
+    const result = await this.commandBus.execute(
       new CreateUserCommand(dto.username, dto.password, dto.role),
     );
+
+    if (result.isErr()) {
+      throw new ConflictException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    return this.commandBus.execute(
+    const result = await this.commandBus.execute(
       new UpdateUserCommand(id, dto.username, dto.role),
     );
+
+    if (result.isErr()) {
+      if (result.error === UserError.DUPLICATE_USERNAME) {
+        throw new ConflictException(result.error);
+      }
+
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async deleteUser(@Param('id') id: string) {
-    return this.commandBus.execute(new DeleteUserCommand(id));
+    const result = await this.commandBus.execute(new DeleteUserCommand(id));
+
+    if (result.isErr()) {
+      if (result.error === UserError.NOT_FOUND) {
+        throw new NotFoundException(result.err);
+      }
+      throw new ConflictException(result.err);
+    }
+
+    return ok(result.value._id);
   }
 
   @Get()
@@ -64,13 +93,27 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async getUser(@Param('id') id: string) {
-    return this.queryBus.execute(new GetUserQuery(id));
+    const result = await this.queryBus.execute(new GetUserQuery(id));
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Get('username/:username')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async getUserByUsername(@Param('username') username: string) {
-    return this.queryBus.execute(new GetUserByUsernameQuery(username));
+    const result = await this.queryBus.execute(
+      new GetUserByUsernameQuery(username),
+    );
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 }

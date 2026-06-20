@@ -24,7 +24,6 @@ export class UserRepository implements UserRepositoryPort {
       createdUser._id.toString(),
       createdUser.username,
       createdUser.role,
-      createdUser.password,
     );
   }
 

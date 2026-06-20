@@ -1,9 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { CreateUserHandler } from './create-user.handler';
-import { NotAcceptableException } from '@nestjs/common';
 import { CreateUserCommand } from './create-user.command';
 import { UserRole } from '@core/constants/user-role.enum';
 import { USER_REPOSITORY } from '../../ports/user.repository.port';
+import { UserError } from '@modules/user/domain/errors/user.error';
 
 describe('CreateUserHandler', () => {
   let handler: CreateUserHandler;
@@ -29,18 +29,24 @@ describe('CreateUserHandler', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw NotAcceptableException when username already exists', async () => {
+  it('should return DUPLICATE_USERNAME when username already exists', async () => {
     mockRepository.getUserByUsername.mockResolvedValue({
-      id: '1',
+      _id: '1',
       username: 'Mheg',
     });
 
-    await expect(
-      handler.execute(
-        new CreateUserCommand('Mheg', 'password', UserRole.ADMIN),
-      ),
-    ).rejects.toThrow(NotAcceptableException);
+    const result = await handler.execute(
+      new CreateUserCommand('Mheg', 'password', UserRole.ADMIN),
+    );
+
+    expect(result.isErr()).toBe(true);
+
+    if (result.isErr()) {
+      expect(result.error).toBe(UserError.DUPLICATE_USERNAME);
+    }
+
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
+    expect(mockRepository.create).not.toHaveBeenCalled();
   });
 
   it('should create a user', async () => {
@@ -49,8 +55,8 @@ describe('CreateUserHandler', () => {
     const user = {
       _id: '123',
       username: 'Mheg',
-      password: 'password',
-      role: 'admin',
+      password: 'hashedPassword',
+      role: UserRole.ADMIN,
     };
 
     mockRepository.create.mockResolvedValue(user);
@@ -59,7 +65,12 @@ describe('CreateUserHandler', () => {
       new CreateUserCommand('Mheg', 'password', UserRole.ADMIN),
     );
 
-    expect(result).toEqual(user);
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(user._id);
+    }
+
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
     expect(mockRepository.create).toHaveBeenCalled();
   });

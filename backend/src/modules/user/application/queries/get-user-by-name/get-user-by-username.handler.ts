@@ -5,6 +5,9 @@ import {
   USER_REPOSITORY,
   type UserRepositoryPort,
 } from '../../ports/user.repository.port';
+import { Result, err, ok } from '@core/interfaces/result';
+import { UserEntity } from '@modules/user/domain/entities/user.entity';
+import { UserError } from '@modules/user/domain/errors/user.error';
 
 @QueryHandler(GetUserByUsernameQuery)
 export class GetUserByUsernameHandler {
@@ -13,14 +16,16 @@ export class GetUserByUsernameHandler {
     private readonly repository: UserRepositoryPort,
   ) {}
 
-  async execute(query: GetUserByUsernameQuery) {
+  async execute(
+    query: GetUserByUsernameQuery,
+  ): Promise<Result<UserEntity, UserError>> {
     const { username } = query;
     const user = await this.repository.getUserByUsername(username);
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      return err(UserError.NOT_FOUND);
     }
 
-    return user;
+    return ok(user);
   }
 }
