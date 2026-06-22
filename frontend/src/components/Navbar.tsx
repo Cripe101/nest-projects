@@ -17,7 +17,7 @@ const Navbar = () => {
       >
         {isOpen ? <IoMdClose size={30} /> : <CiMenuBurger size={30} />}
       </section>
-      <section className="hidden fixed z-2 bg-white py-5 md:flex flex-col justify-between h-full font-bold font-sans">
+      <section className="hidden fixed z-2 bg-slate-50 py-5 md:flex flex-col justify-between h-full font-bold font-sans">
         <section className="grid gap-3">
           <section className="block text-xl md:text-2xl font-serif font-bold text-blue-700 shadow px-6 py-2.5">
             Profit Tracker

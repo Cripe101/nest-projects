@@ -10,5 +10,5 @@ export const createUser = async (data: IUserPost) => {
 export const getAllUsers = async () => {
   const response = await apiClient.get("/users");
 
-  return response.data;
+  return response.data.value;
 };

@@ -41,7 +41,7 @@ const Dashboard = () => {
 
   return (
     <div className="">
-      <div className="mb-5">
+      <div className="">
         <section className="p-5.5 shadow">
           <h1 className="text-xl font-bold">Dashboard</h1>
         </section>

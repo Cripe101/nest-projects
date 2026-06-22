@@ -5,6 +5,9 @@
     "lib": ["ES2023"],
     "module": "esnext",
     "types": ["node"],
+    // "module": "NodeNext",
+    // "moduleResolution": "NodeNext",
+    // "target": "ES2022",
     "skipLibCheck": true,
 
     /* Bundler mode */

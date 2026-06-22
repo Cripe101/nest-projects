@@ -21,7 +21,7 @@ export const updateOneInventory = async ({
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  return response.data;
+  return response.data.value;
 };
 
 export const addInventoryStock = async (id: string, quantity: number) => {
@@ -37,7 +37,7 @@ export const addInventoryStock = async (id: string, quantity: number) => {
     },
   );
 
-  return response.data;
+  return response.data.value;
 };
 
 export const deleteOneInventory = async (id: string) => {
@@ -45,17 +45,17 @@ export const deleteOneInventory = async (id: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  return response.data;
+  return response.data.value;
 };
 
 export const getAllInventory = async () => {
   const response = await apiClient.get("/inventories");
 
-  return response.data;
+  return response.data.value;
 };
 
 export const getOneInventory = async (id: string) => {
   const response = await apiClient.get("/inventories/" + id);
 
-  return response.data;
+  return response.data.value;
 };

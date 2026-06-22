@@ -21,8 +21,8 @@ const AddUser = () => {
       toast.success("User added successfully");
       navigate("/user");
     },
-    onError: (err) => {
-      toast.error(err.message);
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message);
     },
   });
 
