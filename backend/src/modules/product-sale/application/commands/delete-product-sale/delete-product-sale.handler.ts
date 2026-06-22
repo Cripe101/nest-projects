@@ -6,6 +6,8 @@ import {
 } from '../../ports/product-sale.port';
 import { Inject, NotFoundException } from '@nestjs/common';
 import { ProductSaleEntity } from '@modules/product-sale/domain/entities/product-sale.entity';
+import { Result, ok, err } from '@core/interfaces/result';
+import { ProductSaleError } from '@modules/product-sale/domain/errors/product-sale.error';
 
 @CommandHandler(DeleteProductSaleCommand)
 export class DeleteProductSaleHandler implements ICommandHandler<DeleteProductSaleCommand> {
@@ -16,14 +18,14 @@ export class DeleteProductSaleHandler implements ICommandHandler<DeleteProductSa
 
   async execute(
     command: DeleteProductSaleCommand,
-  ): Promise<ProductSaleEntity | null> {
+  ): Promise<Result<string, ProductSaleError>> {
     const { _id } = command;
-    const product = await this.respository.deleteOneProductSale(_id);
+    const sale = await this.respository.deleteOneProductSale(_id);
 
-    if (!product) {
-      throw new NotFoundException('Sale not found');
+    if (!sale) {
+      return err(ProductSaleError.NOT_FOUND);
     }
 
-    return product;
+    return ok(sale._id as string);
   }
 }

@@ -6,6 +6,8 @@ import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
+import { Result, ok, err } from '@core/interfaces/result';
+import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 
 @CommandHandler(UpdateInventoryCommand)
 export class UpdateInventoryHandler implements ICommandHandler<UpdateInventoryCommand> {
@@ -14,7 +16,9 @@ export class UpdateInventoryHandler implements ICommandHandler<UpdateInventoryCo
     private readonly repository: InventoryRepositoryPort,
   ) {}
 
-  async execute(command: UpdateInventoryCommand): Promise<any> {
+  async execute(
+    command: UpdateInventoryCommand,
+  ): Promise<Result<string, InventoryError>> {
     const { _id, productId, minimumStock, createdBy, currentStock } = command;
 
     const inventoryData = new InventoryEntity(
@@ -31,9 +35,9 @@ export class UpdateInventoryHandler implements ICommandHandler<UpdateInventoryCo
     );
 
     if (!inventory) {
-      throw new NotFoundException('Product not found in inventory');
+      return err(InventoryError.NOT_FOUND);
     }
 
-    return inventory;
+    return ok(inventory?._id as string);
   }
 }

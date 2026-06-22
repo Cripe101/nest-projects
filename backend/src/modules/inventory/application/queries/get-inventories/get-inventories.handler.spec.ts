@@ -1,15 +1,12 @@
 import { Test } from '@nestjs/testing';
 
 import { GetInventoriesHandler } from './get-inventories.handler';
-import {
-  INVENTORY_REPOSITORY,
-  InventoryRepositoryPort,
-} from '../../ports/inventory.repository.port';
+import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
 
 describe('GetInventoriesHandler', () => {
   let handler: GetInventoriesHandler;
 
-  const mockRepository: Partial<InventoryRepositoryPort> = {
+  const mockRepository = {
     getAllInventories: jest.fn(),
   };
 
@@ -47,26 +44,14 @@ describe('GetInventoriesHandler', () => {
       },
     ];
 
-    (mockRepository.getAllInventories as jest.Mock).mockResolvedValue(
-      inventories,
-    );
+    mockRepository.getAllInventories.mockResolvedValue(inventories);
 
     const result = await handler.execute();
 
-    expect(result).toEqual([
-      {
-        _id: 'inventory-1',
-        productId: 'product-1',
-        currentStock: 100,
-        minimumStock: 10,
-      },
-      {
-        _id: 'inventory-2',
-        productId: 'product-2',
-        currentStock: 200,
-        minimumStock: 20,
-      },
-    ]);
+    expect(result.isOk()).toEqual(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual(inventories);
+    }
     expect(mockRepository.getAllInventories).toHaveBeenCalled();
   });
 });

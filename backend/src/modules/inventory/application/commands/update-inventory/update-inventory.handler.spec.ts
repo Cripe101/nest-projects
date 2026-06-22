@@ -3,15 +3,12 @@ import { NotFoundException } from '@nestjs/common';
 
 import { UpdateInventoryHandler } from './update-inventory.handler';
 import { UpdateInventoryCommand } from './update-inventory.command';
-import {
-  INVENTORY_REPOSITORY,
-  InventoryRepositoryPort,
-} from '../../ports/inventory.repository.port';
+import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
 
 describe('UpdateInventoryHandler', () => {
   let handler: UpdateInventoryHandler;
 
-  const mockRepository: Partial<InventoryRepositoryPort> = {
+  const mockRepository = {
     updateOneInventory: jest.fn(),
   };
 
@@ -40,9 +37,7 @@ describe('UpdateInventoryHandler', () => {
       createdBy: 'user-id',
     };
 
-    (mockRepository.updateOneInventory as jest.Mock).mockResolvedValue(
-      updatedInventory,
-    );
+    mockRepository.updateOneInventory.mockResolvedValue(updatedInventory);
 
     const result = await handler.execute(
       new UpdateInventoryCommand(
@@ -54,24 +49,27 @@ describe('UpdateInventoryHandler', () => {
       ),
     );
 
-    expect(result).toEqual(updatedInventory);
+    expect(result.isOk()).toEqual(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual('inventory-id');
+    }
     expect(mockRepository.updateOneInventory).toHaveBeenCalled();
   });
 
   it('should throw NotFoundException when inventory does not exist', async () => {
-    (mockRepository.updateOneInventory as jest.Mock).mockResolvedValue(null);
+    mockRepository.updateOneInventory.mockResolvedValue(null);
 
-    await expect(
-      handler.execute(
-        new UpdateInventoryCommand(
-          'inventory-id',
-          'product-id',
-          200,
-          20,
-          'user-id',
-        ),
+    const result = await handler.execute(
+      new UpdateInventoryCommand(
+        'inventory-id',
+        'product-id',
+        200,
+        20,
+        'user-id',
       ),
-    ).rejects.toThrow(NotFoundException);
+    );
+
+    expect(result.isErr()).toEqual(true);
     expect(mockRepository.updateOneInventory).toHaveBeenCalled();
   });
 });

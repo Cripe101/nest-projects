@@ -15,7 +15,10 @@ describe('CreateProductHandler', () => {
     const module = await Test.createTestingModule({
       providers: [
         CreateProductHandler,
-        { provide: PRODUCT_REPOSITORY, useValue: mockRepository },
+        {
+          provide: PRODUCT_REPOSITORY,
+          useValue: mockRepository,
+        },
       ],
     }).compile();
 
@@ -25,29 +28,37 @@ describe('CreateProductHandler', () => {
   });
 
   it('should create a product', async () => {
-    const product = new ProductEntity(
-      null,
-      'Biscuit',
-      'Snack',
-      '6a226ef26b64a0e432214543',
-      8,
-      10,
-      'sample',
+    const command = new CreateProductCommand(
+      'Coke',
+      'Drinks',
+      'user-id',
+      20,
+      25,
+      'Softdrink',
+      'image.jpg',
     );
+
+    const product = new ProductEntity(
+      '123',
+      'Coke',
+      'Drinks',
+      'user-id',
+      20,
+      25,
+      'Softdrink',
+      'image.jpg',
+    );
+
     mockRepository.create.mockResolvedValue(product);
 
-    const result = await handler.execute(
-      new CreateProductCommand(
-        'Biscuit',
-        'Snack',
-        '6a226ef26b64a0e432214543',
-        8,
-        10,
-        'sample',
-      ),
-    );
+    const result = await handler.execute(command);
 
-    expect(result).toEqual(product);
-    expect(mockRepository.create).toHaveBeenCalled();
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(product);
+    }
+
+    expect(mockRepository.create).toHaveBeenCalledTimes(1);
   });
 });

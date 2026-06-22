@@ -41,16 +41,19 @@ describe('GetProductSaleHandler', () => {
 
     const result = await handler.execute(new GetProductSaleQuery('sale-id'));
 
-    expect(result).toEqual(sale);
+    expect(result.isOk()).toEqual(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual(sale);
+    }
     expect(mockRepository.getOneProductSale).toHaveBeenCalledWith('sale-id');
   });
 
-  it('should throw NotFoundException when sale does not exist', async () => {
+  it('should return ProductSaleError.NOT_FOUND when sale does not exist', async () => {
     mockRepository.getOneProductSale.mockResolvedValue(null);
 
-    await expect(
-      handler.execute(new GetProductSaleQuery('sale-id')),
-    ).rejects.toThrow(NotFoundException);
+    const result = await handler.execute(new GetProductSaleQuery('sale-id'));
+
+    expect(result.isErr()).toEqual(true);
     expect(mockRepository.getOneProductSale).toHaveBeenCalledWith('sale-id');
   });
 });

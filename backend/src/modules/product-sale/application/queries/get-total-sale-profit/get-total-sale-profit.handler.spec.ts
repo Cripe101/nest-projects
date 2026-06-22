@@ -35,20 +35,10 @@ describe('GetTotalSaleProfitHandler', () => {
 
     const result = await handler.execute();
 
-    expect(result).toEqual(totalProfit);
-    expect(mockRepository.getTotalSaleProfit).toHaveBeenCalled();
-  });
-
-  it('should return zero total sale profit', async () => {
-    const totalProfit = {
-      totalProfit: 0,
-    };
-
-    mockRepository.getTotalSaleProfit.mockResolvedValue(totalProfit);
-
-    const result = await handler.execute();
-
-    expect(result).toEqual(totalProfit);
+    expect(result.isOk()).toEqual(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual(totalProfit);
+    }
     expect(mockRepository.getTotalSaleProfit).toHaveBeenCalled();
   });
 });

@@ -1,8 +1,10 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -25,6 +27,8 @@ import { RolesGuard } from '../../../core/guard/roles.guard';
 import { AddInventoryStockCommand } from '../application/commands/add-inventory-stock/add-inventory-stock.command';
 import { AddStockDto } from './dto/add-stock.dto';
 import { InventoryResponseDto } from './dto/inventory-response.dto';
+import { InventoryError } from '../domain/errors/inventory.error';
+import { ok } from '@core/interfaces/result';
 
 @Controller('inventories')
 export class InventoryController {
@@ -36,8 +40,11 @@ export class InventoryController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  createInventory(@Body() dto: InventoryDto, @Req() req: RequestWithUser) {
-    return this.commandBus.execute(
+  async createInventory(
+    @Body() dto: InventoryDto,
+    @Req() req: RequestWithUser,
+  ) {
+    const result = await this.commandBus.execute(
       new CreateInventoryCommand(
         dto.productId,
         req.user.id,
@@ -45,26 +52,38 @@ export class InventoryController {
         dto.minimumStock,
       ),
     );
+
+    if (result.isErr()) {
+      throw new ConflictException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Put('add-stock/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  addStock(@Param('id') id: string, @Body() dto: AddStockDto) {
-    return this.commandBus.execute(
+  async addStock(@Param('id') id: string, @Body() dto: AddStockDto) {
+    const result = await this.commandBus.execute(
       new AddInventoryStockCommand(id, dto.quantity),
     );
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  updateInventory(
+  async updateInventory(
     @Param('id') id: string,
     @Body() dto: UpdateInventoryDto,
     @Req() req: RequestWithUser,
   ) {
-    return this.commandBus.execute(
+    const result = await this.commandBus.execute(
       new UpdateInventoryCommand(
         id,
         dto.productId,
@@ -73,22 +92,44 @@ export class InventoryController {
         req.body._id,
       ),
     );
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  deleteInventory(@Param('id') id: string) {
-    return this.commandBus.execute(new DeleteInventoryCommand(id));
+  async deleteInventory(@Param('id') id: string) {
+    const result = await this.commandBus.execute(
+      new DeleteInventoryCommand(id),
+    );
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Get()
-  getAllInventory(): Promise<InventoryResponseDto[]> {
-    return this.queryBus.execute(new GetInventoriesQuery());
+  async getAllInventory() {
+    const result = await this.queryBus.execute(new GetInventoriesQuery());
+
+    return ok(result.value);
   }
 
   @Get(':id')
-  getOneInventory(@Param('id') id: string) {
-    return this.queryBus.execute(new GetInventoryQuery(id));
+  async getOneInventory(@Param('id') id: string) {
+    const result = await this.queryBus.execute(new GetInventoryQuery(id));
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 }

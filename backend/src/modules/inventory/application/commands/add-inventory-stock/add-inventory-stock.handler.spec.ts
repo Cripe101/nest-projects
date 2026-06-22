@@ -1,17 +1,14 @@
 import { Test } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
-
 import { AddInventoryStockHandler } from './add-inventory-stock.handler';
 import { AddInventoryStockCommand } from './add-inventory-stock.command';
-import {
-  INVENTORY_REPOSITORY,
-  InventoryRepositoryPort,
-} from '../../ports/inventory.repository.port';
+import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
+import { InventoryEntity } from '../../../domain/entities/inventory.entity';
+import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 
 describe('AddInventoryStockHandler', () => {
   let handler: AddInventoryStockHandler;
 
-  const mockRepository: Partial<InventoryRepositoryPort> = {
+  const mockRepository = {
     addStock: jest.fn(),
   };
 
@@ -32,29 +29,44 @@ describe('AddInventoryStockHandler', () => {
   });
 
   it('should add stock to inventory', async () => {
-    const inventory = {
-      _id: 'inventory-id',
-      productId: 'product-id',
-      currentStock: 150,
-      minimumStock: 10,
-    };
+    const command = new AddInventoryStockCommand('inventory-id', 50);
 
-    (mockRepository.addStock as jest.Mock).mockResolvedValue(inventory);
-
-    const result = await handler.execute(
-      new AddInventoryStockCommand('inventory-id', 50),
+    const inventory = new InventoryEntity(
+      'inventory-id',
+      'product-id',
+      'user-id',
+      10,
+      150,
     );
 
-    expect(result).toEqual(inventory);
+    mockRepository.addStock.mockResolvedValue(inventory);
+
+    const result = await handler.execute(command);
+
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toBe('Stock added');
+    }
+
+    expect(mockRepository.addStock).toHaveBeenCalledTimes(1);
     expect(mockRepository.addStock).toHaveBeenCalledWith('inventory-id', 50);
   });
 
-  it('should throw NotFoundException when inventory does not exist', async () => {
-    (mockRepository.addStock as jest.Mock).mockResolvedValue(null);
+  it('should return InventoryError.NOT_FOUND when inventory does not exist', async () => {
+    const command = new AddInventoryStockCommand('inventory-id', 50);
 
-    await expect(
-      handler.execute(new AddInventoryStockCommand('inventory-id', 50)),
-    ).rejects.toThrow(NotFoundException);
+    mockRepository.addStock.mockResolvedValue(null);
+
+    const result = await handler.execute(command);
+
+    expect(result.isErr()).toBe(true);
+
+    if (result.isErr()) {
+      expect(result.error).toBe(InventoryError.NOT_FOUND);
+    }
+
+    expect(mockRepository.addStock).toHaveBeenCalledTimes(1);
     expect(mockRepository.addStock).toHaveBeenCalledWith('inventory-id', 50);
   });
 });

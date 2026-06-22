@@ -6,6 +6,7 @@ import {
 } from '../../ports/product-sale.port';
 import { Inject } from '@nestjs/common';
 import { ProductSaleEntity } from '@modules/product-sale/domain/entities/product-sale.entity';
+import { Result, ok } from '@core/interfaces/result';
 
 @QueryHandler(GetProductSalesQuery)
 export class GetProductSalesHandler implements IQueryHandler<GetProductSalesQuery> {
@@ -14,7 +15,9 @@ export class GetProductSalesHandler implements IQueryHandler<GetProductSalesQuer
     private readonly repository: ProductSaleRepositoryPort,
   ) {}
 
-  async execute(): Promise<ProductSaleEntity[]> {
-    return this.repository.getAllProductSales();
+  async execute(): Promise<Result<ProductSaleEntity[], null>> {
+    const sales = await this.repository.getAllProductSales();
+
+    return ok(sales);
   }
 }

@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { UpdateProductHandler } from './update-product.handler';
-import { NotFoundException } from '@nestjs/common';
 import { UpdateProductCommand } from './update-product.command';
 import { PRODUCT_REPOSITORY } from '../../ports/product.repository.port';
+import { ProductEntity } from '@modules/product/domain/entities/product.entity';
+import { ProductError } from '@modules/product/domain/errors/product.error';
 
 describe('UpdateProductHandler', () => {
   let handler: UpdateProductHandler;
@@ -15,7 +16,10 @@ describe('UpdateProductHandler', () => {
     const module = await Test.createTestingModule({
       providers: [
         UpdateProductHandler,
-        { provide: PRODUCT_REPOSITORY, useValue: mockRepository },
+        {
+          provide: PRODUCT_REPOSITORY,
+          useValue: mockRepository,
+        },
       ],
     }).compile();
 
@@ -24,51 +28,77 @@ describe('UpdateProductHandler', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw an NotFoundException when no product is found', async () => {
-    mockRepository.updateOneProduct.mockResolvedValue(null);
-
-    await expect(
-      handler.execute(
-        new UpdateProductCommand(
-          '6a226ef26b64a0e432214543',
-          'Biscuit',
-          'Snack',
-          'userId01',
-          8,
-          10,
-          'sample',
-        ),
-      ),
-    ).rejects.toThrow(NotFoundException);
-    expect(mockRepository.updateOneProduct).toHaveBeenCalled();
-  });
-
-  it('should update one product', async () => {
-    const product = {
-      _id: '6a226ef26b64a0e432214543',
-      productName: 'Biscuit',
-      productCategory: 'Snack',
-      addedBy: 'userId01',
-      buyingPrice: 8,
-      sellingPrice: 10,
-      imageUrl: 'sample',
-    };
-
-    mockRepository.updateOneProduct.mockResolvedValue(product);
-
-    const result = await handler.execute(
-      new UpdateProductCommand(
-        '6a226ef26b64a0e432214543',
-        'Biscuit',
-        'Snack',
-        'userId01',
-        8,
-        10,
-        'sample',
-      ),
+  it('should update a product', async () => {
+    const command = new UpdateProductCommand(
+      '123',
+      'Coke Zero',
+      'Drinks',
+      'user-id',
+      20,
+      25,
+      'Softdrink Zero',
+      'image.jpg',
     );
 
-    expect(result).toEqual(product);
-    expect(mockRepository.updateOneProduct).toHaveBeenCalled();
+    const updatedProduct = new ProductEntity(
+      '123',
+      'Coke Zero',
+      'Drinks',
+      'user-id',
+      20,
+      25,
+      'Softdrink Zero',
+      'image.jpg',
+    );
+
+    mockRepository.updateOneProduct.mockResolvedValue(updatedProduct);
+
+    const result = await handler.execute(command);
+
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(updatedProduct);
+    }
+
+    expect(mockRepository.updateOneProduct).toHaveBeenCalledTimes(1);
+    expect(mockRepository.updateOneProduct).toHaveBeenCalledWith(
+      '123',
+      expect.objectContaining({
+        _id: '123',
+        productName: 'Coke Zero',
+        productCategory: 'Drinks',
+        addedBy: 'user-id',
+      }),
+    );
+  });
+
+  it('should return ProductError.NOT_FOUND when product does not exist', async () => {
+    const command = new UpdateProductCommand(
+      '123',
+      'Coke Zero',
+      'Drinks',
+      'user-id',
+      20,
+      25,
+      'Softdrink Zero',
+      'image.jpg',
+    );
+
+    mockRepository.updateOneProduct.mockResolvedValue(null);
+
+    const result = await handler.execute(command);
+
+    expect(result.isErr()).toBe(true);
+
+    if (result.isErr()) {
+      expect(result.error).toEqual(ProductError.NOT_FOUND);
+    }
+
+    expect(mockRepository.updateOneProduct).toHaveBeenCalledTimes(1);
+    expect(mockRepository.updateOneProduct).toHaveBeenCalledWith(
+      '123',
+      expect.any(ProductEntity),
+    );
   });
 });

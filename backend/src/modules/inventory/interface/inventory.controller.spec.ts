@@ -1,6 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { InventoryController } from './inventory.controller';
+import { ok, err } from '@core/interfaces/result';
+import { InventoryError } from '../domain/errors/inventory.error';
 
 describe('InventoryController', () => {
   let controller: InventoryController;
@@ -17,134 +20,208 @@ describe('InventoryController', () => {
     const module = await Test.createTestingModule({
       controllers: [InventoryController],
       providers: [
-        { provide: CommandBus, useValue: mockCommandBus },
-        { provide: QueryBus, useValue: mockQueryBus },
+        {
+          provide: CommandBus,
+          useValue: mockCommandBus,
+        },
+        {
+          provide: QueryBus,
+          useValue: mockQueryBus,
+        },
       ],
     }).compile();
 
-    controller = module.get(InventoryController);
+    controller = module.get<InventoryController>(InventoryController);
 
     jest.clearAllMocks();
   });
 
-  it('should create an inventory', async () => {
-    const dto = {
-      productId: 'product-id',
-      currentStock: 100,
-      minimumStock: 10,
-    };
+  describe('createInventory', () => {
+    it('should create inventory', async () => {
+      mockCommandBus.execute.mockResolvedValue(ok('123'));
 
-    const req = {
-      user: {
-        id: 'user-id',
-      },
-    };
-
-    const inventory = {
-      _id: 'inventory-id',
-      ...dto,
-      addedBy: req.user.id,
-    };
-
-    mockCommandBus.execute.mockResolvedValue(inventory);
-
-    const result = await controller.createInventory(dto, req as any);
-
-    expect(result).toEqual(inventory);
-    expect(mockCommandBus.execute).toHaveBeenCalled();
-  });
-
-  it('should add stock to inventory', async () => {
-    const dto = {
-      quantity: 50,
-    };
-
-    const inventory = {
-      _id: 'inventory-id',
-      currentStock: 150,
-    };
-
-    mockCommandBus.execute.mockResolvedValue(inventory);
-
-    const result = await controller.addStock('inventory-id', dto);
-
-    expect(result).toEqual(inventory);
-    expect(mockCommandBus.execute).toHaveBeenCalled();
-  });
-
-  it('should update inventory', async () => {
-    const dto = {
-      productId: 'product-id',
-      currentStock: 200,
-      minimumStock: 20,
-    };
-
-    const req = {
-      body: {
-        _id: 'user-id',
-      },
-    };
-
-    const updatedInventory = {
-      _id: 'inventory-id',
-      ...dto,
-    };
-
-    mockCommandBus.execute.mockResolvedValue(updatedInventory);
-
-    const result = await controller.updateInventory(
-      'inventory-id',
-      dto,
-      req as any,
-    );
-
-    expect(result).toEqual(updatedInventory);
-    expect(mockCommandBus.execute).toHaveBeenCalled();
-  });
-
-  it('should delete inventory', async () => {
-    const deletedInventory = {
-      _id: 'inventory-id',
-      productId: 'product-id',
-    };
-
-    mockCommandBus.execute.mockResolvedValue(deletedInventory);
-
-    const result = await controller.deleteInventory('inventory-id');
-
-    expect(result).toEqual(deletedInventory);
-    expect(mockCommandBus.execute).toHaveBeenCalled();
-  });
-
-  it('should return all inventories', async () => {
-    const inventories = [
-      {
-        _id: 'inventory-id',
+      const dto = {
         productId: 'product-id',
         currentStock: 100,
-      },
-    ];
+        minimumStock: 10,
+      };
 
-    mockQueryBus.execute.mockResolvedValue(inventories);
+      const req = {
+        user: {
+          id: 'user-id',
+        },
+      };
 
-    const result = await controller.getAllInventory();
+      const result = await controller.createInventory(dto as any, req as any);
 
-    expect(result).toEqual(inventories);
-    expect(mockQueryBus.execute).toHaveBeenCalled();
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toBe('123');
+      }
+
+      expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw ConflictException when inventory already exists', async () => {
+      mockCommandBus.execute.mockResolvedValue(
+        err(InventoryError.DUPLICATE_PRODUCT),
+      );
+
+      await expect(
+        controller.createInventory(
+          {} as any,
+          { user: { id: 'user-id' } } as any,
+        ),
+      ).rejects.toThrow(ConflictException);
+    });
   });
 
-  it('should return one inventory', async () => {
-    const inventory = {
-      _id: 'inventory-id',
-      productId: 'product-id',
-      currentStock: 100,
-    };
+  describe('addStock', () => {
+    it('should add stock', async () => {
+      mockCommandBus.execute.mockResolvedValue(ok('Stock added'));
 
-    mockQueryBus.execute.mockResolvedValue(inventory);
+      const result = await controller.addStock('123', {
+        quantity: 10,
+      });
 
-    const result = await controller.getOneInventory('inventory-id');
+      expect(result.isOk()).toBe(true);
 
-    expect(result).toEqual(inventory);
-    expect(mockQueryBus.execute).toHaveBeenCalled();
+      if (result.isOk()) {
+        expect(result.value).toBe('Stock added');
+      }
+
+      expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundException when inventory does not exist', async () => {
+      mockCommandBus.execute.mockResolvedValue(err(InventoryError.NOT_FOUND));
+
+      await expect(
+        controller.addStock('123', {
+          quantity: 10,
+        }),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('updateInventory', () => {
+    it('should update inventory', async () => {
+      mockCommandBus.execute.mockResolvedValue(ok('Inventory updated'));
+
+      const dto = {
+        productId: 'product-id',
+        currentStock: 100,
+        minimumStock: 10,
+      };
+
+      const req = {
+        body: {
+          _id: 'user-id',
+        },
+      };
+
+      const result = await controller.updateInventory(
+        '123',
+        dto as any,
+        req as any,
+      );
+
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toBe('Inventory updated');
+      }
+
+      expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundException when inventory is not found', async () => {
+      mockCommandBus.execute.mockResolvedValue(err(InventoryError.NOT_FOUND));
+
+      await expect(
+        controller.updateInventory(
+          '123',
+          {} as any,
+          { body: { _id: 'user-id' } } as any,
+        ),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('deleteInventory', () => {
+    it('should delete inventory', async () => {
+      mockCommandBus.execute.mockResolvedValue(ok('Inventory deleted'));
+
+      const result = await controller.deleteInventory('123');
+
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toBe('Inventory deleted');
+      }
+
+      expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundException when inventory does not exist', async () => {
+      mockCommandBus.execute.mockResolvedValue(err(InventoryError.NOT_FOUND));
+
+      await expect(controller.deleteInventory('123')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('getAllInventory', () => {
+    it('should return all inventories', async () => {
+      const inventories = [
+        {
+          _id: '123',
+          currentStock: 100,
+        },
+      ];
+
+      mockQueryBus.execute.mockResolvedValue(ok(inventories));
+
+      const result = await controller.getAllInventory();
+
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toEqual(inventories);
+      }
+
+      expect(mockQueryBus.execute).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getOneInventory', () => {
+    it('should return one inventory', async () => {
+      const inventory = {
+        _id: '123',
+        currentStock: 100,
+      };
+
+      mockQueryBus.execute.mockResolvedValue(ok(inventory));
+
+      const result = await controller.getOneInventory('123');
+
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toEqual(inventory);
+      }
+
+      expect(mockQueryBus.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundException when inventory does not exist', async () => {
+      mockQueryBus.execute.mockResolvedValue(err(InventoryError.NOT_FOUND));
+
+      await expect(controller.getOneInventory('123')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 });

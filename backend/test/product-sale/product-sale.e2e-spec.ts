@@ -39,7 +39,7 @@ describe('ProductSaleController (e2e)', () => {
         imageUrl: 'http://example.com/img.png',
       });
 
-    productId = productResponse.body._id;
+    productId = productResponse.body.value;
 
     const inventoryResponse = await request(app.getHttpServer())
       .post('/inventories')
@@ -50,7 +50,7 @@ describe('ProductSaleController (e2e)', () => {
         minimumStock: 10,
       });
 
-    inventoryId = inventoryResponse.body._id;
+    inventoryId = inventoryResponse.body.value;
   });
 
   afterAll(async () => {
@@ -66,10 +66,10 @@ describe('ProductSaleController (e2e)', () => {
         quantity: 2,
       });
 
-    expect(response.body).toBeDefined();
-    expect(response.body.productId).toEqual(productId);
+    saleId = response.body.value;
 
-    saleId = response.body._id;
+    expect(response.body).toBeDefined();
+    expect(response.body.value).toEqual(saleId);
   });
 
   it('should get all product sales', async () => {
@@ -77,8 +77,8 @@ describe('ProductSaleController (e2e)', () => {
       .get('/product-sales')
       .set('Authorization', `Bearer ${token}`);
 
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
+    expect(Array.isArray(response.body.value)).toBe(true);
+    expect(response.body.value.length).toBeGreaterThan(0);
   });
 
   it('should get one product sale', async () => {
@@ -86,8 +86,8 @@ describe('ProductSaleController (e2e)', () => {
       .get('/product-sales/' + saleId)
       .set('Authorization', `Bearer ${token}`);
 
-    expect(response.body).toBeDefined();
-    expect(response.body._id).toEqual(saleId);
+    expect(response.body.value).toBeDefined();
+    expect(response.body.value._id).toEqual(saleId);
   });
 
   it('should get total sales', async () => {
@@ -95,7 +95,7 @@ describe('ProductSaleController (e2e)', () => {
       .get('/product-sales/total-sale')
       .set('Authorization', `Bearer ${token}`);
 
-    expect(response.body).toHaveProperty('totalSale');
+    expect(response.body.value).toHaveProperty('totalSale');
   });
 
   it('should get total profit', async () => {
@@ -103,10 +103,14 @@ describe('ProductSaleController (e2e)', () => {
       .get('/product-sales/total-profit')
       .set('Authorization', `Bearer ${token}`);
 
-    expect(response.body).toHaveProperty('totalProfit');
+    expect(response.body.value).toHaveProperty('totalProfit');
   });
 
   it('should delete product sale', async () => {
+    const response = await request(app.getHttpServer())
+      .delete('/product-sales/' + saleId)
+      .set('Authorization', `Bearer ${token}`);
+
     await request(app.getHttpServer())
       .delete('/products/' + productId)
       .set('Authorization', `Bearer ${token}`);
@@ -115,10 +119,7 @@ describe('ProductSaleController (e2e)', () => {
       .delete('/inventories/' + inventoryId)
       .set('Authorization', `Bearer ${token}`);
 
-    const response = await request(app.getHttpServer())
-      .delete('/product-sales/' + saleId)
-      .set('Authorization', `Bearer ${token}`);
-
+    expect(response.body.value).toEqual(saleId);
     expect(response.body).toBeDefined();
   });
 });

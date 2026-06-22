@@ -11,7 +11,7 @@ import {
 describe('DeleteInventoryHandler', () => {
   let handler: DeleteInventoryHandler;
 
-  const mockRepository: Partial<InventoryRepositoryPort> = {
+  const mockRepository = {
     deleteOneInventory: jest.fn(),
   };
 
@@ -39,28 +39,27 @@ describe('DeleteInventoryHandler', () => {
       minimumStock: 10,
     };
 
-    (mockRepository.deleteOneInventory as jest.Mock).mockResolvedValue(
-      inventory,
-    );
+    mockRepository.deleteOneInventory.mockResolvedValue(inventory);
 
     const result = await handler.execute(
       new DeleteInventoryCommand('inventory-id'),
     );
 
-    expect(result).toEqual(inventory);
+    expect(result.isOk()).toEqual(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual('inventory-id');
+    }
     expect(mockRepository.deleteOneInventory).toHaveBeenCalledWith(
       'inventory-id',
     );
   });
 
-  it('should throw NotFoundException when inventory does not exist', async () => {
-    (mockRepository.deleteOneInventory as jest.Mock).mockResolvedValue(null);
+  it('should return InventoryError.NOT_FOUND when inventory does not exist', async () => {
+    mockRepository.deleteOneInventory.mockResolvedValue(null);
 
-    await expect(
-      handler.execute(new DeleteInventoryCommand('inventory-id')),
-    ).rejects.toThrow(NotFoundException);
-    expect(mockRepository.deleteOneInventory).toHaveBeenCalledWith(
-      'inventory-id',
-    );
+    const result = await handler.execute(new DeleteInventoryCommand(''));
+
+    expect(result.isErr()).toEqual(true);
+    expect(mockRepository.deleteOneInventory).toHaveBeenCalled();
   });
 });

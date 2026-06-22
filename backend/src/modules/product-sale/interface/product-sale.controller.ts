@@ -1,8 +1,10 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Req,
@@ -21,6 +23,8 @@ import { GetTotalSaleProfitQuery } from '../application/queries/get-total-sale-p
 import { GetTotalSaleQuery } from '../application/queries/get-total-sale/get-total-sale.query';
 import { GetProductSaleQuery } from '../application/queries/get-product-sale/get-product-sale.query';
 import { DeleteProductSaleCommand } from '../application/commands/delete-product-sale/delete-product-sale.command';
+import { ProductSaleError } from '../domain/errors/product-sale.error';
+import { ok } from '@core/interfaces/result';
 
 @Controller('product-sales')
 export class ProductSaleController {
@@ -32,40 +36,69 @@ export class ProductSaleController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.CASHIER, UserRole.ADMIN)
-  create(@Body() dto: CreateProductSaleDto, @Req() req: RequestWithUser) {
-    return this.commandBus.execute(
+  async create(@Body() dto: CreateProductSaleDto, @Req() req: RequestWithUser) {
+    const result = await this.commandBus.execute(
       new CreateProductSaleCommand(dto.productId, dto.quantity, req.user.id),
     );
+
+    if (result.isErr()) {
+      if (result.error === ProductSaleError.INSUFFECIENT_STOCK) {
+        throw new BadRequestException(result.error);
+      }
+
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Get('total-profit')
   @UseGuards(JwtAuthGuard)
-  getTotalSaleProfit() {
-    return this.queryBus.execute(new GetTotalSaleProfitQuery());
+  async getTotalSaleProfit() {
+    const result = await this.queryBus.execute(new GetTotalSaleProfitQuery());
+
+    return ok(result.value);
   }
 
   @Get('total-sale')
   @UseGuards(JwtAuthGuard)
-  getTotalSalet() {
-    return this.queryBus.execute(new GetTotalSaleQuery());
+  async getTotalSalet() {
+    const result = await this.queryBus.execute(new GetTotalSaleQuery());
+
+    return ok(result.value);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  getAllProductSales() {
-    return this.queryBus.execute(new GetProductSalesQuery());
+  async getAllProductSales() {
+    const result = await this.queryBus.execute(new GetProductSalesQuery());
+
+    return ok(result.value);
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  getOneProductSale(@Param('id') id: string) {
-    return this.queryBus.execute(new GetProductSaleQuery(id));
+  async getOneProductSale(@Param('id') id: string) {
+    const result = await this.queryBus.execute(new GetProductSaleQuery(id));
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.CASHIER, UserRole.ADMIN)
-  deleteOneProductSale(@Param('id') id: string) {
-    return this.commandBus.execute(new DeleteProductSaleCommand(id));
+  async deleteOneProductSale(@Param('id') id: string) {
+    const result = await this.commandBus.execute(
+      new DeleteProductSaleCommand(id),
+    );
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 }

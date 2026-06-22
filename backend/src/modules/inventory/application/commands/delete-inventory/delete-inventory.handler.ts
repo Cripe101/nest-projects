@@ -6,6 +6,8 @@ import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
+import { Result, err, ok } from '@core/interfaces/result';
+import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 
 @CommandHandler(DeleteInventoryCommand)
 export class DeleteInventoryHandler implements ICommandHandler<DeleteInventoryCommand> {
@@ -16,13 +18,13 @@ export class DeleteInventoryHandler implements ICommandHandler<DeleteInventoryCo
 
   async execute(
     command: DeleteInventoryCommand,
-  ): Promise<InventoryEntity | null> {
+  ): Promise<Result<string, InventoryError>> {
     const inventory = await this.repository.deleteOneInventory(command.id);
 
     if (!inventory) {
-      throw new NotFoundException('Product not found in inventory');
+      return err(InventoryError.NOT_FOUND);
     }
 
-    return inventory;
+    return ok(inventory?._id as string);
   }
 }

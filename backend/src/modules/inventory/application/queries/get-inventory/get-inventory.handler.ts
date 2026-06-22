@@ -6,6 +6,8 @@ import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
+import { Result, ok, err } from '@core/interfaces/result';
+import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 
 @QueryHandler(GetInventoryQuery)
 export class GetInventoryHandler implements IQueryHandler<GetInventoryQuery> {
@@ -14,13 +16,15 @@ export class GetInventoryHandler implements IQueryHandler<GetInventoryQuery> {
     private readonly repository: InventoryRepositoryPort,
   ) {}
 
-  async execute(query: GetInventoryQuery): Promise<InventoryEntity | null> {
+  async execute(
+    query: GetInventoryQuery,
+  ): Promise<Result<InventoryEntity, InventoryError>> {
     const inventory = await this.repository.getOneInventory(query.id);
 
     if (!inventory) {
-      throw new NotFoundException('Product not found in inventory');
+      return err(InventoryError.NOT_FOUND);
     }
 
-    return inventory;
+    return ok(inventory);
   }
 }

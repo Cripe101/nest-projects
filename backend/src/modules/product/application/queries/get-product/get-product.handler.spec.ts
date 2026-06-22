@@ -1,17 +1,14 @@
 import { Test } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
-
 import { GetProductHandler } from './get-product.handler';
 import { GetProductQuery } from './get-product.query';
-import {
-  PRODUCT_REPOSITORY,
-  ProductRepositoryPort,
-} from '../../ports/product.repository.port';
+import { PRODUCT_REPOSITORY } from '../../ports/product.repository.port';
+import { ProductEntity } from '@modules/product/domain/entities/product.entity';
+import { ProductError } from '@modules/product/domain/errors/product.error';
 
 describe('GetProductHandler', () => {
   let handler: GetProductHandler;
 
-  const mockRepository: Partial<ProductRepositoryPort> = {
+  const mockRepository = {
     getOneProduct: jest.fn(),
   };
 
@@ -32,29 +29,47 @@ describe('GetProductHandler', () => {
   });
 
   it('should return a product', async () => {
-    const product = {
-      _id: 'product-id',
-      productName: 'Coke',
-      productCategory: 'Drinks',
-      buyingPrice: 20,
-      sellingPrice: 25,
-    };
+    const query = new GetProductQuery('123');
 
-    (mockRepository.getOneProduct as jest.Mock).mockResolvedValue(product);
+    const product = new ProductEntity(
+      '123',
+      'Coke',
+      'Drinks',
+      'user-id',
+      20,
+      25,
+      'Softdrink',
+      'image.jpg',
+    );
 
-    const result = await handler.execute(new GetProductQuery('product-id'));
+    mockRepository.getOneProduct.mockResolvedValue(product);
 
-    expect(result).toEqual(product);
-    expect(mockRepository.getOneProduct).toHaveBeenCalledWith('product-id');
+    const result = await handler.execute(query);
+
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(product);
+    }
+
+    expect(mockRepository.getOneProduct).toHaveBeenCalledTimes(1);
+    expect(mockRepository.getOneProduct).toHaveBeenCalledWith('123');
   });
 
-  it('should throw NotFoundException when product does not exist', async () => {
-    (mockRepository.getOneProduct as jest.Mock).mockResolvedValue(null);
+  it('should return ProductError.NOT_FOUND when product does not exist', async () => {
+    const query = new GetProductQuery('123');
 
-    await expect(
-      handler.execute(new GetProductQuery('product-id')),
-    ).rejects.toThrow(NotFoundException);
+    mockRepository.getOneProduct.mockResolvedValue(null);
 
-    expect(mockRepository.getOneProduct).toHaveBeenCalledWith('product-id');
+    const result = await handler.execute(query);
+
+    expect(result.isErr()).toBe(true);
+
+    if (result.isErr()) {
+      expect(result.error).toEqual(ProductError.NOT_FOUND);
+    }
+
+    expect(mockRepository.getOneProduct).toHaveBeenCalledTimes(1);
+    expect(mockRepository.getOneProduct).toHaveBeenCalledWith('123');
   });
 });

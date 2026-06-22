@@ -7,6 +7,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -21,6 +22,7 @@ import { GetProductsQuery } from '../application/queries/get-products/get-produc
 import { GetProductQuery } from '../application/queries/get-product/get-product.query';
 import { UpdateProductCommand } from '../application/commands/update-product/update-product.command';
 import { DeleteProductCommand } from '../application/commands/delete-product/delete-product.command';
+import { ok } from '@core/interfaces/result';
 
 @Controller('products')
 export class ProductController {
@@ -32,8 +34,8 @@ export class ProductController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  create(@Body() dto: CreateProductDto, @Req() req: RequestWithUser) {
-    return this.commandBus.execute(
+  async create(@Body() dto: CreateProductDto, @Req() req: RequestWithUser) {
+    const result = await this.commandBus.execute(
       new CreateProductCommand(
         dto.productName,
         dto.productCategory,
@@ -44,27 +46,37 @@ export class ProductController {
         dto.imageUrl,
       ),
     );
+
+    return ok(result.value._id);
   }
 
   @Get()
-  getAllProducts() {
-    return this.queryBus.execute(new GetProductsQuery());
+  async getAllProducts() {
+    const result = await this.queryBus.execute(new GetProductsQuery());
+
+    return ok(result.value);
   }
 
   @Get(':id')
-  getOneProduct(@Param('id') id: string) {
-    return this.queryBus.execute(new GetProductQuery(id));
+  async getOneProduct(@Param('id') id: string) {
+    const result = await this.queryBus.execute(new GetProductQuery(id));
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value);
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  updateOneProduct(
+  async updateOneProduct(
     @Param('id') id: string,
     @Body() dto: UpdateProductDto,
     @Req() req: RequestWithUser,
   ) {
-    return this.commandBus.execute(
+    const result = await this.commandBus.execute(
       new UpdateProductCommand(
         id,
         dto.productName,
@@ -76,12 +88,24 @@ export class ProductController {
         dto.imageUrl,
       ),
     );
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value._id);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  deleteOneProduct(@Param('id') id: string) {
-    return this.commandBus.execute(new DeleteProductCommand(id));
+  async deleteOneProduct(@Param('id') id: string) {
+    const result = await this.commandBus.execute(new DeleteProductCommand(id));
+
+    if (result.isErr()) {
+      throw new NotFoundException(result.error);
+    }
+
+    return ok(result.value._id);
   }
 }

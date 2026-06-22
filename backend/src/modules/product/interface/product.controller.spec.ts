@@ -1,6 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { NotFoundException } from '@nestjs/common';
 import { ProductController } from './product.controller';
+import { ok, err } from '@core/interfaces/result';
 
 describe('ProductController', () => {
   let controller: ProductController;
@@ -17,117 +19,187 @@ describe('ProductController', () => {
     const module = await Test.createTestingModule({
       controllers: [ProductController],
       providers: [
-        { provide: CommandBus, useValue: mockCommandBus },
-        { provide: QueryBus, useValue: mockQueryBus },
+        {
+          provide: CommandBus,
+          useValue: mockCommandBus,
+        },
+        {
+          provide: QueryBus,
+          useValue: mockQueryBus,
+        },
       ],
     }).compile();
 
-    controller = module.get(ProductController);
+    controller = module.get<ProductController>(ProductController);
 
     jest.clearAllMocks();
   });
 
-  it('should create a product', async () => {
-    const dto = {
-      productName: 'Coke',
-      productCategory: 'Drinks',
-      buyingPrice: 20,
-      sellingPrice: 25,
-      description: 'Softdrink',
-      imageUrl: 'image.jpg',
-    };
+  describe('create', () => {
+    it('should create a product', async () => {
+      const dto = {
+        productName: 'Coke',
+        productCategory: 'Drinks',
+        buyingPrice: 20,
+        sellingPrice: 25,
+        description: 'Softdrink',
+        imageUrl: 'image.jpg',
+      };
 
-    const req = {
-      user: {
-        id: 'user-id',
-      },
-    };
+      const req = {
+        user: {
+          id: 'user-id',
+        },
+      };
 
-    const createdProduct = {
-      _id: '123',
-      ...dto,
-      addedBy: 'user-id',
-    };
+      const createdProduct = {
+        _id: '123',
+        ...dto,
+      };
 
-    mockCommandBus.execute.mockResolvedValue(createdProduct);
+      mockCommandBus.execute.mockResolvedValue(ok(createdProduct));
 
-    const result = await controller.create(dto, req as any);
+      const result = await controller.create(dto as any, req as any);
 
-    expect(result).toEqual(createdProduct);
-    expect(mockCommandBus.execute).toHaveBeenCalled();
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toEqual('123');
+      }
+
+      expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
+    });
   });
 
-  it('should update a product', async () => {
-    const dto = {
-      productName: 'Coke Zero',
-      productCategory: 'Drinks',
-      buyingPrice: 22,
-      sellingPrice: 28,
-      description: 'Updated Softdrink',
-      imageUrl: 'updated-image.jpg',
-    };
+  describe('getAllProducts', () => {
+    it('should return all products', async () => {
+      const products = [
+        {
+          _id: '123',
+          productName: 'Coke',
+        },
+      ];
 
-    const req = {
-      user: {
-        id: 'user-id',
-      },
-    };
+      mockQueryBus.execute.mockResolvedValue(ok(products));
 
-    const updatedProduct = {
-      _id: '123',
-      ...dto,
-      updatedBy: 'user-id',
-    };
+      const result = await controller.getAllProducts();
 
-    mockCommandBus.execute.mockResolvedValue(updatedProduct);
+      expect(result.isOk()).toBe(true);
 
-    const result = await controller.updateOneProduct('123', dto, req as any);
+      if (result.isOk()) {
+        expect(result.value).toEqual(products);
+      }
 
-    expect(result).toEqual(updatedProduct);
-    expect(mockCommandBus.execute).toHaveBeenCalled();
+      expect(mockQueryBus.execute).toHaveBeenCalledTimes(1);
+    });
   });
 
-  it('should delete a product', async () => {
-    const deletedProduct = {
-      _id: '123',
-      productName: 'Coke',
-    };
-
-    mockCommandBus.execute.mockResolvedValue(deletedProduct);
-
-    const result = await controller.deleteOneProduct('123');
-
-    expect(result).toEqual(deletedProduct);
-    expect(mockCommandBus.execute).toHaveBeenCalled();
-  });
-
-  it('should return all products', async () => {
-    const products = [
-      {
+  describe('getOneProduct', () => {
+    it('should return one product', async () => {
+      const product = {
         _id: '123',
         productName: 'Coke',
-      },
-    ];
+      };
 
-    mockQueryBus.execute.mockResolvedValue(products);
+      mockQueryBus.execute.mockResolvedValue(ok(product));
 
-    const result = await controller.getAllProducts();
+      const result = await controller.getOneProduct('123');
 
-    expect(result).toEqual(products);
-    expect(mockQueryBus.execute).toHaveBeenCalled();
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toEqual(product);
+      }
+
+      expect(mockQueryBus.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundException when product does not exist', async () => {
+      mockQueryBus.execute.mockResolvedValue(err('Product not found'));
+
+      await expect(controller.getOneProduct('123')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 
-  it('should return one product', async () => {
-    const product = {
-      _id: '123',
-      productName: 'Coke',
-    };
+  describe('updateOneProduct', () => {
+    it('should update a product', async () => {
+      const dto = {
+        productName: 'Coke Zero',
+        productCategory: 'Drinks',
+        buyingPrice: 22,
+        sellingPrice: 28,
+        description: 'Updated Softdrink',
+        imageUrl: 'updated-image.jpg',
+      };
 
-    mockQueryBus.execute.mockResolvedValue(product);
+      const req = {
+        user: {
+          id: 'user-id',
+        },
+      };
 
-    const result = await controller.getOneProduct('123');
+      const updatedProduct = {
+        _id: '123',
+        ...dto,
+      };
 
-    expect(result).toEqual(product);
-    expect(mockQueryBus.execute).toHaveBeenCalled();
+      mockCommandBus.execute.mockResolvedValue(ok(updatedProduct));
+
+      const result = await controller.updateOneProduct(
+        '123',
+        dto as any,
+        req as any,
+      );
+
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toEqual('123');
+      }
+
+      expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundException when product does not exist', async () => {
+      mockCommandBus.execute.mockResolvedValue(err('Product not found'));
+
+      await expect(
+        controller.updateOneProduct(
+          '123',
+          {} as any,
+          { user: { id: 'user-id' } } as any,
+        ),
+      ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('deleteOneProduct', () => {
+    it('should delete a product', async () => {
+      const deletedProduct = {
+        _id: '123',
+      };
+
+      mockCommandBus.execute.mockResolvedValue(ok(deletedProduct));
+
+      const result = await controller.deleteOneProduct('123');
+
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toEqual('123');
+      }
+
+      expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw NotFoundException when product does not exist', async () => {
+      mockCommandBus.execute.mockResolvedValue(err('Product not found'));
+
+      await expect(controller.deleteOneProduct('123')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 });

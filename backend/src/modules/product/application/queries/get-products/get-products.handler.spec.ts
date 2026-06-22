@@ -1,15 +1,13 @@
 import { Test } from '@nestjs/testing';
-
 import { GetProductsHandler } from './get-products.handler';
-import {
-  PRODUCT_REPOSITORY,
-  ProductRepositoryPort,
-} from '../../ports/product.repository.port';
+import { GetProductsQuery } from './get-products.query';
+import { PRODUCT_REPOSITORY } from '../../ports/product.repository.port';
+import { ProductEntity } from '@modules/product/domain/entities/product.entity';
 
 describe('GetProductsHandler', () => {
   let handler: GetProductsHandler;
 
-  const mockRepository: Partial<ProductRepositoryPort> = {
+  const mockRepository = {
     getAllProducts: jest.fn(),
   };
 
@@ -31,27 +29,38 @@ describe('GetProductsHandler', () => {
 
   it('should return all products', async () => {
     const products = [
-      {
-        _id: 'product-1',
-        productName: 'Coke',
-        productCategory: 'Drinks',
-        buyingPrice: 20,
-        sellingPrice: 25,
-      },
-      {
-        _id: 'product-2',
-        productName: 'Pepsi',
-        productCategory: 'Drinks',
-        buyingPrice: 18,
-        sellingPrice: 24,
-      },
+      new ProductEntity(
+        '123',
+        'Coke',
+        'Drinks',
+        'user-id',
+        20,
+        25,
+        'Softdrink',
+        'image.jpg',
+      ),
+      new ProductEntity(
+        '456',
+        'Pepsi',
+        'Drinks',
+        'user-id',
+        18,
+        23,
+        'Softdrink',
+        'pepsi.jpg',
+      ),
     ];
 
-    (mockRepository.getAllProducts as jest.Mock).mockResolvedValue(products);
+    mockRepository.getAllProducts.mockResolvedValue(products);
 
     const result = await handler.execute();
 
-    expect(result).toEqual(products);
-    expect(mockRepository.getAllProducts).toHaveBeenCalled();
+    expect(result.isOk()).toBe(true);
+
+    if (result.isOk()) {
+      expect(result.value).toEqual(products);
+    }
+
+    expect(mockRepository.getAllProducts).toHaveBeenCalledTimes(1);
   });
 });

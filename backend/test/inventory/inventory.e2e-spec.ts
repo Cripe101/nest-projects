@@ -38,7 +38,7 @@ describe('InventoryController (e2e)', () => {
         imageUrl: 'http://example.com/image.png',
       });
 
-    productId = productResponse.body._id;
+    productId = productResponse.body.value;
   });
 
   afterAll(async () => {
@@ -55,10 +55,10 @@ describe('InventoryController (e2e)', () => {
         minimumStock: 10,
       });
 
-    expect(response.body).toBeDefined();
-    expect(response.body.productId).toEqual(productId);
+    inventoryId = response.body.value;
 
-    inventoryId = response.body._id;
+    expect(response.body).toBeDefined();
+    expect(response.body.value).toEqual(inventoryId);
   });
 
   it('should get all inventories', async () => {
@@ -66,8 +66,8 @@ describe('InventoryController (e2e)', () => {
       .get('/inventories')
       .set('Authorization', `Bearer ${token}`);
 
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
+    expect(Array.isArray(response.body.value)).toBe(true);
+    expect(response.body.value.length).toBeGreaterThan(0);
   });
 
   it('should get inventory by id', async () => {
@@ -76,7 +76,7 @@ describe('InventoryController (e2e)', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.body).toBeDefined();
-    expect(response.body._id).toEqual(inventoryId);
+    expect(response.body.value._id).toEqual(inventoryId);
   });
 
   it('should add stock to inventory', async () => {
@@ -100,7 +100,7 @@ describe('InventoryController (e2e)', () => {
       });
 
     expect(response.body).toBeDefined();
-    expect(response.body.productId._id).toEqual(productId);
+    expect(response.body.value).toEqual(inventoryId);
   });
 
   it('should delete inventory', async () => {
@@ -113,5 +113,6 @@ describe('InventoryController (e2e)', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.body).toBeDefined();
+    expect(response.body.value).toEqual(inventoryId);
   });
 });

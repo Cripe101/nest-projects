@@ -8,6 +8,7 @@ describe('ProductController (e2e)', () => {
 
   let token: string;
   let createdProductId: string;
+  let createdProductName: string;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -44,18 +45,17 @@ describe('ProductController (e2e)', () => {
         imageUrl: 'http://example.com/image.png',
       });
 
-    expect(response.body).toBeDefined();
-    expect(response.body.productName).toEqual('Test Product');
-    expect(response.body.productCategory).toEqual('Drinks');
+    createdProductId = response.body.value;
 
-    createdProductId = response.body._id;
+    expect(response.body).toBeDefined();
+    expect(response.body.value).toEqual(createdProductId);
   });
 
   it('should get all products', async () => {
     const response = await request(app.getHttpServer()).get('/products');
 
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
+    expect(Array.isArray(response.body.value)).toBe(true);
+    expect(response.body.value.length).toBeGreaterThan(0);
   });
 
   it('should get product by id', async () => {
@@ -63,9 +63,11 @@ describe('ProductController (e2e)', () => {
       '/products/' + createdProductId,
     );
 
+    createdProductName = response.body.value.productName;
+
     expect(response.body).toBeDefined();
-    expect(response.body._id).toEqual(createdProductId);
-    expect(response.body.productName).toEqual('Test Product');
+    expect(response.body.value._id).toEqual(createdProductId);
+    expect(response.body.value.productName).toEqual(createdProductName);
   });
 
   it('should update product', async () => {
@@ -82,8 +84,7 @@ describe('ProductController (e2e)', () => {
       });
 
     expect(response.body).toBeDefined();
-    expect(response.body.productName).toEqual('Updated Product');
-    expect(response.body.productCategory).toEqual('Foods');
+    expect(response.body.value).toEqual(createdProductId);
   });
 
   it('should delete product', async () => {

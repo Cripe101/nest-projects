@@ -1,6 +1,9 @@
 import { Test } from '@nestjs/testing';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ProductSaleController } from './product-sale.controller';
+import { ok, err } from '@core/interfaces/result';
+import { ProductSaleError } from '../domain/errors/product-sale.error';
 
 describe('ProductSaleController', () => {
   let controller: ProductSaleController;
@@ -17,109 +20,180 @@ describe('ProductSaleController', () => {
     const module = await Test.createTestingModule({
       controllers: [ProductSaleController],
       providers: [
-        { provide: CommandBus, useValue: mockCommandBus },
-        { provide: QueryBus, useValue: mockQueryBus },
+        {
+          provide: CommandBus,
+          useValue: mockCommandBus,
+        },
+        {
+          provide: QueryBus,
+          useValue: mockQueryBus,
+        },
       ],
     }).compile();
 
-    controller = module.get(ProductSaleController);
+    controller = module.get<ProductSaleController>(ProductSaleController);
 
     jest.clearAllMocks();
   });
 
-  it('should create a product sale', async () => {
-    const dto = {
-      productId: 'product-id',
-      quantity: 5,
-    };
+  describe('create', () => {
+    it('should create a product sale', async () => {
+      mockCommandBus.execute.mockResolvedValue(ok('sale-id'));
 
-    const req = {
-      user: {
-        id: 'user-id',
-      },
-    };
-
-    const createdSale = {
-      _id: 'sale-id',
-      productId: dto.productId,
-      quantity: dto.quantity,
-      soldBy: req.user.id,
-    };
-
-    mockCommandBus.execute.mockResolvedValue(createdSale);
-
-    const result = await controller.create(dto, req as any);
-
-    expect(result).toEqual(createdSale);
-    expect(mockCommandBus.execute).toHaveBeenCalled();
-  });
-
-  it('should return total sale profit', async () => {
-    const totalProfit = 1500;
-
-    mockQueryBus.execute.mockResolvedValue(totalProfit);
-
-    const result = await controller.getTotalSaleProfit();
-
-    expect(result).toEqual(totalProfit);
-    expect(mockQueryBus.execute).toHaveBeenCalled();
-  });
-
-  it('should return total sales', async () => {
-    const totalSales = 5000;
-
-    mockQueryBus.execute.mockResolvedValue(totalSales);
-
-    const result = await controller.getTotalSalet();
-
-    expect(result).toEqual(totalSales);
-    expect(mockQueryBus.execute).toHaveBeenCalled();
-  });
-
-  it('should return all product sales', async () => {
-    const sales = [
-      {
-        _id: 'sale-id',
+      const dto = {
         productId: 'product-id',
-        quantity: 5,
-      },
-    ];
+        quantity: 2,
+      };
 
-    mockQueryBus.execute.mockResolvedValue(sales);
+      const req = {
+        user: {
+          id: 'user-id',
+        },
+      };
 
-    const result = await controller.getAllProductSales();
+      const result = await controller.create(dto as any, req as any);
 
-    expect(result).toEqual(sales);
-    expect(mockQueryBus.execute).toHaveBeenCalled();
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toBe('sale-id');
+      }
+
+      expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw BadRequestException when stock is insufficient', async () => {
+      mockCommandBus.execute.mockResolvedValue(
+        err(ProductSaleError.INSUFFECIENT_STOCK),
+      );
+
+      await expect(
+        controller.create(
+          {
+            productId: 'product-id',
+            quantity: 2,
+          } as any,
+          {
+            user: {
+              id: 'user-id',
+            },
+          } as any,
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw NotFoundException when product is not found', async () => {
+      mockCommandBus.execute.mockResolvedValue(err(ProductSaleError.NOT_FOUND));
+
+      await expect(
+        controller.create(
+          {
+            productId: 'product-id',
+            quantity: 2,
+          } as any,
+          {
+            user: {
+              id: 'user-id',
+            },
+          } as any,
+        ),
+      ).rejects.toThrow(NotFoundException);
+    });
   });
 
-  it('should return a product sale by id', async () => {
-    const sale = {
-      _id: 'sale-id',
-      productId: 'product-id',
-      quantity: 5,
-    };
+  describe('getTotalSaleProfit', () => {
+    it('should return total sale profit', async () => {
+      mockQueryBus.execute.mockResolvedValue(ok(1000));
 
-    mockQueryBus.execute.mockResolvedValue(sale);
+      const result = await controller.getTotalSaleProfit();
 
-    const result = await controller.getOneProductSale('sale-id');
+      expect(result.isOk()).toBe(true);
 
-    expect(result).toEqual(sale);
-    expect(mockQueryBus.execute).toHaveBeenCalled();
+      if (result.isOk()) {
+        expect(result.value).toBe(1000);
+      }
+    });
   });
 
-  it('should delete a product sale', async () => {
-    const deletedSale = {
-      _id: 'sale-id',
-      productId: 'product-id',
-      quantity: 5,
-    };
+  describe('getTotalSalet', () => {
+    it('should return total sale', async () => {
+      mockQueryBus.execute.mockResolvedValue(ok(5000));
 
-    mockCommandBus.execute.mockResolvedValue(deletedSale);
+      const result = await controller.getTotalSalet();
 
-    const result = await controller.deleteOneProductSale('sale-id');
+      expect(result.isOk()).toBe(true);
 
-    expect(result).toEqual(deletedSale);
-    expect(mockCommandBus.execute).toHaveBeenCalled();
+      if (result.isOk()) {
+        expect(result.value).toBe(5000);
+      }
+    });
+  });
+
+  describe('getAllProductSales', () => {
+    it('should return all product sales', async () => {
+      const sales = [
+        {
+          _id: '123',
+        },
+      ];
+
+      mockQueryBus.execute.mockResolvedValue(ok(sales));
+
+      const result = await controller.getAllProductSales();
+
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toEqual(sales);
+      }
+    });
+  });
+
+  describe('getOneProductSale', () => {
+    it('should return one product sale', async () => {
+      const sale = {
+        _id: '123',
+      };
+
+      mockQueryBus.execute.mockResolvedValue(ok(sale));
+
+      const result = await controller.getOneProductSale('123');
+
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toEqual(sale);
+      }
+    });
+
+    it('should throw NotFoundException', async () => {
+      mockQueryBus.execute.mockResolvedValue(err(ProductSaleError.NOT_FOUND));
+
+      await expect(controller.getOneProductSale('123')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+
+  describe('deleteOneProductSale', () => {
+    it('should delete a product sale', async () => {
+      mockCommandBus.execute.mockResolvedValue(ok('deleted'));
+
+      const result = await controller.deleteOneProductSale('123');
+
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        expect(result.value).toBe('deleted');
+      }
+    });
+
+    it('should throw NotFoundException', async () => {
+      mockCommandBus.execute.mockResolvedValue(err(ProductSaleError.NOT_FOUND));
+
+      await expect(controller.deleteOneProductSale('123')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 });

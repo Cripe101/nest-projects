@@ -42,12 +42,10 @@ describe('UserController (e2e)', () => {
         role: UserRole.STAFF,
       });
 
-    expect(response.body).toBeDefined();
-    expect(response.body.username).toEqual('test-user');
-    expect(response.body.role).toEqual(UserRole.STAFF);
+    createdUserId = response.body.value;
 
-    createdUserId = response.body._id;
-    createdUserUsername = response.body.username;
+    expect(response.body).toBeDefined();
+    expect(response.body.value).toEqual(createdUserId);
   });
 
   it('should get all users', async () => {
@@ -55,8 +53,8 @@ describe('UserController (e2e)', () => {
       .get('/users')
       .set('Authorization', `Bearer ${token}`);
 
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
+    expect(Array.isArray(response.body.value)).toEqual(true);
+    expect(response.body.value.length).toBeGreaterThan(0);
   });
 
   it('should get user by id', async () => {
@@ -64,10 +62,12 @@ describe('UserController (e2e)', () => {
       .get('/users/' + createdUserId)
       .set('Authorization', `Bearer ${token}`);
 
+    createdUserUsername = response.body.value.username;
+
     expect(response.body).toBeDefined();
-    expect(response.body._id).toEqual(createdUserId);
-    expect(response.body.username).toEqual('test-user');
-    expect(response.body.role).toEqual(UserRole.STAFF);
+    expect(response.body.value._id).toEqual(createdUserId);
+    expect(response.body.value.username).toEqual('test-user');
+    expect(response.body.value.role).toEqual(UserRole.STAFF);
   });
 
   it('should get user by username', async () => {
@@ -76,8 +76,8 @@ describe('UserController (e2e)', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.body).toBeDefined();
-    expect(response.body.username).toEqual(createdUserUsername);
-    expect(response.body.role).toEqual(UserRole.STAFF);
+    expect(response.body.value.username).toEqual(createdUserUsername);
+    expect(response.body.value.role).toEqual(UserRole.STAFF);
   });
 
   it('should update user', async () => {
@@ -90,8 +90,8 @@ describe('UserController (e2e)', () => {
       });
 
     expect(response.body).toBeDefined();
-    expect(response.body.username).toEqual('updated-user');
-    expect(response.body.role).toEqual(UserRole.CASHIER);
+    expect(response.body.value.username).toEqual('updated-user');
+    expect(response.body.value.role).toEqual(UserRole.CASHIER);
   });
 
   it('should delete user', async () => {

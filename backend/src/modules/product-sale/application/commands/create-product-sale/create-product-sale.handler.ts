@@ -14,6 +14,8 @@ import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,
 } from '@modules/inventory/application/ports/inventory.repository.port';
+import { Result, ok, err } from '@core/interfaces/result';
+import { ProductSaleError } from '@modules/product-sale/domain/errors/product-sale.error';
 
 @CommandHandler(CreateProductSaleCommand)
 export class CreateProductSaleHandler implements ICommandHandler<CreateProductSaleCommand> {
@@ -28,23 +30,25 @@ export class CreateProductSaleHandler implements ICommandHandler<CreateProductSa
     private readonly inventoryRepo: InventoryRepositoryPort,
   ) {}
 
-  async execute(command: CreateProductSaleCommand): Promise<ProductSaleEntity> {
+  async execute(
+    command: CreateProductSaleCommand,
+  ): Promise<Result<string, ProductSaleError>> {
     const { productId, quantity, cashier } = command;
 
     const product = await this.productRepo.getOneProduct(productId);
 
     if (!product) {
-      throw new NotFoundException('Product not found');
+      return err(ProductSaleError.PRODUCT_NOT_FOUND);
     }
 
     const inventory = await this.inventoryRepo.getInventoryByProduct(productId);
 
     if (!inventory) {
-      throw new NotFoundException('Product not found in inventory');
+      return err(ProductSaleError.INVENTORY_NOT_FOUND);
     }
 
     if (inventory.currentStock < quantity) {
-      throw new BadRequestException('Insuffecient stock');
+      return err(ProductSaleError.INSUFFECIENT_STOCK);
     }
 
     const totalPrice = product.sellingPrice * quantity;
@@ -63,6 +67,8 @@ export class CreateProductSaleHandler implements ICommandHandler<CreateProductSa
 
     await this.inventoryRepo.deductStock(inventory._id as string, quantity);
 
-    return await this.repository.create(saleData);
+    const productSale = await this.repository.create(saleData);
+
+    return ok(productSale?._id as string);
   }
 }

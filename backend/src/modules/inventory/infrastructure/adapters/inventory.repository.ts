@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InventoryEntity } from '../../domain/entities/inventory.entity';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -13,24 +13,12 @@ export class InventoryRepository implements InventoryRepositoryPort {
     private readonly inventoryModel: Model<Inventory>,
   ) {}
 
-  private toEntity(
-    inventory: Inventory & { _id: Types.ObjectId | string },
-  ): InventoryEntity {
-    return new InventoryEntity(
-      inventory._id.toString(),
-      this.toProduct(inventory.productId),
-      inventory.createdBy.toString(),
-      inventory.minimumStock,
-      inventory.currentStock,
-    );
-  }
-
   private toProduct(product: unknown): string | ProductEntity {
     if (product instanceof Types.ObjectId || typeof product === 'string') {
       return product.toString();
     }
 
-    const productDocument = product as {
+    const p = product as {
       _id: Types.ObjectId | string;
       productName: string;
       productCategory: string;
@@ -42,14 +30,26 @@ export class InventoryRepository implements InventoryRepositoryPort {
     };
 
     return new ProductEntity(
-      productDocument._id.toString(),
-      productDocument.productName,
-      productDocument.productCategory,
-      productDocument.addedBy.toString(),
-      productDocument.buyingPrice,
-      productDocument.sellingPrice,
-      productDocument.description,
-      productDocument.imageUrl,
+      p._id.toString(),
+      p.productName,
+      p.productCategory,
+      p.addedBy.toString(),
+      p.buyingPrice,
+      p.sellingPrice,
+      p.description,
+      p.imageUrl,
+    );
+  }
+
+  private toEntity(
+    inventory: Inventory & { _id: Types.ObjectId | string },
+  ): InventoryEntity {
+    return new InventoryEntity(
+      inventory._id.toString(),
+      this.toProduct(inventory.productId),
+      inventory.createdBy.toString(),
+      inventory.minimumStock,
+      inventory.currentStock,
     );
   }
 
@@ -65,13 +65,7 @@ export class InventoryRepository implements InventoryRepositoryPort {
       currentStock: inventory.currentStock,
     });
 
-    return new InventoryEntity(
-      createdInventory._id.toString(),
-      createdInventory.productId.toString(),
-      createdInventory.createdBy.toString(),
-      createdInventory.minimumStock,
-      createdInventory.currentStock,
-    );
+    return this.toEntity(createdInventory);
   }
 
   async updateOneInventory(
@@ -97,48 +91,68 @@ export class InventoryRepository implements InventoryRepositoryPort {
   }
 
   async deleteOneInventory(id: string): Promise<InventoryEntity | null> {
-    return await this.inventoryModel.findByIdAndDelete(id);
+    const deletedInventory = await this.inventoryModel.findByIdAndDelete(id);
+
+    return deletedInventory ? this.toEntity(deletedInventory) : null;
   }
 
   async deductStock(
     id: string,
     quantity: number,
   ): Promise<InventoryEntity | null> {
-    return await this.inventoryModel.findByIdAndUpdate(
-      { _id: id, currentStock: { $gte: quantity } },
-      { $inc: { currentStock: -quantity } },
+    const updatedInventory = await this.inventoryModel.findOneAndUpdate(
+      {
+        _id: id,
+        currentStock: { $gte: quantity },
+      },
+      {
+        $inc: {
+          currentStock: -quantity,
+        },
+      },
       {
         returnDocument: 'after',
       },
     );
+
+    return updatedInventory ? this.toEntity(updatedInventory) : null;
   }
 
-  async addStock(id: string, quantity: number): Promise<any | null> {
-    return await this.inventoryModel.findByIdAndUpdate(
+  async addStock(
+    id: string,
+    quantity: number,
+  ): Promise<InventoryEntity | null> {
+    const updatedInventory = await this.inventoryModel.findByIdAndUpdate(
       id,
-      { $inc: { currentStock: quantity } },
+      {
+        $inc: {
+          currentStock: quantity,
+        },
+      },
       {
         returnDocument: 'after',
       },
     );
-  }
 
-  async getOneInventory(id: string): Promise<InventoryEntity> {
-    const inventory = await this.inventoryModel
-      .findById(id)
-      .populate('productId');
-
-    if (!inventory) {
-      throw new NotFoundException('Product in inventory not found');
-    }
-
-    return this.toEntity(inventory);
+    return updatedInventory ? this.toEntity(updatedInventory) : null;
   }
 
   async getInventoryByProduct(
     productId: string,
   ): Promise<InventoryEntity | null> {
-    return await this.inventoryModel.findOne({ productId });
+    const inventory = await this.inventoryModel.findOne({
+      productId: new Types.ObjectId(productId),
+    });
+
+    return inventory ? this.toEntity(inventory) : null;
+  }
+
+  async getOneInventory(id: string): Promise<InventoryEntity | null> {
+    const inventory = await this.inventoryModel
+      .findById(id)
+      .populate('productId');
+
+    return inventory ? this.toEntity(inventory) : null;
   }
 
   async getAllInventories(): Promise<InventoryEntity[]> {

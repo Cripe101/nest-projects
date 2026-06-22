@@ -6,6 +6,8 @@ import {
   PRODUCT_REPOSITORY,
   type ProductRepositoryPort,
 } from '../../ports/product.repository.port';
+import { Result, err, ok } from '@core/interfaces/result';
+import { ProductError } from '@modules/product/domain/errors/product.error';
 
 @CommandHandler(DeleteProductCommand)
 export class DeleteProductHandler implements ICommandHandler<DeleteProductCommand> {
@@ -14,15 +16,17 @@ export class DeleteProductHandler implements ICommandHandler<DeleteProductComman
     private readonly repository: ProductRepositoryPort,
   ) {}
 
-  async execute(command: DeleteProductCommand): Promise<ProductEntity | null> {
+  async execute(
+    command: DeleteProductCommand,
+  ): Promise<Result<ProductEntity, ProductError>> {
     const { id } = command;
 
     const product = await this.repository.deleteOneProduct(id);
 
     if (!product) {
-      throw new NotFoundException('Product not found');
+      return err(ProductError.NOT_FOUND);
     }
 
-    return product;
+    return ok(product);
   }
 }

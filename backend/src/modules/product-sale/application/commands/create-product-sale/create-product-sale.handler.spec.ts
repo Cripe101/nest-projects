@@ -9,6 +9,7 @@ import { PRODUCT_SALE_REPOSITORY } from '../../ports/product-sale.port';
 import { PRODUCT_REPOSITORY } from '@modules/product/application/ports/product.repository.port';
 
 import { INVENTORY_REPOSITORY } from '@modules/inventory/application/ports/inventory.repository.port';
+import { ok } from '@core/interfaces/result';
 
 describe('CreateProductSaleHandler', () => {
   let handler: CreateProductSaleHandler;
@@ -77,13 +78,13 @@ describe('CreateProductSaleHandler', () => {
 
     mockInventoryRepository.deductStock.mockResolvedValue(undefined);
 
-    mockSaleRepository.create.mockResolvedValue(sale);
+    mockSaleRepository.create.mockResolvedValue(ok(sale));
 
     const result = await handler.execute(
       new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
     );
 
-    expect(result).toEqual(sale);
+    expect(result.isOk()).toEqual(true);
     expect(mockProductRepository.getOneProduct).toHaveBeenCalledWith(
       'product-id',
     );
@@ -97,17 +98,19 @@ describe('CreateProductSaleHandler', () => {
     expect(mockSaleRepository.create).toHaveBeenCalled();
   });
 
-  it('should throw NotFoundException when product does not exist', async () => {
+  it('should return ProductSaleError.PRODUCT_NOT_FOUND when product does not exist', async () => {
     mockProductRepository.getOneProduct.mockResolvedValue(null);
 
-    await expect(
-      handler.execute(
-        new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
-      ),
-    ).rejects.toThrow(NotFoundException);
+    const result = await handler.execute(
+      new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
+    );
+
+    expect(result.isErr()).toEqual(true);
+    expect(mockProductRepository.getOneProduct).toHaveBeenCalled();
+    expect(mockSaleRepository.create).not.toHaveBeenCalled();
   });
 
-  it('should throw NotFoundException when inventory does not exist', async () => {
+  it('should return ProductSaleError.INVENTORY_NOT_FOUND when inventory does not exist', async () => {
     mockProductRepository.getOneProduct.mockResolvedValue({
       _id: 'product-id',
       sellingPrice: 50,
@@ -116,14 +119,16 @@ describe('CreateProductSaleHandler', () => {
 
     mockInventoryRepository.getInventoryByProduct.mockResolvedValue(null);
 
-    await expect(
-      handler.execute(
-        new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
-      ),
-    ).rejects.toThrow(NotFoundException);
+    const result = await handler.execute(
+      new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
+    );
+
+    expect(result.isErr()).toEqual(true);
+    expect(mockInventoryRepository.getInventoryByProduct).toHaveBeenCalled();
+    expect(mockSaleRepository.create).not.toHaveBeenCalled();
   });
 
-  it('should throw BadRequestException when stock is insufficient', async () => {
+  it('should return ProductSaleError.INSUFFICIENT_STOCK when stock is insufficient', async () => {
     mockProductRepository.getOneProduct.mockResolvedValue({
       _id: 'product-id',
       sellingPrice: 50,
@@ -135,11 +140,11 @@ describe('CreateProductSaleHandler', () => {
       currentStock: 1,
     });
 
-    await expect(
-      handler.execute(
-        new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
-      ),
-    ).rejects.toThrow(BadRequestException);
+    const result = await handler.execute(
+      new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
+    );
+
+    expect(result.isErr()).toEqual(true);
     expect(mockInventoryRepository.deductStock).not.toHaveBeenCalled();
     expect(mockSaleRepository.create).not.toHaveBeenCalled();
   });

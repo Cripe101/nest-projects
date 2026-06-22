@@ -6,6 +6,8 @@ import {
   type ProductSaleRepositoryPort,
 } from '../../ports/product-sale.port';
 import { ProductSaleEntity } from '@modules/product-sale/domain/entities/product-sale.entity';
+import { Result, err, ok } from '@core/interfaces/result';
+import { ProductSaleError } from '@modules/product-sale/domain/errors/product-sale.error';
 
 @QueryHandler(GetProductSaleQuery)
 export class GetProductSaleHandler implements IQueryHandler<GetProductSaleQuery> {
@@ -14,15 +16,17 @@ export class GetProductSaleHandler implements IQueryHandler<GetProductSaleQuery>
     private readonly repository: ProductSaleRepositoryPort,
   ) {}
 
-  async execute(query: GetProductSaleQuery): Promise<ProductSaleEntity | null> {
+  async execute(
+    query: GetProductSaleQuery,
+  ): Promise<Result<ProductSaleEntity, ProductSaleError>> {
     const { _id } = query;
 
     const product = await this.repository.getOneProductSale(_id);
 
     if (!product) {
-      throw new NotFoundException('Sale not found');
+      return err(ProductSaleError.NOT_FOUND);
     }
 
-    return product;
+    return ok(product);
   }
 }

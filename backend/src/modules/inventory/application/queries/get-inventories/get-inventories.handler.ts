@@ -5,7 +5,8 @@ import {
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
 import { Inject } from '@nestjs/common';
-import { InventoryResponseDto } from '@modules/inventory/interface/dto/inventory-response.dto';
+import { Result, ok } from '@core/interfaces/result';
+import { InventoryEntity } from '@modules/inventory/domain/entities/inventory.entity';
 
 @QueryHandler(GetInventoriesQuery)
 export class GetInventoriesHandler implements IQueryHandler<GetInventoriesQuery> {
@@ -14,14 +15,9 @@ export class GetInventoriesHandler implements IQueryHandler<GetInventoriesQuery>
     private readonly repository: InventoryRepositoryPort,
   ) {}
 
-  async execute(): Promise<InventoryResponseDto[]> {
+  async execute(): Promise<Result<InventoryEntity[], null>> {
     const inventories = await this.repository.getAllInventories();
 
-    return inventories.map((inventory) => ({
-      _id: inventory._id,
-      productId: inventory.productId,
-      currentStock: inventory.currentStock,
-      minimumStock: inventory.minimumStock,
-    }));
+    return ok(inventories);
   }
 }

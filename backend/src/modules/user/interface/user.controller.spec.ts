@@ -42,10 +42,10 @@ describe('UserController', () => {
 
     const result = await controller.createUser(dto);
 
-    expect(result.isOk()).toBe(true);
+    expect(result.isOk()).toEqual(true);
 
     if (result.isOk()) {
-      expect(result.value).toBe('123');
+      expect(result.value).toEqual('123');
     }
 
     expect(mockCommandBus.execute).toHaveBeenCalled();
@@ -80,7 +80,7 @@ describe('UserController', () => {
 
     const result = await controller.updateUser('123', { ...dto });
 
-    expect(result.isOk()).toBe(true);
+    expect(result.isOk()).toEqual(true);
 
     if (result.isOk()) {
       expect(result.value).toEqual(updatedUser);
@@ -128,10 +128,10 @@ describe('UserController', () => {
 
     const result = await controller.deleteUser('123');
 
-    expect(result.isOk()).toBe(true);
+    expect(result.isOk()).toEqual(true);
 
     if (result.isOk()) {
-      expect(result.value).toBe('123');
+      expect(result.value).toEqual('123');
     }
 
     expect(mockCommandBus.execute).toHaveBeenCalled();
@@ -159,7 +159,7 @@ describe('UserController', () => {
 
     const result = await controller.getUsers();
 
-    expect(result.isOk()).toBe(true);
+    expect(result.isOk()).toEqual(true);
 
     if (result.isOk()) {
       expect(result.value).toEqual(users);
@@ -178,7 +178,7 @@ describe('UserController', () => {
 
     const result = await controller.getUser('123');
 
-    expect(result.isOk()).toBe(true);
+    expect(result.isOk()).toEqual(true);
 
     if (result.isOk()) {
       expect(result.value).toEqual(user);
@@ -197,7 +197,7 @@ describe('UserController', () => {
 
     const result = await controller.getUserByUsername('Mheg');
 
-    expect(result.isOk()).toBe(true);
+    expect(result.isOk()).toEqual(true);
 
     if (result.isOk()) {
       expect(result.value).toEqual(user);

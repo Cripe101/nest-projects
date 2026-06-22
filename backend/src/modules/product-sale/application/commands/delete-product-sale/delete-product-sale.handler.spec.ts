@@ -40,19 +40,24 @@ describe('DeleteProductSaleHandler', () => {
     mockRepository.deleteOneProductSale.mockResolvedValue(sale);
 
     const result = await handler.execute(
+      new DeleteProductSaleCommand(sale._id),
+    );
+
+    expect(result.isOk()).toEqual(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual(sale._id);
+    }
+    expect(mockRepository.deleteOneProductSale).toHaveBeenCalledWith(sale._id);
+  });
+
+  it('should return ProcutSaleError.NOT_FOUND when sale does not exist', async () => {
+    mockRepository.deleteOneProductSale.mockResolvedValue(null);
+
+    const result = await handler.execute(
       new DeleteProductSaleCommand('sale-id'),
     );
 
-    expect(result).toEqual(sale);
-    expect(mockRepository.deleteOneProductSale).toHaveBeenCalledWith('sale-id');
-  });
-
-  it('should throw NotFoundException when sale does not exist', async () => {
-    mockRepository.deleteOneProductSale.mockResolvedValue(null);
-
-    await expect(
-      handler.execute(new DeleteProductSaleCommand('sale-id')),
-    ).rejects.toThrow(NotFoundException);
+    expect(result.isErr()).toEqual(true);
     expect(mockRepository.deleteOneProductSale).toHaveBeenCalledWith('sale-id');
   });
 });

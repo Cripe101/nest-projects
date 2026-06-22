@@ -6,6 +6,8 @@ import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
+import { Result, ok, err } from '@core/interfaces/result';
+import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 
 @CommandHandler(AddInventoryStockCommand)
 export class AddInventoryStockHandler implements ICommandHandler<AddInventoryStockCommand> {
@@ -14,15 +16,17 @@ export class AddInventoryStockHandler implements ICommandHandler<AddInventorySto
     private readonly repository: InventoryRepositoryPort,
   ) {}
 
-  async execute(command: AddInventoryStockCommand): Promise<InventoryEntity> {
+  async execute(
+    command: AddInventoryStockCommand,
+  ): Promise<Result<string, InventoryError>> {
     const { inventoryId, quantity } = command;
 
     const inventory = await this.repository.addStock(inventoryId, quantity);
 
     if (!inventory) {
-      throw new NotFoundException('Product not found in inventory');
+      return err(InventoryError.NOT_FOUND);
     }
 
-    return inventory;
+    return ok('Stock added');
   }
 }

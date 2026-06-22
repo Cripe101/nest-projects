@@ -3,15 +3,13 @@ import { NotFoundException } from '@nestjs/common';
 
 import { GetInventoryHandler } from './get-inventory.handler';
 import { GetInventoryQuery } from './get-inventory.query';
-import {
-  INVENTORY_REPOSITORY,
-  InventoryRepositoryPort,
-} from '../../ports/inventory.repository.port';
+import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
+import { Result } from 'neverthrow';
 
 describe('GetInventoryHandler', () => {
   let handler: GetInventoryHandler;
 
-  const mockRepository: Partial<InventoryRepositoryPort> = {
+  const mockRepository = {
     getOneInventory: jest.fn(),
   };
 
@@ -39,20 +37,23 @@ describe('GetInventoryHandler', () => {
       minimumStock: 10,
     };
 
-    (mockRepository.getOneInventory as jest.Mock).mockResolvedValue(inventory);
+    mockRepository.getOneInventory.mockResolvedValue(inventory);
 
     const result = await handler.execute(new GetInventoryQuery('inventory-id'));
 
-    expect(result).toEqual(inventory);
+    expect(result.isOk()).toEqual(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual(inventory);
+    }
     expect(mockRepository.getOneInventory).toHaveBeenCalledWith('inventory-id');
   });
 
-  it('should throw NotFoundException when inventory does not exist', async () => {
-    (mockRepository.getOneInventory as jest.Mock).mockResolvedValue(null);
+  it('should return InventoryError.NOT_FOUND when inventory does not exist', async () => {
+    mockRepository.getOneInventory.mockResolvedValue(null);
 
-    await expect(
-      handler.execute(new GetInventoryQuery('inventory-id')),
-    ).rejects.toThrow(NotFoundException);
+    const result = await handler.execute(new GetInventoryQuery('inventory-id'));
+
+    expect(result.isErr()).toEqual(true);
     expect(mockRepository.getOneInventory).toHaveBeenCalledWith('inventory-id');
   });
 });
