@@ -14,7 +14,7 @@ import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,
 } from '@modules/inventory/application/ports/inventory.repository.port';
-import { Result, ok, err } from '@core/interfaces/result';
+import { Result, ok, err } from '@core/libs/result';
 import { ProductSaleError } from '@modules/product-sale/domain/errors/product-sale.error';
 
 @CommandHandler(CreateProductSaleCommand)

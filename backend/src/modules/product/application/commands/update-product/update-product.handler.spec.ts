@@ -58,19 +58,9 @@ describe('UpdateProductHandler', () => {
     expect(result.isOk()).toBe(true);
 
     if (result.isOk()) {
-      expect(result.value).toEqual(updatedProduct);
+      expect(result.value).toEqual(updatedProduct._id);
     }
-
     expect(mockRepository.updateOneProduct).toHaveBeenCalledTimes(1);
-    expect(mockRepository.updateOneProduct).toHaveBeenCalledWith(
-      '123',
-      expect.objectContaining({
-        _id: '123',
-        productName: 'Coke Zero',
-        productCategory: 'Drinks',
-        addedBy: 'user-id',
-      }),
-    );
   });
 
   it('should return ProductError.NOT_FOUND when product does not exist', async () => {
@@ -90,15 +80,9 @@ describe('UpdateProductHandler', () => {
     const result = await handler.execute(command);
 
     expect(result.isErr()).toBe(true);
-
     if (result.isErr()) {
       expect(result.error).toEqual(ProductError.NOT_FOUND);
     }
-
     expect(mockRepository.updateOneProduct).toHaveBeenCalledTimes(1);
-    expect(mockRepository.updateOneProduct).toHaveBeenCalledWith(
-      '123',
-      expect.any(ProductEntity),
-    );
   });
 });

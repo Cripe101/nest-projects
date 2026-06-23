@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthController } from './auth.controller';
+import { ok } from '@core/libs/result';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -35,11 +36,14 @@ describe('AuthController', () => {
       accessToken: 'jwt-token',
     };
 
-    mockCommandBus.execute.mockResolvedValue(loginResponse);
+    mockCommandBus.execute.mockResolvedValue(ok(loginResponse));
 
     const result = await controller.login(dto);
 
-    expect(result).toEqual(loginResponse);
+    expect(result.isOk()).toEqual(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual(loginResponse);
+    }
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 });

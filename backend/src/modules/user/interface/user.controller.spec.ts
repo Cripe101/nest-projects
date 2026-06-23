@@ -3,7 +3,7 @@ import { UserController } from './user.controller';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { UserRole } from '@core/constants/user-role.enum';
-import { ok, err } from '@core/interfaces/result';
+import { ok, err } from '@core/libs/result';
 import { UserError } from '@modules/user/domain/errors/user.error';
 
 describe('UserController', () => {
@@ -76,16 +76,14 @@ describe('UserController', () => {
       role: UserRole.ADMIN,
     };
 
-    mockCommandBus.execute.mockResolvedValue(ok(updatedUser));
+    mockCommandBus.execute.mockResolvedValue(ok(updatedUser._id));
 
     const result = await controller.updateUser('123', { ...dto });
 
     expect(result.isOk()).toEqual(true);
-
     if (result.isOk()) {
-      expect(result.value).toEqual(updatedUser);
+      expect(result.value).toEqual(updatedUser._id);
     }
-
     expect(mockCommandBus.execute).toHaveBeenCalled();
   });
 
@@ -124,7 +122,7 @@ describe('UserController', () => {
       role: UserRole.ADMIN,
     };
 
-    mockCommandBus.execute.mockResolvedValue(ok(deletedUser));
+    mockCommandBus.execute.mockResolvedValue(ok(deletedUser._id));
 
     const result = await controller.deleteUser('123');
 

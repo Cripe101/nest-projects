@@ -6,7 +6,7 @@ import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
-import { Result, ok, err } from '@core/interfaces/result';
+import { Result, ok, err } from '@core/libs/result';
 import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 
 @CommandHandler(CreateInventoryCommand)

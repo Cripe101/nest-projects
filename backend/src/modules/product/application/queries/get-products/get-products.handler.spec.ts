@@ -56,11 +56,9 @@ describe('GetProductsHandler', () => {
     const result = await handler.execute();
 
     expect(result.isOk()).toBe(true);
-
     if (result.isOk()) {
       expect(result.value).toEqual(products);
     }
-
     expect(mockRepository.getAllProducts).toHaveBeenCalledTimes(1);
   });
 });

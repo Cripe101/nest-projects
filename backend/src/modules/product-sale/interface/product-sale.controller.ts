@@ -24,7 +24,7 @@ import { GetTotalSaleQuery } from '../application/queries/get-total-sale/get-tot
 import { GetProductSaleQuery } from '../application/queries/get-product-sale/get-product-sale.query';
 import { DeleteProductSaleCommand } from '../application/commands/delete-product-sale/delete-product-sale.command';
 import { ProductSaleError } from '../domain/errors/product-sale.error';
-import { ok } from '@core/interfaces/result';
+import { ok } from '@core/libs/result';
 
 @Controller('product-sales')
 export class ProductSaleController {

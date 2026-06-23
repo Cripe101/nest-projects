@@ -8,7 +8,7 @@ import {
 } from '../../ports/user.repository.port';
 import { Inject } from '@nestjs/common';
 import { UserError } from '@modules/user/domain/errors/user.error';
-import { Result, err, ok } from '@core/interfaces/result';
+import { Result, err, ok } from '@core/libs/result';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {

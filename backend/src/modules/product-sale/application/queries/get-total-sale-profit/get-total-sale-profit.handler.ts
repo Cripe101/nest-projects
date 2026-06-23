@@ -5,7 +5,7 @@ import {
   type ProductSaleRepositoryPort,
 } from '../../ports/product-sale.port';
 import { Inject } from '@nestjs/common';
-import { Result, ok } from '@core/interfaces/result';
+import { Result, ok } from '@core/libs/result';
 
 @QueryHandler(GetTotalSaleProfitQuery)
 export class GetTotalSaleProfitHandler implements IQueryHandler<GetTotalSaleProfitQuery> {

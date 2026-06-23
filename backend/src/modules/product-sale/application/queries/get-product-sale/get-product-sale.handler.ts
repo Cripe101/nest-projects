@@ -6,7 +6,7 @@ import {
   type ProductSaleRepositoryPort,
 } from '../../ports/product-sale.port';
 import { ProductSaleEntity } from '@modules/product-sale/domain/entities/product-sale.entity';
-import { Result, err, ok } from '@core/interfaces/result';
+import { Result, err, ok } from '@core/libs/result';
 import { ProductSaleError } from '@modules/product-sale/domain/errors/product-sale.error';
 
 @QueryHandler(GetProductSaleQuery)

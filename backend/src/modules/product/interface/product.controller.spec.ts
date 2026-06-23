@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { NotFoundException } from '@nestjs/common';
 import { ProductController } from './product.controller';
-import { ok, err } from '@core/interfaces/result';
+import { ok, err } from '@core/libs/result';
 
 describe('ProductController', () => {
   let controller: ProductController;
@@ -57,16 +57,14 @@ describe('ProductController', () => {
         ...dto,
       };
 
-      mockCommandBus.execute.mockResolvedValue(ok(createdProduct));
+      mockCommandBus.execute.mockResolvedValue(ok(createdProduct._id));
 
       const result = await controller.create(dto as any, req as any);
 
       expect(result.isOk()).toBe(true);
-
       if (result.isOk()) {
-        expect(result.value).toEqual('123');
+        expect(result.value).toEqual(createdProduct._id);
       }
-
       expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
     });
   });
@@ -85,11 +83,9 @@ describe('ProductController', () => {
       const result = await controller.getAllProducts();
 
       expect(result.isOk()).toBe(true);
-
       if (result.isOk()) {
         expect(result.value).toEqual(products);
       }
-
       expect(mockQueryBus.execute).toHaveBeenCalledTimes(1);
     });
   });
@@ -145,7 +141,7 @@ describe('ProductController', () => {
         ...dto,
       };
 
-      mockCommandBus.execute.mockResolvedValue(ok(updatedProduct));
+      mockCommandBus.execute.mockResolvedValue(ok(updatedProduct._id));
 
       const result = await controller.updateOneProduct(
         '123',
@@ -154,11 +150,9 @@ describe('ProductController', () => {
       );
 
       expect(result.isOk()).toBe(true);
-
       if (result.isOk()) {
-        expect(result.value).toEqual('123');
+        expect(result.value).toEqual(updatedProduct._id);
       }
-
       expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
     });
 
@@ -181,16 +175,14 @@ describe('ProductController', () => {
         _id: '123',
       };
 
-      mockCommandBus.execute.mockResolvedValue(ok(deletedProduct));
+      mockCommandBus.execute.mockResolvedValue(ok(deletedProduct._id));
 
       const result = await controller.deleteOneProduct('123');
 
       expect(result.isOk()).toBe(true);
-
       if (result.isOk()) {
-        expect(result.value).toEqual('123');
+        expect(result.value).toEqual(deletedProduct._id);
       }
-
       expect(mockCommandBus.execute).toHaveBeenCalledTimes(1);
     });
 

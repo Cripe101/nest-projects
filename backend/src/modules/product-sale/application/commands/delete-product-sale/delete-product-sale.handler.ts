@@ -6,7 +6,7 @@ import {
 } from '../../ports/product-sale.port';
 import { Inject, NotFoundException } from '@nestjs/common';
 import { ProductSaleEntity } from '@modules/product-sale/domain/entities/product-sale.entity';
-import { Result, ok, err } from '@core/interfaces/result';
+import { Result, ok, err } from '@core/libs/result';
 import { ProductSaleError } from '@modules/product-sale/domain/errors/product-sale.error';
 
 @CommandHandler(DeleteProductSaleCommand)

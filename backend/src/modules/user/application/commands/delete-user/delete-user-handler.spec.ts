@@ -56,7 +56,7 @@ describe('DeleteUserHandler', () => {
     expect(result.isOk()).toBe(true);
 
     if (result.isOk()) {
-      expect(result.value).toEqual(user);
+      expect(result.value).toEqual(user._id);
     }
 
     expect(mockRepository.deleteOneUser).toHaveBeenCalledWith('123');

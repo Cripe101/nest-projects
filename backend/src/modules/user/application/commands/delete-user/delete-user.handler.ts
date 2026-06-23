@@ -6,7 +6,7 @@ import {
   USER_REPOSITORY,
   type UserRepositoryPort,
 } from '../../ports/user.repository.port';
-import { Result, err, ok } from '@core/interfaces/result';
+import { Result, err, ok } from '@core/libs/result';
 import { UserError } from '@modules/user/domain/errors/user.error';
 
 @CommandHandler(DeleteUserCommand)
@@ -18,13 +18,13 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
 
   async execute(
     command: DeleteUserCommand,
-  ): Promise<Result<UserEntity, UserError>> {
+  ): Promise<Result<string, UserError>> {
     const user = await this.repository.deleteOneUser(command._id);
 
     if (!user) {
       return err(UserError.NOT_FOUND);
     }
 
-    return ok(user);
+    return ok(user?._id as string);
   }
 }

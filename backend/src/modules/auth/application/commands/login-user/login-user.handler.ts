@@ -7,6 +7,8 @@ import {
   USER_REPOSITORY,
   type UserRepositoryPort,
 } from '@modules/user/application/ports/user.repository.port';
+import { Result, ok, err } from '@core/libs/result';
+import { AuthError } from '@modules/auth/domain/errors/auth.error';
 
 @CommandHandler(LoginUserCommand)
 export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
@@ -16,14 +18,15 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
     private readonly jwtService: JwtService,
   ) {}
 
-  async execute(command: LoginUserCommand): Promise<any> {
+  async execute(command: LoginUserCommand): Promise<Result<any, AuthError>> {
     const { username, password } = command;
+
     const user = await this.repository.getUserByUsername(username);
 
     const isMatch = await bycrypt.compare(password, user?.password as string);
 
-    if (!isMatch) {
-      throw new NotAcceptableException('Invalid credentials');
+    if (!isMatch || !user) {
+      return err(AuthError.INVALID);
     }
 
     const payload = {
@@ -32,9 +35,9 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
       role: user?.role,
     };
 
-    return {
+    return ok({
       accessToken: this.jwtService.sign(payload),
       user: payload,
-    };
+    });
   }
 }

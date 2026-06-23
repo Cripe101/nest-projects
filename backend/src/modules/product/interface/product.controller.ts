@@ -22,7 +22,7 @@ import { GetProductsQuery } from '../application/queries/get-products/get-produc
 import { GetProductQuery } from '../application/queries/get-product/get-product.query';
 import { UpdateProductCommand } from '../application/commands/update-product/update-product.command';
 import { DeleteProductCommand } from '../application/commands/delete-product/delete-product.command';
-import { ok } from '@core/interfaces/result';
+import { ok } from '@core/libs/result';
 
 @Controller('products')
 export class ProductController {
@@ -47,7 +47,7 @@ export class ProductController {
       ),
     );
 
-    return ok(result.value._id);
+    return ok(result.value);
   }
 
   @Get()
@@ -93,7 +93,7 @@ export class ProductController {
       throw new NotFoundException(result.error);
     }
 
-    return ok(result.value._id);
+    return ok(result.value);
   }
 
   @Delete(':id')
@@ -106,6 +106,6 @@ export class ProductController {
       throw new NotFoundException(result.error);
     }
 
-    return ok(result.value._id);
+    return ok(result.value);
   }
 }

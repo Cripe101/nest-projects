@@ -6,7 +6,7 @@ import {
 } from '../../ports/product-sale.port';
 import { Inject } from '@nestjs/common';
 import { ProductSaleEntity } from '@modules/product-sale/domain/entities/product-sale.entity';
-import { Result, ok } from '@core/interfaces/result';
+import { Result, ok } from '@core/libs/result';
 
 @QueryHandler(GetProductSalesQuery)
 export class GetProductSalesHandler implements IQueryHandler<GetProductSalesQuery> {

@@ -56,7 +56,7 @@ describe('CreateProductHandler', () => {
     expect(result.isOk()).toBe(true);
 
     if (result.isOk()) {
-      expect(result.value).toEqual(product);
+      expect(result.value).toEqual(product._id);
     }
 
     expect(mockRepository.create).toHaveBeenCalledTimes(1);

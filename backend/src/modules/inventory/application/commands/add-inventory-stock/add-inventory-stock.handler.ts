@@ -1,12 +1,11 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AddInventoryStockCommand } from './add-inventory-stock.command';
-import { InventoryEntity } from '../../../domain/entities/inventory.entity';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
-import { Result, ok, err } from '@core/interfaces/result';
+import { Result, ok, err } from '@core/libs/result';
 import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 
 @CommandHandler(AddInventoryStockCommand)
@@ -27,6 +26,6 @@ export class AddInventoryStockHandler implements ICommandHandler<AddInventorySto
       return err(InventoryError.NOT_FOUND);
     }
 
-    return ok('Stock added');
+    return ok(inventory?._id as string);
   }
 }

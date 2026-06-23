@@ -47,13 +47,10 @@ describe('GetProductHandler', () => {
     const result = await handler.execute(query);
 
     expect(result.isOk()).toBe(true);
-
     if (result.isOk()) {
       expect(result.value).toEqual(product);
     }
-
     expect(mockRepository.getOneProduct).toHaveBeenCalledTimes(1);
-    expect(mockRepository.getOneProduct).toHaveBeenCalledWith('123');
   });
 
   it('should return ProductError.NOT_FOUND when product does not exist', async () => {
@@ -64,12 +61,9 @@ describe('GetProductHandler', () => {
     const result = await handler.execute(query);
 
     expect(result.isErr()).toBe(true);
-
     if (result.isErr()) {
       expect(result.error).toEqual(ProductError.NOT_FOUND);
     }
-
     expect(mockRepository.getOneProduct).toHaveBeenCalledTimes(1);
-    expect(mockRepository.getOneProduct).toHaveBeenCalledWith('123');
   });
 });

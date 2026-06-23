@@ -9,7 +9,7 @@ import { PRODUCT_SALE_REPOSITORY } from '../../ports/product-sale.port';
 import { PRODUCT_REPOSITORY } from '@modules/product/application/ports/product.repository.port';
 
 import { INVENTORY_REPOSITORY } from '@modules/inventory/application/ports/inventory.repository.port';
-import { ok } from '@core/interfaces/result';
+import { ok } from '@core/libs/result';
 
 describe('CreateProductSaleHandler', () => {
   let handler: CreateProductSaleHandler;

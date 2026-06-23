@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { InventoryController } from './inventory.controller';
-import { ok, err } from '@core/interfaces/result';
+import { ok, err } from '@core/libs/result';
 import { InventoryError } from '../domain/errors/inventory.error';
 
 describe('InventoryController', () => {

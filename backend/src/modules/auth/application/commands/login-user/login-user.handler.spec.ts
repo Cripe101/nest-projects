@@ -4,10 +4,7 @@ import { NotAcceptableException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { LoginUserHandler } from './login-user.handler';
 import { LoginUserCommand } from './login-user.command';
-import {
-  USER_REPOSITORY,
-  UserRepositoryPort,
-} from '@modules/user/application/ports/user.repository.port';
+import { USER_REPOSITORY } from '@modules/user/application/ports/user.repository.port';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),
@@ -16,7 +13,7 @@ jest.mock('bcrypt', () => ({
 describe('LoginUserHandler', () => {
   let handler: LoginUserHandler;
 
-  const mockRepository: Partial<UserRepositoryPort> = {
+  const mockRepository = {
     getUserByUsername: jest.fn(),
   };
 
@@ -52,7 +49,7 @@ describe('LoginUserHandler', () => {
       role: 'admin',
     };
 
-    (mockRepository.getUserByUsername as jest.Mock).mockResolvedValue(user);
+    mockRepository.getUserByUsername.mockResolvedValue(user);
 
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
@@ -62,20 +59,23 @@ describe('LoginUserHandler', () => {
       new LoginUserCommand('Mheg', 'password'),
     );
 
-    expect(result).toEqual({
-      accessToken: 'jwt-token',
-      user: {
-        sub: '123',
-        username: 'Mheg',
-        role: 'admin',
-      },
-    });
+    expect(result.isOk()).toEqual(true);
+    if (result.isOk()) {
+      expect(result.value).toEqual({
+        accessToken: 'jwt-token',
+        user: {
+          sub: '123',
+          username: 'Mheg',
+          role: 'admin',
+        },
+      });
+    }
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
     expect(bcrypt.compare).toHaveBeenCalledWith('password', 'hashed-password');
     expect(mockJwtService.sign).toHaveBeenCalled();
   });
 
-  it('should throw NotAcceptableException when password is invalid', async () => {
+  it('should return AuthError.INVALID when password or user is invalid', async () => {
     const user = {
       _id: '123',
       username: 'Mheg',
@@ -85,13 +85,13 @@ describe('LoginUserHandler', () => {
 
     const command = new LoginUserCommand('Mheg', 'wrong-password');
 
-    (mockRepository.getUserByUsername as jest.Mock).mockResolvedValue(user);
+    mockRepository.getUserByUsername.mockResolvedValue(user);
 
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-    await expect(handler.execute(command)).rejects.toThrow(
-      NotAcceptableException,
-    );
+    const result = await handler.execute(command);
+
+    expect(result.isErr()).toEqual(true);
     expect(mockJwtService.sign).not.toHaveBeenCalled();
   });
 });

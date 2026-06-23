@@ -6,7 +6,7 @@ import {
   type ProductRepositoryPort,
 } from '../../ports/product.repository.port';
 import { Inject } from '@nestjs/common';
-import { Result, ok } from '@core/interfaces/result';
+import { Result, ok } from '@core/libs/result';
 
 @QueryHandler(GetProductsQuery)
 export class GetProductsHandler implements IQueryHandler<GetProductsQuery> {

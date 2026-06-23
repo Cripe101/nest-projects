@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ProductSaleController } from './product-sale.controller';
-import { ok, err } from '@core/interfaces/result';
+import { ok, err } from '@core/libs/result';
 import { ProductSaleError } from '../domain/errors/product-sale.error';
 
 describe('ProductSaleController', () => {

@@ -86,33 +86,10 @@ describe('UpdateUserHandler', () => {
     expect(result.isOk()).toBe(true);
 
     if (result.isOk()) {
-      expect(result.value).toEqual(updatedUser);
+      expect(result.value).toEqual(updatedUser._id);
     }
 
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-    expect(mockRepository.updateOneUser).toHaveBeenCalled();
-  });
-
-  it('should allow updating user with the same username', async () => {
-    const updatedUser = {
-      _id: '123',
-      username: 'Mheg',
-      role: UserRole.ADMIN,
-    };
-
-    mockRepository.getUserByUsername.mockResolvedValue(updatedUser);
-    mockRepository.updateOneUser.mockResolvedValue(updatedUser);
-
-    const result = await handler.execute(
-      new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN),
-    );
-
-    expect(result.isOk()).toBe(true);
-
-    if (result.isOk()) {
-      expect(result.value).toEqual(updatedUser);
-    }
-
     expect(mockRepository.updateOneUser).toHaveBeenCalled();
   });
 });

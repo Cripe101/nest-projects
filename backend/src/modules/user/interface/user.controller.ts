@@ -22,7 +22,7 @@ import { RolesGuard } from '@core/guard/roles.guard';
 import { Roles } from '@core/decorators/roles.decorator';
 import { UserRole } from '@core/constants/user-role.enum';
 import { DeleteUserCommand } from '../application/commands/delete-user/delete-user.command';
-import { ok } from '@core/interfaces/result';
+import { ok } from '@core/libs/result';
 import { UserError } from '@modules/user/domain/errors/user.error';
 
 @Controller('users')
@@ -73,13 +73,10 @@ export class UserController {
     const result = await this.commandBus.execute(new DeleteUserCommand(id));
 
     if (result.isErr()) {
-      if (result.error === UserError.NOT_FOUND) {
-        throw new NotFoundException(result.err);
-      }
-      throw new ConflictException(result.err);
+      throw new NotFoundException(result.err);
     }
 
-    return ok(result.value._id);
+    return ok(result.value);
   }
 
   @Get()

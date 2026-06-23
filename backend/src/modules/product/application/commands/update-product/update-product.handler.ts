@@ -7,7 +7,7 @@ import {
 } from '../../ports/product.repository.port';
 import { ProductEntity } from '@modules/product/domain/entities/product.entity';
 import { ProductError } from '@modules/product/domain/errors/product.error';
-import { Result, err, ok } from '@core/interfaces/result';
+import { Result, err, ok } from '@core/libs/result';
 
 @CommandHandler(UpdateProductCommand)
 export class UpdateProductHandler implements ICommandHandler<UpdateProductCommand> {
@@ -18,7 +18,7 @@ export class UpdateProductHandler implements ICommandHandler<UpdateProductComman
 
   async execute(
     command: UpdateProductCommand,
-  ): Promise<Result<ProductEntity, ProductError>> {
+  ): Promise<Result<string, ProductError>> {
     const {
       productCategory,
       productName,
@@ -47,6 +47,6 @@ export class UpdateProductHandler implements ICommandHandler<UpdateProductComman
       return err(ProductError.NOT_FOUND);
     }
 
-    return ok(product);
+    return ok(product?._id as string);
   }
 }

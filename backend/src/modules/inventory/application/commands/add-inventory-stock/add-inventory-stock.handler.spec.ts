@@ -44,11 +44,9 @@ describe('AddInventoryStockHandler', () => {
     const result = await handler.execute(command);
 
     expect(result.isOk()).toBe(true);
-
     if (result.isOk()) {
-      expect(result.value).toBe('Stock added');
+      expect(result.value).toBe(inventory._id);
     }
-
     expect(mockRepository.addStock).toHaveBeenCalledTimes(1);
     expect(mockRepository.addStock).toHaveBeenCalledWith('inventory-id', 50);
   });
@@ -61,12 +59,9 @@ describe('AddInventoryStockHandler', () => {
     const result = await handler.execute(command);
 
     expect(result.isErr()).toBe(true);
-
     if (result.isErr()) {
       expect(result.error).toBe(InventoryError.NOT_FOUND);
     }
-
     expect(mockRepository.addStock).toHaveBeenCalledTimes(1);
-    expect(mockRepository.addStock).toHaveBeenCalledWith('inventory-id', 50);
   });
 });

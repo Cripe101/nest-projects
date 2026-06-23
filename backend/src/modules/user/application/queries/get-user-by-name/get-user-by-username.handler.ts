@@ -5,7 +5,7 @@ import {
   USER_REPOSITORY,
   type UserRepositoryPort,
 } from '../../ports/user.repository.port';
-import { Result, err, ok } from '@core/interfaces/result';
+import { Result, err, ok } from '@core/libs/result';
 import { UserEntity } from '@modules/user/domain/entities/user.entity';
 import { UserError } from '@modules/user/domain/errors/user.error';
 

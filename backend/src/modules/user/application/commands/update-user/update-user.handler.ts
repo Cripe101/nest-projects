@@ -5,7 +5,7 @@ import {
   USER_REPOSITORY,
   type UserRepositoryPort,
 } from '../../ports/user.repository.port';
-import { Result, err, ok } from '@core/interfaces/result';
+import { Result, err, ok } from '@core/libs/result';
 import { UserEntity } from '@modules/user/domain/entities/user.entity';
 import { UserError } from '@modules/user/domain/errors/user.error';
 
@@ -18,7 +18,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
 
   async execute(
     command: UpdateUserCommand,
-  ): Promise<Result<UserEntity, UserError>> {
+  ): Promise<Result<string, UserError>> {
     const { _id, username, role } = command;
 
     const existingUser = await this.repository.getUserByUsername(
@@ -39,6 +39,6 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
       return err(UserError.NOT_FOUND);
     }
 
-    return ok(user);
+    return ok(user?._id as string);
   }
 }

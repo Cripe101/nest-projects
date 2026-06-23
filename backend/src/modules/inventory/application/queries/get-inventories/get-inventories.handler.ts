@@ -5,7 +5,7 @@ import {
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
 import { Inject } from '@nestjs/common';
-import { Result, ok } from '@core/interfaces/result';
+import { Result, ok } from '@core/libs/result';
 import { InventoryEntity } from '@modules/inventory/domain/entities/inventory.entity';
 
 @QueryHandler(GetInventoriesQuery)

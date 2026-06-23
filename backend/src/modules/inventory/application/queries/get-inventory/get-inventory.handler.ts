@@ -1,12 +1,12 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetInventoryQuery } from './get-inventory.query';
 import { InventoryEntity } from '../../../domain/entities/inventory.entity';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
-import { Result, ok, err } from '@core/interfaces/result';
+import { Result, ok, err } from '@core/libs/result';
 import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 
 @QueryHandler(GetInventoryQuery)

@@ -6,7 +6,7 @@ import {
   PRODUCT_REPOSITORY,
   type ProductRepositoryPort,
 } from '../../ports/product.repository.port';
-import { Result, err, ok } from '@core/interfaces/result';
+import { Result, err, ok } from '@core/libs/result';
 import { ProductError } from '@modules/product/domain/errors/product.error';
 
 @CommandHandler(DeleteProductCommand)
@@ -18,7 +18,7 @@ export class DeleteProductHandler implements ICommandHandler<DeleteProductComman
 
   async execute(
     command: DeleteProductCommand,
-  ): Promise<Result<ProductEntity, ProductError>> {
+  ): Promise<Result<string, ProductError>> {
     const { id } = command;
 
     const product = await this.repository.deleteOneProduct(id);
@@ -27,6 +27,6 @@ export class DeleteProductHandler implements ICommandHandler<DeleteProductComman
       return err(ProductError.NOT_FOUND);
     }
 
-    return ok(product);
+    return ok(product?._id as string);
   }
 }

@@ -49,7 +49,7 @@ describe('DeleteProductHandler', () => {
     expect(result.isOk()).toBe(true);
 
     if (result.isOk()) {
-      expect(result.value).toEqual(deletedProduct);
+      expect(result.value).toEqual(deletedProduct._id);
     }
 
     expect(mockRepository.deleteOneProduct).toHaveBeenCalledTimes(1);

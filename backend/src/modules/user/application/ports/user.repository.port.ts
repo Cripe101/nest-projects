@@ -1,4 +1,4 @@
-import { Result } from '@core/interfaces/result';
+import { Result } from '@core/libs/result';
 import { UserEntity } from '../../domain/entities/user.entity';
 import { UserError } from '@modules/user/domain/errors/user.error';
 
