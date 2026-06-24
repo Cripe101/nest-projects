@@ -20,7 +20,7 @@ const Login = () => {
       password: string;
     }) => login({ username, password }),
     onSuccess: (data) => {
-      const role = data.user.role;
+      const role = data.value.user.role;
       role === "admin"
         ? navigate("/inventory")
         : role === "manager"

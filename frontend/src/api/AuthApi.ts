@@ -9,7 +9,7 @@ export const login = async ({
 }) => {
   const response = await apiClient.post("/auth/login", { username, password });
 
-  localStorage.setItem("accessToken", response.data.accessToken);
+  localStorage.setItem("accessToken", response.data.value.accessToken);
 
   return response.data;
 };
