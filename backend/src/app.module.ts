@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { ProfitModule } from './module/sample-profit/infrastracture/profit.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProductSaleModule } from './modules/product-sale/product-sale.module';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
-import { AuthModule } from '@modules/auth/auth.module';
-import { UserModule } from '@modules/user/user.module';
-import { ProductModule } from '@modules/product/product.module';
-import { InventoryModule } from '@modules/inventory/inventory.module';
 import { AppService } from './app.service';
+import { ProfitModule } from './sample-profit/infrastracture/profit.module';
+import { ProductModule } from './modules/product/product.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
 
 @Module({
   imports: [
