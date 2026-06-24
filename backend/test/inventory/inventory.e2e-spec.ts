@@ -42,8 +42,10 @@ describe('InventoryController (e2e)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
-  });
+    if (app) {
+   await app.close();
+ }
+ });
 
   it('should create inventory', async () => {
     const response = await request(app.getHttpServer())
@@ -76,7 +78,7 @@ describe('InventoryController (e2e)', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.body).toBeDefined();
-    expect(response.body.value._id).toEqual(inventoryId);
+    expect(response.body.value?._id).toEqual(inventoryId);
   });
 
   it('should add stock to inventory', async () => {

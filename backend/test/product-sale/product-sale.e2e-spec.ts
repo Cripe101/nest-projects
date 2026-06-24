@@ -25,7 +25,7 @@ describe('ProductSaleController (e2e)', () => {
         password: 'Mhegz2003',
       });
 
-    token = loginResponse.body.accessToken;
+    token = loginResponse.body.value.accessToken;
 
     const productResponse = await request(app.getHttpServer())
       .post('/products')
@@ -54,8 +54,10 @@ describe('ProductSaleController (e2e)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
-  });
+    if (app) {
+   await app.close();
+ }
+ });
 
   it('should create a product sale', async () => {
     const response = await request(app.getHttpServer())

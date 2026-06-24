@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InventoryEntity } from '../../domain/entities/inventory.entity';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Inventory } from '@core/schemas/inventory/inventory.schema';
 import { InventoryRepositoryPort } from '@modules/inventory/application/ports/inventory.repository.port';
 import { ProductEntity } from '@modules/product/domain/entities/product.entity';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class InventoryRepository implements InventoryRepositoryPort {

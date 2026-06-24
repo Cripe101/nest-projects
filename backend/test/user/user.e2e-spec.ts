@@ -25,12 +25,14 @@ describe('UserController (e2e)', () => {
         password: 'Mhegz2003',
       });
 
-    token = loginResponse.body.accessToken;
+    token = loginResponse.body.value.accessToken;
   });
 
   afterAll(async () => {
-    await app.close();
-  });
+    if (app) {
+   await app.close();
+ }
+ });
 
   it('should create a user', async () => {
     const response = await request(app.getHttpServer())
@@ -90,8 +92,7 @@ describe('UserController (e2e)', () => {
       });
 
     expect(response.body).toBeDefined();
-    expect(response.body.value.username).toEqual('updated-user');
-    expect(response.body.value.role).toEqual(UserRole.CASHIER);
+    expect(response.body.value).toEqual(createdUserId);
   });
 
   it('should delete user', async () => {

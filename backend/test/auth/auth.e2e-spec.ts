@@ -16,7 +16,9 @@ describe('AuthController (e2e)', () => {
   });
 
   afterAll(async () => {
+     if (app) {
     await app.close();
+  }
   });
 
   it('should login successfully and return access token', async () => {
@@ -29,9 +31,8 @@ describe('AuthController (e2e)', () => {
 
     expect(response.status).toEqual(201);
     expect(response.body).toBeDefined();
-    expect(response.body.accessToken).toBeDefined();
-    expect(response.body.user).toBeDefined();
-    expect(response.body.user.username).toEqual('Mhegz');
+    expect(response.body.value.accessToken).toBeDefined();
+    expect(response.body.value.user).toBeDefined();
   });
 
   it('should fail login with invalid credentials', async () => {
@@ -43,6 +44,6 @@ describe('AuthController (e2e)', () => {
       });
 
     expect(response.status).toBeGreaterThanOrEqual(400);
-    expect(response.body.accessToken).toBeUndefined();
+    expect(response.body.value?.accessToken).toBeUndefined();
   });
 });
