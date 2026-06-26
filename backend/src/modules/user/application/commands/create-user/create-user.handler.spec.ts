@@ -65,6 +65,8 @@ describe('CreateUserHandler', () => {
       new CreateUserCommand('Mheg', 'password', UserRole.ADMIN),
     );
 
+    // this is a bad pratice
+
     expect(result.isOk()).toBe(true);
 
     if (result.isOk()) {
