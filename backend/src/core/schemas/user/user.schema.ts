@@ -4,6 +4,18 @@ import { UserRole } from '../../constants/user-role.enum';
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true })
+  firstName!: string;
+
+  @Prop({ required: false })
+  middleName?: string;
+
+  @Prop({ required: true })
+  lastName!: string;
+
+  @Prop({ required: true })
+  email!: string;
+
+  @Prop({ required: true })
   username!: string;
 
   @Prop({ required: true })

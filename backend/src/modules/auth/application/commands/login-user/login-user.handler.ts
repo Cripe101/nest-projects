@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { LoginUserCommand } from './login-user.command';
 import { JwtService } from '@nestjs/jwt';
 import bycrypt from 'bcrypt';
-import { Inject, NotAcceptableException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import {
   USER_REPOSITORY,
   type UserRepositoryPort,
@@ -15,6 +15,7 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly repository: UserRepositoryPort,
+
     private readonly jwtService: JwtService,
   ) {}
 

@@ -20,7 +20,8 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   async execute(
     command: CreateUserCommand,
   ): Promise<Result<string, UserError>> {
-    const { username, role, password } = command;
+    const { username, role, password, firstName, middleName, lastName, email } =
+      command;
 
     const checkIfUserExists = await this.repository.getUserByUsername(username);
 
@@ -30,11 +31,20 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
     const hashedPassword = await this.hashPassword(password);
 
-    const user = new UserEntity(null, username, role, hashedPassword);
+    const user = new UserEntity(
+      null,
+      firstName,
+      middleName,
+      lastName,
+      email,
+      username,
+      role,
+      hashedPassword,
+    );
 
     const result = await this.repository.create(user);
 
-    return ok(result?._id as string);
+    return ok(result._id as string);
   }
 
   private async hashPassword(password: string): Promise<string> {

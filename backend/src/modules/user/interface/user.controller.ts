@@ -37,7 +37,15 @@ export class UserController {
   @Roles(UserRole.ADMIN)
   async createUser(@Body() dto: CreateUserDto) {
     const result = await this.commandBus.execute(
-      new CreateUserCommand(dto.username, dto.password, dto.role),
+      new CreateUserCommand(
+        dto.firstName,
+        dto.middleName as string,
+        dto.lastName,
+        dto.email,
+        dto.username,
+        dto.password,
+        dto.role,
+      ),
     );
 
     if (result.isErr()) {
@@ -52,7 +60,15 @@ export class UserController {
   @Roles(UserRole.ADMIN)
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     const result = await this.commandBus.execute(
-      new UpdateUserCommand(id, dto.username, dto.role),
+      new UpdateUserCommand(
+        id,
+        dto.firstName,
+        dto.middleName as string,
+        dto.lastName,
+        dto.email,
+        dto.username,
+        dto.role,
+      ),
     );
 
     if (result.isErr()) {

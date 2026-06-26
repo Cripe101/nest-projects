@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
-import { NotAcceptableException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import { LoginUserHandler } from './login-user.handler';
 import { LoginUserCommand } from './login-user.command';

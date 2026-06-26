@@ -5,6 +5,8 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateUserDto } from '../../interface/dto/user.dto';
 import { User } from '@core/schemas/user/user.schema';
+import { UserError } from '@modules/user/domain/errors/user.error';
+import { Result, ok } from '@core/libs/result';
 
 @Injectable()
 export class UserRepository implements UserRepositoryPort {
@@ -15,16 +17,26 @@ export class UserRepository implements UserRepositoryPort {
 
   async create(user: UserEntity): Promise<UserEntity> {
     const createdUser = await this.userModel.create({
+      firstName: user.firstName,
+      middleName: user.middleName,
+      lastName: user.lastName,
+      email: user.email,
       username: user.username,
       password: user.password,
       role: user.role,
     });
 
-    return new UserEntity(
+    const userReturn = new UserEntity(
       createdUser._id.toString(),
+      createdUser.firstName,
+      createdUser.middleName as string,
+      createdUser.lastName,
+      createdUser.email,
       createdUser.username,
       createdUser.role,
     );
+
+    return userReturn;
   }
 
   async updateOneUser(

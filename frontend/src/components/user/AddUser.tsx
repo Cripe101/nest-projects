@@ -7,6 +7,10 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const AddUser = () => {
+  const [firstName, setFirstName] = useState<string>("");
+  const [middleName, setMiddleName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [userRole, setUserRole] = useState<string>("");
@@ -28,6 +32,10 @@ const AddUser = () => {
 
   const handleSubmit = () => {
     const data: IUserPost = {
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
+      email: email,
       username: username,
       password: password,
       role: userRole,
@@ -52,6 +60,30 @@ const AddUser = () => {
     <div className="p-10 flex flex-col justify-center items-center gap-3">
       <h1>AddUser</h1>
       <section className="grid gap-3">
+        <Input
+          label="First Name"
+          placeholder="First Name"
+          value={firstName}
+          setter={setFirstName}
+        />
+        <Input
+          label="Middle Name"
+          placeholder="Middle Name"
+          value={middleName}
+          setter={setMiddleName}
+        />
+        <Input
+          label="Last Name"
+          placeholder="Last Name"
+          value={lastName}
+          setter={setLastName}
+        />
+        <Input
+          label="Email"
+          placeholder="Email"
+          value={email}
+          setter={setEmail}
+        />
         <Input
           label="Username"
           placeholder="Username"

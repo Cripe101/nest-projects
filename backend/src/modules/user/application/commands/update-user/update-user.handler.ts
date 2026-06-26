@@ -19,7 +19,8 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
   async execute(
     command: UpdateUserCommand,
   ): Promise<Result<string, UserError>> {
-    const { _id, username, role } = command;
+    const { _id, firstName, middleName, lastName, email, username, role } =
+      command;
 
     const existingUser = await this.repository.getUserByUsername(
       command.username,
@@ -31,6 +32,10 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
 
     const user = await this.repository.updateOneUser(_id, {
       _id: _id,
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
+      email: email,
       username: username,
       role: role,
     });
