@@ -6,7 +6,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UpdateUserDto } from '../../interface/dto/user.dto';
 import { User } from '@core/schemas/user/user.schema';
 import { UserError } from '@modules/user/domain/errors/user.error';
-import { Result, ok } from '@core/libs/result';
+import { Result, ok, err } from '@core/libs/result';
+import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class UserRepository implements UserRepositoryPort {
@@ -56,11 +57,29 @@ export class UserRepository implements UserRepositoryPort {
     return await this.userModel.find();
   }
 
-  async getUserByUsername(username: string): Promise<UserEntity | null> {
-    return await this.userModel.findOne({ username });
+  async getUserByUsername(
+    username: string,
+  ): Promise<Result<UserEntity | null, UserError>> {
+    const user = await this.userModel.findOne({ username });
+
+    if (!user) {
+      return err(UserError.NOT_FOUND);
+    }
+
+    return ok({
+      ...user,
+      middleName: user.middleName as string,
+      _id: user._id.toString(),
+    });
   }
 
-  async getOneUser(id: string): Promise<UserEntity | null> {
-    return await this.userModel.findById(id);
+  async getOneUser(id: string): Promise<Result<UserEntity | null, UserError>> {
+    const user = await this.userModel.findById(id);
+
+    if (!user) {
+      return err(UserError.NOT_FOUND);
+    }
+
+    return ok(UserMapper.toEntity(user));
   }
 }

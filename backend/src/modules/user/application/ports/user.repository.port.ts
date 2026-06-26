@@ -13,7 +13,9 @@ export interface UserRepositoryPort {
 
   getAllUsers(): Promise<UserEntity[]>;
 
-  getOneUser(id: string): Promise<UserEntity | null>;
+  getOneUser(id: string): Promise<Result<UserEntity | null, UserError>>;
 
-  getUserByUsername(username: string): Promise<UserEntity | null>;
+  getUserByUsername(
+    username: string,
+  ): Promise<Result<UserEntity | null, UserError>>;
 }
