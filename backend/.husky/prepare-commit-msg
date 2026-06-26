@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# Only run commitizen for regular commits (not merges, amends, etc.)
+if [ "$2" = "" ]; then
+  cd backend
+  exec < /dev/tty
+  npx cz --hook
+fi
