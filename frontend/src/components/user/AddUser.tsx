@@ -44,16 +44,17 @@ const AddUser = () => {
     if (password != confirmPassword) {
       return toast.error("Password does not match");
     }
-
-    username === ""
-      ? toast.error("Enter username")
-      : password === ""
-        ? toast.error("Enter password")
-        : userRole === ""
-          ? toast.error("Select role")
-          : confirmPassword === ""
-            ? toast.error("Renter Password")
-            : addMutation.mutate(data);
+    if (username === "") {
+      toast.error("Enter username");
+    } else if (password === "") {
+      toast.error("Enter password");
+    } else if (userRole === "") {
+      toast.error("Select role");
+    } else if (confirmPassword === "") {
+      toast.error("Renter Password");
+    } else {
+      addMutation.mutate(data);
+    }
   };
 
   return (

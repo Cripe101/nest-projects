@@ -21,13 +21,11 @@ const Login = () => {
     }) => login({ username, password }),
     onSuccess: (data) => {
       const role = data.value.user.role;
-      role === "admin"
-        ? navigate("/inventory")
-        : role === "manager"
-          ? navigate("/inventory")
-          : role === "cashier"
-            ? navigate("/sale")
-            : "";
+      if (role === "admin" || role === "manager") {
+        navigate("/inventory");
+      } else if (role === "cashier") {
+        navigate("/sale");
+      }
 
       toast.success(`${username} successfully login`);
     },
