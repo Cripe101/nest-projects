@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
 
 import { DeleteProductSaleHandler } from './delete-product-sale.handler';
 import { DeleteProductSaleCommand } from './delete-product-sale.command';

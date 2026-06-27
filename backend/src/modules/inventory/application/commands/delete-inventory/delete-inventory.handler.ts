@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteInventoryCommand } from './delete-inventory.command';
-import { InventoryEntity } from '../../../domain/entities/inventory.entity';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import {
   INVENTORY_REPOSITORY,
   type InventoryRepositoryPort,

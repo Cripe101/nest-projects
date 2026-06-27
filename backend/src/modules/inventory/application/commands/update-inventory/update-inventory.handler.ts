@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateInventoryCommand } from './update-inventory.command';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { InventoryEntity } from '../../../domain/entities/inventory.entity';
 import {
   INVENTORY_REPOSITORY,

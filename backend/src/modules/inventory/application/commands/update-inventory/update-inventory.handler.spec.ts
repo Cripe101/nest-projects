@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
 
 import { UpdateInventoryHandler } from './update-inventory.handler';
 import { UpdateInventoryCommand } from './update-inventory.command';

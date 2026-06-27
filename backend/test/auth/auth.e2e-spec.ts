@@ -16,9 +16,9 @@ describe('AuthController (e2e)', () => {
   });
 
   afterAll(async () => {
-     if (app) {
-    await app.close();
-  }
+    if (app) {
+      await app.close();
+    }
   });
 
   it('should login successfully and return access token', async () => {

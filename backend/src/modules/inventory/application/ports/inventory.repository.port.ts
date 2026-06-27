@@ -14,7 +14,7 @@ export interface InventoryRepositoryPort {
 
   deductStock(id: string, quantity: number): Promise<InventoryEntity | null>;
 
-  addStock(id: string, quantity: number): Promise<any | null>;
+  addStock(id: string, quantity: number): Promise<InventoryEntity | null>;
 
   getInventoryByProduct(productId: string): Promise<InventoryEntity | null>;
 

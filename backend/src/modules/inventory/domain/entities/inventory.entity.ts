@@ -11,7 +11,7 @@ export class InventoryEntity extends BaseEntity {
   ) {
     super(_id);
 
-    if (currentStock! < 0) {
+    if (currentStock < 0) {
       throw new Error('Stock connot be negative');
     }
 

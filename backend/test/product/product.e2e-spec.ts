@@ -30,9 +30,9 @@ describe('ProductController (e2e)', () => {
 
   afterAll(async () => {
     if (app) {
-   await app.close();
- }
- });
+      await app.close();
+    }
+  });
 
   it('should create a product', async () => {
     const response = await request(app.getHttpServer())

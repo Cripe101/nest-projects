@@ -1,12 +1,7 @@
 import { Test } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
-
 import { DeleteInventoryHandler } from './delete-inventory.handler';
 import { DeleteInventoryCommand } from './delete-inventory.command';
-import {
-  INVENTORY_REPOSITORY,
-  InventoryRepositoryPort,
-} from '../../ports/inventory.repository.port';
+import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
 
 describe('DeleteInventoryHandler', () => {
   let handler: DeleteInventoryHandler;

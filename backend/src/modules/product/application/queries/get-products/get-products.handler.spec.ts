@@ -1,6 +1,5 @@
 import { Test } from '@nestjs/testing';
 import { GetProductsHandler } from './get-products.handler';
-import { GetProductsQuery } from './get-products.query';
 import { PRODUCT_REPOSITORY } from '../../ports/product.repository.port';
 import { ProductEntity } from '@modules/product/domain/entities/product.entity';
 

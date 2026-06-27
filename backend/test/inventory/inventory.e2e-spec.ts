@@ -43,9 +43,9 @@ describe('InventoryController (e2e)', () => {
 
   afterAll(async () => {
     if (app) {
-   await app.close();
- }
- });
+      await app.close();
+    }
+  });
 
   it('should create inventory', async () => {
     const response = await request(app.getHttpServer())

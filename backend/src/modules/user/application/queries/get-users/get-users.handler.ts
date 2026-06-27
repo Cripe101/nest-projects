@@ -6,7 +6,7 @@ import {
 } from '../../ports/user.repository.port';
 import { Inject } from '@nestjs/common';
 import { UserEntity } from '@modules/user/domain/entities/user.entity';
-import { Result, ok } from '@core/libs/result';
+import { Result, ok, err } from '@core/libs/result';
 
 @QueryHandler(GetUsersQuery)
 export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
@@ -18,6 +18,8 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
   async execute(): Promise<Result<UserEntity[], null>> {
     const users = await this.repository.getAllUsers();
 
-    return ok(users);
+    if (users.isErr()) return err(null);
+
+    return ok(users.value);
   }
 }

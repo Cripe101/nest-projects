@@ -44,7 +44,9 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
     const result = await this.repository.create(user);
 
-    return ok(result._id as string);
+    if (result.isErr()) return err(result.error);
+
+    return ok(result.value._id as string);
   }
 
   private async hashPassword(password: string): Promise<string> {

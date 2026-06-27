@@ -1,0 +1,88 @@
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/app.controller.ts
+  1:22  error  'Get' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/auth/application/commands/login-user/login-user.handler.ts
+  38:10  error  Expected non-Promise value in a boolean conditional  @typescript-eslint/no-misused-promises
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/auth/infrastructure/jwt/jwt.strategy.ts
+  16:3  error  Async method 'validate' has no 'await' expression  @typescript-eslint/require-await
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/create-inventory/create-inventory.handler.spec.ts
+  5:3  error  'InventoryRepositoryPort' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/delete-inventory/delete-inventory.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used        @typescript-eslint/no-unused-vars
+  8:3   error  'InventoryRepositoryPort' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/delete-inventory/delete-inventory.handler.ts
+  3:10  error  'InventoryEntity' is defined but never used    @typescript-eslint/no-unused-vars
+  4:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/update-inventory/update-inventory.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/update-inventory/update-inventory.handler.ts
+  3:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/ports/inventory.repository.port.ts
+  17:51  error  'any' overrides all other types in this union type  @typescript-eslint/no-redundant-type-constituents
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/queries/get-inventory/get-inventory.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+  7:10  error  'Result' is defined but never used             @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/interface/dto/add-stock.dto.ts
+  1:10  error  'Type' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/interface/inventory.controller.ts
+  29:10  error  'InventoryResponseDto' is defined but never used  @typescript-eslint/no-unused-vars
+  30:10  error  'InventoryError' is defined but never used        @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/commands/create-product-sale/create-product-sale.handler.spec.ts
+  2:10  error  'BadRequestException' is defined but never used  @typescript-eslint/no-unused-vars
+  2:31  error  'NotFoundException' is defined but never used    @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/commands/create-product-sale/create-product-sale.handler.ts
+  4:10  error  'BadRequestException' is defined but never used  @typescript-eslint/no-unused-vars
+  4:39  error  'NotFoundException' is defined but never used    @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/commands/delete-product-sale/delete-product-sale.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/commands/delete-product-sale/delete-product-sale.handler.ts
+  7:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+  8:10  error  'ProductSaleEntity' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/queries/get-product-sale/get-product-sale.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/queries/get-product-sale/get-product-sale.handler.ts
+  3:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product/application/commands/delete-product/delete-product.handler.ts
+  3:10  error  'ProductEntity' is defined but never used      @typescript-eslint/no-unused-vars
+  4:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product/application/commands/update-product/update-product.handler.ts
+  3:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product/application/queries/get-products/get-products.handler.spec.ts
+  3:10  error  'GetProductsQuery' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product/product.module.ts
+  17:10  error  'ProductEntity' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/application/commands/update-user/update-user.handler.ts
+  3:10  error  'ConflictException' is defined but never used  @typescript-eslint/no-unused-vars
+  3:37  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+  9:10  error  'UserEntity' is defined but never used         @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/application/queries/get-user-by-name/get-user-by-username.handler.ts
+  3:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/application/queries/get-user/get-user.handler.ts
+  3:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 35 problems (35 errors, 0 warnings)
+

@@ -51,7 +51,7 @@ describe('ProductSaleController', () => {
         },
       };
 
-      const result = await controller.create(dto as any, req as any);
+      const result = await controller.create(dto, req as any);
 
       expect(result.isOk()).toBe(true);
 

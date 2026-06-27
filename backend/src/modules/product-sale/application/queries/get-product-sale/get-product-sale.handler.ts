@@ -1,6 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetProductSaleQuery } from './get-product-sale.query';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import {
   PRODUCT_SALE_REPOSITORY,
   type ProductSaleRepositoryPort,

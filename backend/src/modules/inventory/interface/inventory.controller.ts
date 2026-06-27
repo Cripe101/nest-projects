@@ -26,8 +26,6 @@ import { JwtAuthGuard } from '../../../core/guard/jwt.auth.guard';
 import { RolesGuard } from '../../../core/guard/roles.guard';
 import { AddInventoryStockCommand } from '../application/commands/add-inventory-stock/add-inventory-stock.command';
 import { AddStockDto } from './dto/add-stock.dto';
-import { InventoryResponseDto } from './dto/inventory-response.dto';
-import { InventoryError } from '../domain/errors/inventory.error';
 import { ok } from '@core/libs/result';
 
 @Controller('inventories')

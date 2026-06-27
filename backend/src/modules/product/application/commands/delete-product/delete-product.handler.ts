@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteProductCommand } from './delete-product.command';
-import { ProductEntity } from '../../../domain/entities/product.entity';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import {
   PRODUCT_REPOSITORY,
   type ProductRepositoryPort,

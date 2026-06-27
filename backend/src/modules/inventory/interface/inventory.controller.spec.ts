@@ -52,7 +52,7 @@ describe('InventoryController', () => {
         },
       };
 
-      const result = await controller.createInventory(dto as any, req as any);
+      const result = await controller.createInventory(dto, req as any);
 
       expect(result.isOk()).toBe(true);
 
@@ -121,11 +121,7 @@ describe('InventoryController', () => {
         },
       };
 
-      const result = await controller.updateInventory(
-        '123',
-        dto as any,
-        req as any,
-      );
+      const result = await controller.updateInventory('123', dto, req as any);
 
       expect(result.isOk()).toBe(true);
 

@@ -1,6 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteUserCommand } from './delete-user.command';
-import { UserEntity } from '../../../domain/entities/user.entity';
 import { Inject } from '@nestjs/common';
 import {
   USER_REPOSITORY,
@@ -21,10 +20,10 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
   ): Promise<Result<string, UserError>> {
     const user = await this.repository.deleteOneUser(command._id);
 
-    if (!user) {
-      return err(UserError.NOT_FOUND);
+    if (user.isErr()) {
+      return err(user.error);
     }
 
-    return ok(user?._id as string);
+    return ok(user.value?._id as string);
   }
 }

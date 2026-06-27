@@ -1,9 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { CreateInventoryCommand } from './create-inventory.command';
-import {
-  INVENTORY_REPOSITORY,
-  InventoryRepositoryPort,
-} from '../../ports/inventory.repository.port';
+import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
 import { InventoryEntity } from '../../../domain/entities/inventory.entity';
 import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 import { CreateInventoryHandler } from './create-inventory.handlers';

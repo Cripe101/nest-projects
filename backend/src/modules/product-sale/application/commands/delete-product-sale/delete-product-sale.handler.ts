@@ -4,8 +4,7 @@ import {
   PRODUCT_SALE_REPOSITORY,
   type ProductSaleRepositoryPort,
 } from '../../ports/product-sale.port';
-import { Inject, NotFoundException } from '@nestjs/common';
-import { ProductSaleEntity } from '@modules/product-sale/domain/entities/product-sale.entity';
+import { Inject } from '@nestjs/common';
 import { Result, ok, err } from '@core/libs/result';
 import { ProductSaleError } from '@modules/product-sale/domain/errors/product-sale.error';
 

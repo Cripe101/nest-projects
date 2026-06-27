@@ -16,7 +16,7 @@ export class UserRepository implements UserRepositoryPort {
     private readonly userModel: Model<User>,
   ) {}
 
-  async create(user: UserEntity): Promise<UserEntity> {
+  async create(user: UserEntity): Promise<Result<UserEntity, UserError>> {
     const createdUser = await this.userModel.create({
       firstName: user.firstName,
       middleName: user.middleName,
@@ -37,24 +37,36 @@ export class UserRepository implements UserRepositoryPort {
       createdUser.role,
     );
 
-    return userReturn;
+    return ok(userReturn);
   }
 
   async updateOneUser(
     id: string,
     dto: UpdateUserDto,
-  ): Promise<UserEntity | null> {
-    return await this.userModel.findByIdAndUpdate(id, dto, {
+  ): Promise<Result<UserEntity | null, UserError>> {
+    const user = await this.userModel.findByIdAndUpdate(id, dto, {
       returnDocument: 'after',
     });
+
+    if (!user) return err(UserError.NOT_FOUND);
+
+    return ok(UserMapper.toEntity(user));
   }
 
-  async deleteOneUser(id: string): Promise<UserEntity | null> {
-    return await this.userModel.findByIdAndDelete(id);
+  async deleteOneUser(
+    id: string,
+  ): Promise<Result<UserEntity | null, UserError>> {
+    const user = await this.userModel.findByIdAndDelete(id);
+
+    if (!user) return err(UserError.NOT_FOUND);
+
+    return ok(UserMapper.toEntity(user));
   }
 
-  async getAllUsers(): Promise<UserEntity[]> {
-    return await this.userModel.find();
+  async getAllUsers(): Promise<Result<UserEntity[], null>> {
+    const users = await this.userModel.find();
+
+    return ok(UserMapper.toEntity(users));
   }
 
   async getUserByUsername(
@@ -66,11 +78,7 @@ export class UserRepository implements UserRepositoryPort {
       return err(UserError.NOT_FOUND);
     }
 
-    return ok({
-      ...user,
-      middleName: user.middleName as string,
-      _id: user._id.toString(),
-    });
+    return ok(UserMapper.toEntity(user));
   }
 
   async getOneUser(id: string): Promise<Result<UserEntity | null, UserError>> {

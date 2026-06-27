@@ -1,6 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetUserQuery } from './get-user.query';
-import { NotFoundException } from '@nestjs/common/exceptions/not-found.exception';
 import {
   USER_REPOSITORY,
   type UserRepositoryPort,
@@ -17,15 +16,17 @@ export class GetUserHandler implements IQueryHandler<GetUserQuery> {
     private readonly repository: UserRepositoryPort,
   ) {}
 
-  async execute(query: GetUserQuery): Promise<Result<UserEntity, UserError>> {
+  async execute(
+    query: GetUserQuery,
+  ): Promise<Result<UserEntity | null, UserError>> {
     const { id } = query;
 
     const user = await this.repository.getOneUser(id);
 
-    if (!user) {
-      return err(UserError.NOT_FOUND);
+    if (user.isErr()) {
+      return err(user.error);
     }
 
-    return ok(user);
+    return ok(user?.value);
   }
 }

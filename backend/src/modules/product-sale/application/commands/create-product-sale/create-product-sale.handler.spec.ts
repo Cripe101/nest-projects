@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 import { CreateProductSaleHandler } from './create-product-sale.handler';
 import { CreateProductSaleCommand } from './create-product-sale.command';

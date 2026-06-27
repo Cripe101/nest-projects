@@ -14,7 +14,6 @@ import {
 import { ProductController } from './interface/product.controller';
 import { PRODUCT_REPOSITORY } from './application/ports/product.repository.port';
 import { ProductRepository } from './infrastructure/adapters/product.repository';
-import { ProductEntity } from './domain/entities/product.entity';
 
 const commandHandlers = [
   CreateProductHandler,

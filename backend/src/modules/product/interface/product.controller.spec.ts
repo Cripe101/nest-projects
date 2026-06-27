@@ -59,7 +59,7 @@ describe('ProductController', () => {
 
       mockCommandBus.execute.mockResolvedValue(ok(createdProduct._id));
 
-      const result = await controller.create(dto as any, req as any);
+      const result = await controller.create(dto, req as any);
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
@@ -143,11 +143,7 @@ describe('ProductController', () => {
 
       mockCommandBus.execute.mockResolvedValue(ok(updatedProduct._id));
 
-      const result = await controller.updateOneProduct(
-        '123',
-        dto as any,
-        req as any,
-      );
+      const result = await controller.updateOneProduct('123', dto, req as any);
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {

@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
 
 import { GetProductSaleHandler } from './get-product-sale.handler';
 import { GetProductSaleQuery } from './get-product-sale.query';

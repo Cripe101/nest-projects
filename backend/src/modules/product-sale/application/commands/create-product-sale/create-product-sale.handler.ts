@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateProductSaleCommand } from './create-product-sale.command';
 import { ProductSaleEntity } from '../../../domain/entities/product-sale.entity';
-import { BadRequestException, Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import {
   PRODUCT_REPOSITORY,
   type ProductRepositoryPort,

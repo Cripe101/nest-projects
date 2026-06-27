@@ -1,10 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
 
 import { GetInventoryHandler } from './get-inventory.handler';
 import { GetInventoryQuery } from './get-inventory.query';
 import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
-import { Result } from 'neverthrow';
 
 describe('GetInventoryHandler', () => {
   let handler: GetInventoryHandler;

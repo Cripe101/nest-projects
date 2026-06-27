@@ -1,0 +1,335 @@
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/app.controller.ts
+  1:22  error  'Get' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/core/guard/roles.guard.ts
+  20:11  error  Unsafe assignment of an `any` value           @typescript-eslint/no-unsafe-assignment
+  22:11  error  Unsafe assignment of an `any` value           @typescript-eslint/no-unsafe-assignment
+  22:26  error  Unsafe member access .user on an `any` value  @typescript-eslint/no-unsafe-member-access
+  24:40  error  Unsafe member access .role on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/auth/application/commands/login-user/login-user.handler.spec.ts
+  53:13  error  Unsafe member access .compare on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+  73:19  error  Unsafe member access .compare on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+  89:13  error  Unsafe member access .compare on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/auth/application/commands/login-user/login-user.handler.ts
+  36:11  error  Unsafe assignment of an error typed value                        @typescript-eslint/no-unsafe-assignment
+  36:27  error  Unsafe call of a type that could not be resolved                 @typescript-eslint/no-unsafe-call
+  36:34  error  Unsafe member access .compare on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/auth/infrastructure/jwt/jwt.strategy.ts
+   9:5   error  Unsafe call of a type that could not be resolved                                     @typescript-eslint/no-unsafe-call
+  10:7   error  Unsafe assignment of an error typed value                                            @typescript-eslint/no-unsafe-assignment
+  10:23  error  Unsafe call of a type that could not be resolved                                     @typescript-eslint/no-unsafe-call
+  10:34  error  Unsafe member access .fromAuthHeaderAsBearerToken on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+  16:3   error  Async method 'validate' has no 'await' expression                                    @typescript-eslint/require-await
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/auth/interface/auth.controller.ts
+  13:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  17:9   error  Unsafe call of an `any` typed value            @typescript-eslint/no-unsafe-call
+  17:16  error  Unsafe member access .isErr on an `any` value  @typescript-eslint/no-unsafe-member-access
+  18:47  error  Unsafe member access .error on an `any` value  @typescript-eslint/no-unsafe-member-access
+  21:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/add-inventory-stock/add-inventory-stock.handler.ts
+  23:11  error  Unsafe assignment of an `any` value          @typescript-eslint/no-unsafe-assignment
+  29:26  error  Unsafe member access ._id on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/create-inventory/create-inventory.handler.spec.ts
+  5:3  error  'InventoryRepositoryPort' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/delete-inventory/delete-inventory.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used        @typescript-eslint/no-unused-vars
+  8:3   error  'InventoryRepositoryPort' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/delete-inventory/delete-inventory.handler.ts
+  3:10  error  'InventoryEntity' is defined but never used    @typescript-eslint/no-unused-vars
+  4:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/update-inventory/update-inventory.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/commands/update-inventory/update-inventory.handler.ts
+  3:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/ports/inventory.repository.port.ts
+  17:51  error  'any' overrides all other types in this union type  @typescript-eslint/no-redundant-type-constituents
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/application/queries/get-inventory/get-inventory.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+  7:10  error  'Result' is defined but never used             @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/interface/dto/add-stock.dto.ts
+  1:10  error  'Type' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/inventory/interface/inventory.controller.ts
+   29:10  error  'InventoryResponseDto' is defined but never used  @typescript-eslint/no-unused-vars
+   30:10  error  'InventoryError' is defined but never used        @typescript-eslint/no-unused-vars
+   47:11  error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+   56:9   error  Unsafe call of an `any` typed value               @typescript-eslint/no-unsafe-call
+   56:16  error  Unsafe member access .isErr on an `any` value     @typescript-eslint/no-unsafe-member-access
+   57:42  error  Unsafe member access .error on an `any` value     @typescript-eslint/no-unsafe-member-access
+   60:22  error  Unsafe member access .value on an `any` value     @typescript-eslint/no-unsafe-member-access
+   67:11  error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+   71:9   error  Unsafe call of an `any` typed value               @typescript-eslint/no-unsafe-call
+   71:16  error  Unsafe member access .isErr on an `any` value     @typescript-eslint/no-unsafe-member-access
+   72:42  error  Unsafe member access .error on an `any` value     @typescript-eslint/no-unsafe-member-access
+   75:22  error  Unsafe member access .value on an `any` value     @typescript-eslint/no-unsafe-member-access
+   86:11  error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+   92:18  error  Unsafe member access ._id on an `any` value       @typescript-eslint/no-unsafe-member-access
+   96:9   error  Unsafe call of an `any` typed value               @typescript-eslint/no-unsafe-call
+   96:16  error  Unsafe member access .isErr on an `any` value     @typescript-eslint/no-unsafe-member-access
+   97:42  error  Unsafe member access .error on an `any` value     @typescript-eslint/no-unsafe-member-access
+  100:22  error  Unsafe member access .value on an `any` value     @typescript-eslint/no-unsafe-member-access
+  107:11  error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  111:9   error  Unsafe call of an `any` typed value               @typescript-eslint/no-unsafe-call
+  111:16  error  Unsafe member access .isErr on an `any` value     @typescript-eslint/no-unsafe-member-access
+  112:42  error  Unsafe member access .error on an `any` value     @typescript-eslint/no-unsafe-member-access
+  115:22  error  Unsafe member access .value on an `any` value     @typescript-eslint/no-unsafe-member-access
+  120:11  error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  122:22  error  Unsafe member access .value on an `any` value     @typescript-eslint/no-unsafe-member-access
+  127:11  error  Unsafe assignment of an `any` value               @typescript-eslint/no-unsafe-assignment
+  129:9   error  Unsafe call of an `any` typed value               @typescript-eslint/no-unsafe-call
+  129:16  error  Unsafe member access .isErr on an `any` value     @typescript-eslint/no-unsafe-member-access
+  130:42  error  Unsafe member access .error on an `any` value     @typescript-eslint/no-unsafe-member-access
+  133:22  error  Unsafe member access .value on an `any` value     @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/commands/create-product-sale/create-product-sale.handler.spec.ts
+  2:10  error  'BadRequestException' is defined but never used  @typescript-eslint/no-unused-vars
+  2:31  error  'NotFoundException' is defined but never used    @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/commands/create-product-sale/create-product-sale.handler.ts
+  4:10  error  'BadRequestException' is defined but never used  @typescript-eslint/no-unused-vars
+  4:39  error  'NotFoundException' is defined but never used    @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/commands/delete-product-sale/delete-product-sale.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/commands/delete-product-sale/delete-product-sale.handler.ts
+  7:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+  8:10  error  'ProductSaleEntity' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/queries/get-product-sale/get-product-sale.handler.spec.ts
+  2:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/application/queries/get-product-sale/get-product-sale.handler.ts
+  3:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/infrastructure/adapters/product-sale.repository.ts
+  105:11  error  Unsafe array destructuring of an `any` array value   @typescript-eslint/no-unsafe-assignment
+  115:7   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+  115:29  error  Unsafe member access .totalProfit on an `any` value  @typescript-eslint/no-unsafe-member-access
+  120:11  error  Unsafe array destructuring of an `any` array value   @typescript-eslint/no-unsafe-assignment
+  130:7   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+  130:27  error  Unsafe member access .totalSale on an `any` value    @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product-sale/interface/product-sale.controller.ts
+   40:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   44:9   error  Unsafe call of an `any` typed value            @typescript-eslint/no-unsafe-call
+   44:16  error  Unsafe member access .isErr on an `any` value  @typescript-eslint/no-unsafe-member-access
+   45:18  error  Unsafe member access .error on an `any` value  @typescript-eslint/no-unsafe-member-access
+   46:46  error  Unsafe member access .error on an `any` value  @typescript-eslint/no-unsafe-member-access
+   49:42  error  Unsafe member access .error on an `any` value  @typescript-eslint/no-unsafe-member-access
+   52:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   58:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   60:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   66:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   68:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   74:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   76:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   82:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   84:9   error  Unsafe call of an `any` typed value            @typescript-eslint/no-unsafe-call
+   84:16  error  Unsafe member access .isErr on an `any` value  @typescript-eslint/no-unsafe-member-access
+   85:42  error  Unsafe member access .error on an `any` value  @typescript-eslint/no-unsafe-member-access
+   88:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   95:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   98:9   error  Unsafe call of an `any` typed value            @typescript-eslint/no-unsafe-call
+   98:16  error  Unsafe member access .isErr on an `any` value  @typescript-eslint/no-unsafe-member-access
+   99:42  error  Unsafe member access .error on an `any` value  @typescript-eslint/no-unsafe-member-access
+  102:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product/application/commands/delete-product/delete-product.handler.ts
+  3:10  error  'ProductEntity' is defined but never used      @typescript-eslint/no-unused-vars
+  4:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product/application/commands/update-product/update-product.handler.ts
+  3:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product/application/queries/get-products/get-products.handler.spec.ts
+  3:10  error  'GetProductsQuery' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product/interface/product.controller.ts
+   38:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   50:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   55:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   57:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   62:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   64:9   error  Unsafe call of an `any` typed value            @typescript-eslint/no-unsafe-call
+   64:16  error  Unsafe member access .isErr on an `any` value  @typescript-eslint/no-unsafe-member-access
+   65:42  error  Unsafe member access .error on an `any` value  @typescript-eslint/no-unsafe-member-access
+   68:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   79:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   92:9   error  Unsafe call of an `any` typed value            @typescript-eslint/no-unsafe-call
+   92:16  error  Unsafe member access .isErr on an `any` value  @typescript-eslint/no-unsafe-member-access
+   93:42  error  Unsafe member access .error on an `any` value  @typescript-eslint/no-unsafe-member-access
+   96:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  103:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  105:9   error  Unsafe call of an `any` typed value            @typescript-eslint/no-unsafe-call
+  105:16  error  Unsafe member access .isErr on an `any` value  @typescript-eslint/no-unsafe-member-access
+  106:42  error  Unsafe member access .error on an `any` value  @typescript-eslint/no-unsafe-member-access
+  109:22  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/product/product.module.ts
+  17:10  error  'ProductEntity' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/sample-profit/infrastracture/persistence/mongo-profit.repository.ts
+   38:11  error  Unsafe array destructuring of an `any` array value   @typescript-eslint/no-unsafe-assignment
+   48:7   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+   48:29  error  Unsafe member access .totalProfit on an `any` value  @typescript-eslint/no-unsafe-member-access
+   57:11  error  Unsafe array destructuring of an `any` array value   @typescript-eslint/no-unsafe-assignment
+   75:7   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+   75:29  error  Unsafe member access .totalProfit on an `any` value  @typescript-eslint/no-unsafe-member-access
+   86:11  error  Unsafe array destructuring of an `any` array value   @typescript-eslint/no-unsafe-assignment
+  106:7   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+  106:29  error  Unsafe member access .totalProfit on an `any` value  @typescript-eslint/no-unsafe-member-access
+  111:11  error  Unsafe array destructuring of an `any` array value   @typescript-eslint/no-unsafe-assignment
+  128:7   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+  128:29  error  Unsafe member access .totalProfit on an `any` value  @typescript-eslint/no-unsafe-member-access
+  133:11  error  Unsafe array destructuring of an `any` array value   @typescript-eslint/no-unsafe-assignment
+  150:7   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+  150:29  error  Unsafe member access .totalProfit on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/application/commands/create-user/create-user.handler.ts
+  53:11  error  Unsafe assignment of an error typed value                        @typescript-eslint/no-unsafe-assignment
+  53:24  error  Unsafe call of a type that could not be resolved                 @typescript-eslint/no-unsafe-call
+  53:31  error  Unsafe member access .genSalt on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+  54:11  error  Unsafe assignment of an error typed value                        @typescript-eslint/no-unsafe-assignment
+  54:34  error  Unsafe call of a type that could not be resolved                 @typescript-eslint/no-unsafe-call
+  54:41  error  Unsafe member access .hash on a type that cannot be resolved     @typescript-eslint/no-unsafe-member-access
+  56:5   error  Unsafe return of a value of type error                           @typescript-eslint/no-unsafe-return
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/application/commands/update-user/update-user.handler.ts
+  3:10  error  'ConflictException' is defined but never used  @typescript-eslint/no-unused-vars
+  3:37  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+  9:10  error  'UserEntity' is defined but never used         @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/application/queries/get-user-by-name/get-user-by-username.handler.ts
+  3:18  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/application/queries/get-user/get-user.handler.ts
+  3:10  error  'NotFoundException' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/infrastructure/adapters/user.mapper.ts
+  17:30  error  A method that is not declared with `this: void` may cause unintentional scoping of `this` when separated from its object.
+Consider using an arrow function or explicitly `.bind()`ing the method to avoid calling the method with an unintended `this` value. 
+If a function does not access `this`, it can be annotated with `this: void`  @typescript-eslint/unbound-method
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/interface/user.controller.spec.ts
+  158:11  error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  160:12  error  Unsafe call of an `any` typed value            @typescript-eslint/no-unsafe-call
+  160:19  error  Unsafe member access .isOk on an `any` value   @typescript-eslint/no-unsafe-member-access
+  162:9   error  Unsafe call of an `any` typed value            @typescript-eslint/no-unsafe-call
+  162:16  error  Unsafe member access .isOk on an `any` value   @typescript-eslint/no-unsafe-member-access
+  163:21  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/src/modules/user/interface/user.controller.ts
+   39:11  error  Unsafe assignment of an `any` value              @typescript-eslint/no-unsafe-assignment
+   51:9   error  Unsafe call of an `any` typed value              @typescript-eslint/no-unsafe-call
+   51:16  error  Unsafe member access .isErr on an `any` value    @typescript-eslint/no-unsafe-member-access
+   52:42  error  Unsafe member access .error on an `any` value    @typescript-eslint/no-unsafe-member-access
+   55:22  error  Unsafe member access .value on an `any` value    @typescript-eslint/no-unsafe-member-access
+   62:11  error  Unsafe assignment of an `any` value              @typescript-eslint/no-unsafe-assignment
+   74:9   error  Unsafe call of an `any` typed value              @typescript-eslint/no-unsafe-call
+   74:16  error  Unsafe member access .isErr on an `any` value    @typescript-eslint/no-unsafe-member-access
+   75:18  error  Unsafe member access .error on an `any` value    @typescript-eslint/no-unsafe-member-access
+   76:44  error  Unsafe member access .error on an `any` value    @typescript-eslint/no-unsafe-member-access
+   79:42  error  Unsafe member access .error on an `any` value    @typescript-eslint/no-unsafe-member-access
+   82:22  error  Unsafe member access .value on an `any` value    @typescript-eslint/no-unsafe-member-access
+   89:11  error  Unsafe assignment of an `any` value              @typescript-eslint/no-unsafe-assignment
+   91:9   error  Unsafe call of an `any` typed value              @typescript-eslint/no-unsafe-call
+   91:16  error  Unsafe member access .isErr on an `any` value    @typescript-eslint/no-unsafe-member-access
+   92:42  error  Unsafe member access .err on an `any` value      @typescript-eslint/no-unsafe-member-access
+   95:22  error  Unsafe member access .value on an `any` value    @typescript-eslint/no-unsafe-member-access
+  102:5   error  Unsafe return of a value of type `Promise<any>`  @typescript-eslint/no-unsafe-return
+  109:11  error  Unsafe assignment of an `any` value              @typescript-eslint/no-unsafe-assignment
+  111:9   error  Unsafe call of an `any` typed value              @typescript-eslint/no-unsafe-call
+  111:16  error  Unsafe member access .isErr on an `any` value    @typescript-eslint/no-unsafe-member-access
+  112:42  error  Unsafe member access .error on an `any` value    @typescript-eslint/no-unsafe-member-access
+  115:22  error  Unsafe member access .value on an `any` value    @typescript-eslint/no-unsafe-member-access
+  122:11  error  Unsafe assignment of an `any` value              @typescript-eslint/no-unsafe-assignment
+  126:9   error  Unsafe call of an `any` typed value              @typescript-eslint/no-unsafe-call
+  126:16  error  Unsafe member access .isErr on an `any` value    @typescript-eslint/no-unsafe-member-access
+  127:42  error  Unsafe member access .error on an `any` value    @typescript-eslint/no-unsafe-member-access
+  130:22  error  Unsafe member access .value on an `any` value    @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/test/auth/auth.e2e-spec.ts
+  34:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  35:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  47:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/test/inventory/inventory.e2e-spec.ts
+   27:5   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+   27:32  error  Unsafe member access .accessToken on an `any` value  @typescript-eslint/no-unsafe-member-access
+   41:5   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+   41:38  error  Unsafe member access .value on an `any` value        @typescript-eslint/no-unsafe-member-access
+   60:5   error  Unsafe assignment of an `any` value                  @typescript-eslint/no-unsafe-assignment
+   60:33  error  Unsafe member access .value on an `any` value        @typescript-eslint/no-unsafe-member-access
+   63:26  error  Unsafe member access .value on an `any` value        @typescript-eslint/no-unsafe-member-access
+   71:40  error  Unsafe member access .value on an `any` value        @typescript-eslint/no-unsafe-member-access
+   72:26  error  Unsafe member access .value on an `any` value        @typescript-eslint/no-unsafe-member-access
+   81:26  error  Unsafe member access .value on an `any` value        @typescript-eslint/no-unsafe-member-access
+  105:26  error  Unsafe member access .value on an `any` value        @typescript-eslint/no-unsafe-member-access
+  118:26  error  Unsafe member access .value on an `any` value        @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/test/product-sale/product-sale.e2e-spec.ts
+   28:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   28:32  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   42:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   42:38  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   53:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   53:42  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   71:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+   71:28  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   74:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   82:40  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   83:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   91:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+   92:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  100:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  108:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  124:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/test/product/product.e2e-spec.ts
+  28:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  28:32  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  50:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  50:38  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  53:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  59:40  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  60:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  68:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  68:40  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  71:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  72:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  89:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/home/mheg-ryan/Documents/projects/nest-projects/backend/test/user/user.e2e-spec.ts
+  28:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  28:32  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  47:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  47:35  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  50:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  58:40  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  59:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  67:5   error  Unsafe assignment of an `any` value            @typescript-eslint/no-unsafe-assignment
+  67:41  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  70:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  71:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  72:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  81:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  82:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+  95:26  error  Unsafe member access .value on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+✖ 246 problems (246 errors, 0 warnings)
+

@@ -1,6 +1,6 @@
 import { QueryHandler } from '@nestjs/cqrs';
 import { GetUserByUsernameQuery } from './get-user-by-username.query';
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import {
   USER_REPOSITORY,
   type UserRepositoryPort,
@@ -18,14 +18,14 @@ export class GetUserByUsernameHandler {
 
   async execute(
     query: GetUserByUsernameQuery,
-  ): Promise<Result<UserEntity, UserError>> {
+  ): Promise<Result<UserEntity | null, UserError>> {
     const { username } = query;
     const user = await this.repository.getUserByUsername(username);
 
-    if (!user) {
+    if (user.isErr()) {
       return err(UserError.NOT_FOUND);
     }
 
-    return ok(user);
+    return ok(user?.value);
   }
 }

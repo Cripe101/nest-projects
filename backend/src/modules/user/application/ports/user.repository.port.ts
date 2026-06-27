@@ -5,13 +5,16 @@ import { UserError } from '@modules/user/domain/errors/user.error';
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY');
 
 export interface UserRepositoryPort {
-  create(user: UserEntity): Promise<UserEntity>;
+  create(user: UserEntity): Promise<Result<UserEntity, UserError>>;
 
-  updateOneUser(id: string, userData: UserEntity): Promise<UserEntity | null>;
+  updateOneUser(
+    id: string,
+    userData: UserEntity,
+  ): Promise<Result<UserEntity | null, UserError>>;
 
-  deleteOneUser(id: string): Promise<UserEntity | null>;
+  deleteOneUser(id: string): Promise<Result<UserEntity | null, UserError>>;
 
-  getAllUsers(): Promise<UserEntity[]>;
+  getAllUsers(): Promise<Result<UserEntity[], null>>;
 
   getOneUser(id: string): Promise<Result<UserEntity | null, UserError>>;
 
