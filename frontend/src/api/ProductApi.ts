@@ -9,7 +9,6 @@ export const createProduct = async (data: IProductPost) => {
 
 export const getAllProducts = async () => {
   const response = await apiClient.get("/products");
-  console.log(response);
   return response.data.value;
 };
 

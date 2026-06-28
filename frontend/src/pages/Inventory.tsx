@@ -15,8 +15,6 @@ const Inventory = () => {
     queryFn: getAllInventory,
   });
 
-  console.log(inventoryQuery.data);
-
   const deleteMutation = useMutation({
     mutationKey: ["delete-inventory"],
     mutationFn: (id: string) => deleteOneInventory(id),
