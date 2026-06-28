@@ -4,6 +4,7 @@ import { DeleteUserCommand } from './delete-user.command';
 import { USER_REPOSITORY } from '../../ports/user.repository.port';
 import { UserError } from '@modules/user/domain/errors/user.error';
 import { UserRole } from '@core/constants/user-role.enum';
+import { err, ok } from '@core/libs/result';
 
 describe('DeleteUserHandler', () => {
   let handler: DeleteUserHandler;
@@ -29,16 +30,12 @@ describe('DeleteUserHandler', () => {
   });
 
   it('should return NOT_FOUND when no user is found with id: 123', async () => {
-    mockRepository.deleteOneUser.mockResolvedValue(null);
+    mockRepository.deleteOneUser.mockResolvedValue(err(UserError.NOT_FOUND));
 
     const result = await handler.execute(new DeleteUserCommand('123'));
 
     expect(result.isErr()).toBe(true);
-
-    if (result.isErr()) {
-      expect(result.error).toBe(UserError.NOT_FOUND);
-    }
-
+    if (result.isErr()) expect(result.error).toBe(UserError.NOT_FOUND);
     expect(mockRepository.deleteOneUser).toHaveBeenCalledWith('123');
   });
 
@@ -49,16 +46,12 @@ describe('DeleteUserHandler', () => {
       role: UserRole.ADMIN,
     };
 
-    mockRepository.deleteOneUser.mockResolvedValue(user);
+    mockRepository.deleteOneUser.mockResolvedValue(ok(user));
 
     const result = await handler.execute(new DeleteUserCommand('123'));
 
     expect(result.isOk()).toBe(true);
-
-    if (result.isOk()) {
-      expect(result.value).toEqual(user._id);
-    }
-
+    if (result.isOk()) expect(result.value).toEqual(user._id);
     expect(mockRepository.deleteOneUser).toHaveBeenCalledWith('123');
   });
 });

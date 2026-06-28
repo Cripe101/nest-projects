@@ -29,15 +29,10 @@ export class UpdateInventoryHandler implements ICommandHandler<UpdateInventoryCo
       currentStock,
     );
 
-    const inventory = await this.repository.updateOneInventory(
-      _id,
-      inventoryData,
-    );
+    const result = await this.repository.updateOneInventory(_id, inventoryData);
 
-    if (!inventory) {
-      return err(InventoryError.NOT_FOUND);
-    }
+    if (result.isErr()) return err(result.error);
 
-    return ok(inventory?._id as string);
+    return ok(result.value?._id as string);
   }
 }

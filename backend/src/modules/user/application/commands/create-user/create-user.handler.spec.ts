@@ -1,20 +1,30 @@
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { CreateUserHandler } from './create-user.handler';
 import { CreateUserCommand } from './create-user.command';
-import { UserRole } from '@core/constants/user-role.enum';
 import { USER_REPOSITORY } from '../../ports/user.repository.port';
+import { ok, err } from '@core/libs/result';
 import { UserError } from '@modules/user/domain/errors/user.error';
+import bcrypt from 'bcrypt';
+import { UserRole } from '@core/constants/user-role.enum';
+
+jest.mock('bcrypt', () => ({
+  __esModule: true,
+  default: {
+    genSalt: jest.fn(),
+    hash: jest.fn(),
+  },
+}));
 
 describe('CreateUserHandler', () => {
   let handler: CreateUserHandler;
 
   const mockRepository = {
-    create: jest.fn(),
     getUserByUsername: jest.fn(),
+    create: jest.fn(),
   };
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         CreateUserHandler,
         {
@@ -25,55 +35,75 @@ describe('CreateUserHandler', () => {
     }).compile();
 
     handler = module.get(CreateUserHandler);
+  });
 
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return DUPLICATE_USERNAME when username already exists', async () => {
-    mockRepository.getUserByUsername.mockResolvedValue({
-      _id: '1',
-      username: 'Mheg',
-    });
+  const command = new CreateUserCommand(
+    'John',
+    'Michael',
+    'Doe',
+    'john@example.com',
+    'johndoe',
+    'password123',
+    UserRole.ADMIN,
+  );
 
-    const result = await handler.execute(
-      new CreateUserCommand('Mheg', 'password', UserRole.ADMIN),
+  it('should create a new user successfully', async () => {
+    mockRepository.getUserByUsername.mockResolvedValue(
+      err(UserError.NOT_FOUND),
     );
 
-    expect(result.isErr()).toBe(true);
+    (bcrypt.genSalt as jest.Mock).mockResolvedValue('salt');
+    (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password');
 
-    if (result.isErr()) {
-      expect(result.error).toBe(UserError.DUPLICATE_USERNAME);
-    }
-
-    expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-    expect(mockRepository.create).not.toHaveBeenCalled();
-  });
-
-  it('should create a user', async () => {
-    mockRepository.getUserByUsername.mockResolvedValue(null);
-
-    const user = {
-      _id: '123',
-      username: 'Mheg',
-      password: 'hashedPassword',
-      role: UserRole.ADMIN,
-    };
-
-    mockRepository.create.mockResolvedValue(user);
-
-    const result = await handler.execute(
-      new CreateUserCommand('Mheg', 'password', UserRole.ADMIN),
+    mockRepository.create.mockResolvedValue(
+      ok({
+        _id: 'user-id',
+      } as any),
     );
 
-    // this is a bad pratice
+    const result = await handler.execute(command);
 
     expect(result.isOk()).toBe(true);
+    if (result.isOk()) expect(result.value).toBe('user-id');
+    expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('johndoe');
+    expect(bcrypt.genSalt).toHaveBeenCalledWith(10);
+    expect(bcrypt.hash).toHaveBeenCalledWith('password123', 'salt');
+    expect(mockRepository.create).toHaveBeenCalledTimes(1);
+  });
 
-    if (result.isOk()) {
-      expect(result.value).toEqual(user._id);
-    }
+  it('should return DUPLICATE_USERNAME if username already exists', async () => {
+    mockRepository.getUserByUsername.mockResolvedValue(
+      ok({
+        _id: 'existing-user-id',
+        username: 'johndoe',
+      } as any),
+    );
 
-    expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-    expect(mockRepository.create).toHaveBeenCalled();
+    const result = await handler.execute(command);
+
+    expect(result.isErr()).toBe(true);
+    if (result.isErr()) expect(result.error).toBe(UserError.DUPLICATE_USERNAME);
+    expect(mockRepository.create).not.toHaveBeenCalled();
+    expect(bcrypt.hash).not.toHaveBeenCalled();
+  });
+
+  it('should return DUPLICATE_USERNAME if repository create fails', async () => {
+    mockRepository.getUserByUsername.mockResolvedValue(
+      err(UserError.NOT_FOUND),
+    );
+
+    (bcrypt.genSalt as jest.Mock).mockResolvedValue('salt');
+    (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password');
+
+    mockRepository.create.mockResolvedValue(err(UserError.DUPLICATE_USERNAME));
+
+    const result = await handler.execute(command);
+
+    expect(result.isErr()).toBe(true);
+    if (result.isErr()) expect(result.error).toBe(UserError.DUPLICATE_USERNAME);
   });
 });

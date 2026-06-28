@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 
 import { GetInventoriesHandler } from './get-inventories.handler';
 import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
+import { ok } from '@core/libs/result';
 
 describe('GetInventoriesHandler', () => {
   let handler: GetInventoriesHandler;
@@ -44,14 +45,12 @@ describe('GetInventoriesHandler', () => {
       },
     ];
 
-    mockRepository.getAllInventories.mockResolvedValue(inventories);
+    mockRepository.getAllInventories.mockResolvedValue(ok(inventories));
 
     const result = await handler.execute();
 
     expect(result.isOk()).toEqual(true);
-    if (result.isOk()) {
-      expect(result.value).toEqual(inventories);
-    }
+    if (result.isOk()) expect(result.value).toEqual(inventories);
     expect(mockRepository.getAllInventories).toHaveBeenCalled();
   });
 });

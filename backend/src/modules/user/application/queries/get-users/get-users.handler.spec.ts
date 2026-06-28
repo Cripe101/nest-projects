@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { GetUsersHandler } from './get-users.handler';
 import { USER_REPOSITORY } from '../../ports/user.repository.port';
 import { UserRole } from '@core/constants/user-role.enum';
+import { ok } from '@core/libs/result';
 
 describe('GetUsersHanlder', () => {
   let handler: GetUsersHandler;
@@ -40,15 +41,12 @@ describe('GetUsersHanlder', () => {
       },
     ];
 
-    mockRepository.getAllUsers.mockResolvedValue(users);
+    mockRepository.getAllUsers.mockResolvedValue(ok(users));
 
     const result = await handler.execute();
 
     expect(result.isOk()).toBe(true);
-
-    if (result.isOk()) {
-      expect(result.value).toEqual(users);
-    }
+    if (result.isOk()) expect(result.value).toEqual(users);
     expect(mockRepository.getAllUsers).toHaveBeenCalled();
   });
 });

@@ -1,95 +1,128 @@
-import { Test } from '@nestjs/testing';
+import { Test, TestingModule } from '@nestjs/testing';
 import { UpdateUserHandler } from './update-user.handler';
 import { UpdateUserCommand } from './update-user.command';
-import { UserRole } from '@core/constants/user-role.enum';
-import { USER_REPOSITORY } from '../../ports/user.repository.port';
+import {
+  USER_REPOSITORY,
+  UserRepositoryPort,
+} from '../../ports/user.repository.port';
+import { ok, err } from '@core/libs/result';
 import { UserError } from '@modules/user/domain/errors/user.error';
+import { UserRole } from '@core/constants/user-role.enum';
 
 describe('UpdateUserHandler', () => {
   let handler: UpdateUserHandler;
-
-  const mockRepository = {
-    updateOneUser: jest.fn(),
-    getUserByUsername: jest.fn(),
-  };
+  let repository: jest.Mocked<UserRepositoryPort>;
 
   beforeEach(async () => {
-    const module = await Test.createTestingModule({
+    repository = {
+      getUserByUsername: jest.fn(),
+      updateOneUser: jest.fn(),
+    } as unknown as jest.Mocked<UserRepositoryPort>;
+
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         UpdateUserHandler,
-        { provide: USER_REPOSITORY, useValue: mockRepository },
+        {
+          provide: USER_REPOSITORY,
+          useValue: repository,
+        },
       ],
     }).compile();
 
     handler = module.get(UpdateUserHandler);
+  });
 
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return DUPLICATE_USERNAME when username already exists', async () => {
-    mockRepository.getUserByUsername.mockResolvedValue({
-      _id: '456',
-      username: 'Mheg',
-    });
+  const command = new UpdateUserCommand(
+    'user-id',
+    'Mheg',
+    'Ryan',
+    'Lim',
+    'mheg@example.com',
+    'mhegz',
+    UserRole.STAFF,
+  );
 
-    const result = await handler.execute(
-      new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN),
+  it('should update the user successfully', async () => {
+    repository.getUserByUsername.mockResolvedValue(
+      ok({
+        _id: 'user-id',
+        username: 'mhegz',
+      } as any),
     );
 
-    expect(result.isErr()).toBe(true);
-
-    if (result.isErr()) {
-      expect(result.error).toBe(UserError.DUPLICATE_USERNAME);
-    }
-
-    expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-    expect(mockRepository.updateOneUser).not.toHaveBeenCalled();
-  });
-
-  it('should return NOT_FOUND when user does not exist', async () => {
-    mockRepository.getUserByUsername.mockResolvedValue(null);
-    mockRepository.updateOneUser.mockResolvedValue(null);
-
-    const result = await handler.execute(
-      new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN),
+    repository.updateOneUser.mockResolvedValue(
+      ok({
+        _id: 'user-id',
+      } as any),
     );
 
-    expect(result.isErr()).toBe(true);
-
-    if (result.isErr()) {
-      expect(result.error).toBe(UserError.NOT_FOUND);
-    }
-
-    expect(mockRepository.updateOneUser).toHaveBeenCalledWith('123', {
-      _id: '123',
-      role: UserRole.ADMIN,
-      username: 'Mheg',
-    });
-    expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-  });
-
-  it('should update a user', async () => {
-    mockRepository.getUserByUsername.mockResolvedValue(null);
-
-    const updatedUser = {
-      _id: '123',
-      username: 'Mheg',
-      role: UserRole.ADMIN,
-    };
-
-    mockRepository.updateOneUser.mockResolvedValue(updatedUser);
-
-    const result = await handler.execute(
-      new UpdateUserCommand('123', 'Mheg', UserRole.ADMIN),
-    );
+    const result = await handler.execute(command);
 
     expect(result.isOk()).toBe(true);
+    if (result.isOk()) expect(result.value).toBe('user-id');
+    expect(repository.getUserByUsername).toHaveBeenCalledWith('mhegz');
+    expect(repository.updateOneUser).toHaveBeenCalledWith('user-id', {
+      _id: 'user-id',
+      firstName: 'Mheg',
+      middleName: 'Ryan',
+      lastName: 'Lim',
+      email: 'mheg@example.com',
+      username: 'mhegz',
+      role: UserRole.STAFF,
+    });
+  });
 
-    if (result.isOk()) {
-      expect(result.value).toEqual(updatedUser._id);
-    }
+  it('should return DUPLICATE_USERNAME when username belongs to another user', async () => {
+    repository.getUserByUsername.mockResolvedValue(
+      ok({
+        _id: 'another-user-id',
+        username: 'johndoe',
+      } as any),
+    );
 
-    expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
-    expect(mockRepository.updateOneUser).toHaveBeenCalled();
+    const result = await handler.execute(command);
+
+    expect(result.isErr()).toBe(true);
+    if (result.isErr()) expect(result.error).toBe(UserError.DUPLICATE_USERNAME);
+    expect(repository.updateOneUser).not.toHaveBeenCalled();
+  });
+
+  it('should allow update when username belongs to the same user', async () => {
+    repository.getUserByUsername.mockResolvedValue(
+      ok({
+        _id: 'user-id',
+        username: 'johndoe',
+      } as any),
+    );
+
+    repository.updateOneUser.mockResolvedValue(
+      ok({
+        _id: 'user-id',
+      } as any),
+    );
+
+    const result = await handler.execute(command);
+
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) expect(result.value).toBe('user-id');
+  });
+
+  it('should update even when username does not exist', async () => {
+    repository.getUserByUsername.mockResolvedValue(err(UserError.NOT_FOUND));
+
+    repository.updateOneUser.mockResolvedValue(
+      ok({
+        _id: 'user-id',
+      } as any),
+    );
+
+    const result = await handler.execute(command);
+
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) expect(result.value).toBe('user-id');
   });
 });

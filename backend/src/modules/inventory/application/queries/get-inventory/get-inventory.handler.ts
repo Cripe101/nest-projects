@@ -18,13 +18,11 @@ export class GetInventoryHandler implements IQueryHandler<GetInventoryQuery> {
 
   async execute(
     query: GetInventoryQuery,
-  ): Promise<Result<InventoryEntity, InventoryError>> {
-    const inventory = await this.repository.getOneInventory(query.id);
+  ): Promise<Result<InventoryEntity | null, InventoryError>> {
+    const result = await this.repository.getOneInventory(query.id);
 
-    if (!inventory) {
-      return err(InventoryError.NOT_FOUND);
-    }
+    if (result.isErr()) return err(result.error);
 
-    return ok(inventory);
+    return ok(result.value);
   }
 }

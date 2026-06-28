@@ -5,7 +5,7 @@ import {
   type InventoryRepositoryPort,
 } from '../../ports/inventory.repository.port';
 import { Inject } from '@nestjs/common';
-import { Result, ok } from '@core/libs/result';
+import { Result, ok, err } from '@core/libs/result';
 import { InventoryEntity } from '@modules/inventory/domain/entities/inventory.entity';
 
 @QueryHandler(GetInventoriesQuery)
@@ -16,8 +16,10 @@ export class GetInventoriesHandler implements IQueryHandler<GetInventoriesQuery>
   ) {}
 
   async execute(): Promise<Result<InventoryEntity[], null>> {
-    const inventories = await this.repository.getAllInventories();
+    const result = await this.repository.getAllInventories();
 
-    return ok(inventories);
+    if (result.isErr()) return err(null);
+
+    return ok(result.value);
   }
 }

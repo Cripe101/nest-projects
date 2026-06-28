@@ -41,12 +41,10 @@ export class UpdateProductHandler implements ICommandHandler<UpdateProductComman
       description,
     );
 
-    const product = await this.repository.updateOneProduct(_id, updatedProduct);
+    const result = await this.repository.updateOneProduct(_id, updatedProduct);
 
-    if (!product) {
-      return err(ProductError.NOT_FOUND);
-    }
+    if (result.isErr()) return err(result.error);
 
-    return ok(product?._id as string);
+    return ok(result.value?._id as string);
   }
 }

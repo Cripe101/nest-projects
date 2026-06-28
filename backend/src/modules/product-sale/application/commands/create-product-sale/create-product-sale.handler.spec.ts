@@ -2,13 +2,12 @@ import { Test } from '@nestjs/testing';
 
 import { CreateProductSaleHandler } from './create-product-sale.handler';
 import { CreateProductSaleCommand } from './create-product-sale.command';
-
 import { PRODUCT_SALE_REPOSITORY } from '../../ports/product-sale.port';
-
 import { PRODUCT_REPOSITORY } from '@modules/product/application/ports/product.repository.port';
-
 import { INVENTORY_REPOSITORY } from '@modules/inventory/application/ports/inventory.repository.port';
-import { ok } from '@core/libs/result';
+import { ok, err } from '@core/libs/result';
+import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
+import { ProductSaleError } from '@modules/product-sale/domain/errors/product-sale.error';
 
 describe('CreateProductSaleHandler', () => {
   let handler: CreateProductSaleHandler;
@@ -71,11 +70,15 @@ describe('CreateProductSaleHandler', () => {
       profit: 20,
     };
 
-    mockProductRepository.getOneProduct.mockResolvedValue(product);
+    mockProductRepository.getOneProduct.mockResolvedValue(ok(product));
 
-    mockInventoryRepository.getInventoryByProduct.mockResolvedValue(inventory);
+    mockInventoryRepository.getInventoryByProduct.mockResolvedValue(
+      ok(inventory),
+    );
 
-    mockInventoryRepository.deductStock.mockResolvedValue(undefined);
+    mockInventoryRepository.deductStock.mockResolvedValue(
+      err(InventoryError.NOT_FOUND),
+    );
 
     mockSaleRepository.create.mockResolvedValue(ok(sale));
 
@@ -98,7 +101,9 @@ describe('CreateProductSaleHandler', () => {
   });
 
   it('should return ProductSaleError.PRODUCT_NOT_FOUND when product does not exist', async () => {
-    mockProductRepository.getOneProduct.mockResolvedValue(null);
+    mockProductRepository.getOneProduct.mockResolvedValue(
+      err(ProductSaleError.PRODUCT_NOT_FOUND),
+    );
 
     const result = await handler.execute(
       new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
@@ -110,13 +115,17 @@ describe('CreateProductSaleHandler', () => {
   });
 
   it('should return ProductSaleError.INVENTORY_NOT_FOUND when inventory does not exist', async () => {
-    mockProductRepository.getOneProduct.mockResolvedValue({
-      _id: 'product-id',
-      sellingPrice: 50,
-      buyingPrice: 30,
-    });
+    mockProductRepository.getOneProduct.mockResolvedValue(
+      ok({
+        _id: 'product-id',
+        sellingPrice: 50,
+        buyingPrice: 30,
+      }),
+    );
 
-    mockInventoryRepository.getInventoryByProduct.mockResolvedValue(null);
+    mockInventoryRepository.getInventoryByProduct.mockResolvedValue(
+      err(ProductSaleError.INVENTORY_NOT_FOUND),
+    );
 
     const result = await handler.execute(
       new CreateProductSaleCommand('product-id', 2, 'cashier-id'),
@@ -128,16 +137,20 @@ describe('CreateProductSaleHandler', () => {
   });
 
   it('should return ProductSaleError.INSUFFICIENT_STOCK when stock is insufficient', async () => {
-    mockProductRepository.getOneProduct.mockResolvedValue({
-      _id: 'product-id',
-      sellingPrice: 50,
-      buyingPrice: 30,
-    });
+    mockProductRepository.getOneProduct.mockResolvedValue(
+      ok({
+        _id: 'product-id',
+        sellingPrice: 50,
+        buyingPrice: 30,
+      }),
+    );
 
-    mockInventoryRepository.getInventoryByProduct.mockResolvedValue({
-      _id: 'inventory-id',
-      currentStock: 1,
-    });
+    mockInventoryRepository.getInventoryByProduct.mockResolvedValue(
+      ok({
+        _id: 'inventory-id',
+        currentStock: 1,
+      }),
+    );
 
     const result = await handler.execute(
       new CreateProductSaleCommand('product-id', 2, 'cashier-id'),

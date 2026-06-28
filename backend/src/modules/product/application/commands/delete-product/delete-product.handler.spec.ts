@@ -4,6 +4,7 @@ import { DeleteProductCommand } from './delete-product.command';
 import { PRODUCT_REPOSITORY } from '../../ports/product.repository.port';
 import { ProductEntity } from '../../../domain/entities/product.entity';
 import { ProductError } from '@modules/product/domain/errors/product.error';
+import { ok, err } from '@core/libs/result';
 
 describe('DeleteProductHandler', () => {
   let handler: DeleteProductHandler;
@@ -42,16 +43,12 @@ describe('DeleteProductHandler', () => {
       'image.jpg',
     );
 
-    mockRepository.deleteOneProduct.mockResolvedValue(deletedProduct);
+    mockRepository.deleteOneProduct.mockResolvedValue(ok(deletedProduct));
 
     const result = await handler.execute(command);
 
     expect(result.isOk()).toBe(true);
-
-    if (result.isOk()) {
-      expect(result.value).toEqual(deletedProduct._id);
-    }
-
+    if (result.isOk()) expect(result.value).toEqual(deletedProduct._id);
     expect(mockRepository.deleteOneProduct).toHaveBeenCalledTimes(1);
     expect(mockRepository.deleteOneProduct).toHaveBeenCalledWith('123');
   });
@@ -59,16 +56,14 @@ describe('DeleteProductHandler', () => {
   it('should return ProductError.NOT_FOUND when product does not exist', async () => {
     const command = new DeleteProductCommand('123');
 
-    mockRepository.deleteOneProduct.mockResolvedValue(null);
+    mockRepository.deleteOneProduct.mockResolvedValue(
+      err(ProductError.NOT_FOUND),
+    );
 
     const result = await handler.execute(command);
 
     expect(result.isErr()).toBe(true);
-
-    if (result.isErr()) {
-      expect(result.error).toEqual(ProductError.NOT_FOUND);
-    }
-
+    if (result.isErr()) expect(result.error).toEqual(ProductError.NOT_FOUND);
     expect(mockRepository.deleteOneProduct).toHaveBeenCalledTimes(1);
     expect(mockRepository.deleteOneProduct).toHaveBeenCalledWith('123');
   });

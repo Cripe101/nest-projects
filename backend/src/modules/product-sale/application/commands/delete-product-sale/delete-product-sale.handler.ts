@@ -19,12 +19,10 @@ export class DeleteProductSaleHandler implements ICommandHandler<DeleteProductSa
     command: DeleteProductSaleCommand,
   ): Promise<Result<string, ProductSaleError>> {
     const { _id } = command;
-    const sale = await this.respository.deleteOneProductSale(_id);
+    const result = await this.respository.deleteOneProductSale(_id);
 
-    if (!sale) {
-      return err(ProductSaleError.NOT_FOUND);
-    }
+    if (result.isErr()) return err(ProductSaleError.NOT_FOUND);
 
-    return ok(sale._id as string);
+    return ok(result.value?._id as string);
   }
 }

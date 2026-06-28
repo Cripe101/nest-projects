@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
-
 import { GetTotalSaleHandler } from './get-total-sale.handler';
 import { PRODUCT_SALE_REPOSITORY } from '../../ports/product-sale.port';
+import { ok } from '@core/libs/result';
 
 describe('GetTotalSaleHandler', () => {
   let handler: GetTotalSaleHandler;
@@ -31,14 +31,12 @@ describe('GetTotalSaleHandler', () => {
       totalSale: 5000,
     };
 
-    mockRepository.getTotalSale.mockResolvedValue(totalSale);
+    mockRepository.getTotalSale.mockResolvedValue(ok(totalSale));
 
     const result = await handler.execute();
 
     expect(result.isOk()).toEqual(true);
-    if (result.isOk()) {
-      expect(result.value).toEqual(totalSale);
-    }
+    if (result.isOk()) expect(result.value).toEqual(totalSale);
     expect(mockRepository.getTotalSale).toHaveBeenCalled();
   });
 });

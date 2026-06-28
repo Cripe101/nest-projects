@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { GetProductsHandler } from './get-products.handler';
 import { PRODUCT_REPOSITORY } from '../../ports/product.repository.port';
 import { ProductEntity } from '@modules/product/domain/entities/product.entity';
+import { ok } from '@core/libs/result';
 
 describe('GetProductsHandler', () => {
   let handler: GetProductsHandler;
@@ -50,14 +51,12 @@ describe('GetProductsHandler', () => {
       ),
     ];
 
-    mockRepository.getAllProducts.mockResolvedValue(products);
+    mockRepository.getAllProducts.mockResolvedValue(ok(products));
 
     const result = await handler.execute();
 
     expect(result.isOk()).toBe(true);
-    if (result.isOk()) {
-      expect(result.value).toEqual(products);
-    }
+    if (result.isOk()) expect(result.value).toEqual(products);
     expect(mockRepository.getAllProducts).toHaveBeenCalledTimes(1);
   });
 });

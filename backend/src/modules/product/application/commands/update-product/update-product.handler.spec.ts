@@ -4,6 +4,7 @@ import { UpdateProductCommand } from './update-product.command';
 import { PRODUCT_REPOSITORY } from '../../ports/product.repository.port';
 import { ProductEntity } from '@modules/product/domain/entities/product.entity';
 import { ProductError } from '@modules/product/domain/errors/product.error';
+import { ok, err } from '@core/libs/result';
 
 describe('UpdateProductHandler', () => {
   let handler: UpdateProductHandler;
@@ -51,15 +52,12 @@ describe('UpdateProductHandler', () => {
       'image.jpg',
     );
 
-    mockRepository.updateOneProduct.mockResolvedValue(updatedProduct);
+    mockRepository.updateOneProduct.mockResolvedValue(ok(updatedProduct));
 
     const result = await handler.execute(command);
 
     expect(result.isOk()).toBe(true);
-
-    if (result.isOk()) {
-      expect(result.value).toEqual(updatedProduct._id);
-    }
+    if (result.isOk()) expect(result.value).toEqual(updatedProduct._id);
     expect(mockRepository.updateOneProduct).toHaveBeenCalledTimes(1);
   });
 
@@ -75,14 +73,14 @@ describe('UpdateProductHandler', () => {
       'image.jpg',
     );
 
-    mockRepository.updateOneProduct.mockResolvedValue(null);
+    mockRepository.updateOneProduct.mockResolvedValue(
+      err(ProductError.NOT_FOUND),
+    );
 
     const result = await handler.execute(command);
 
     expect(result.isErr()).toBe(true);
-    if (result.isErr()) {
-      expect(result.error).toEqual(ProductError.NOT_FOUND);
-    }
+    if (result.isErr()) expect(result.error).toEqual(ProductError.NOT_FOUND);
     expect(mockRepository.updateOneProduct).toHaveBeenCalledTimes(1);
   });
 });

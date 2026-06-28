@@ -18,15 +18,13 @@ export class GetProductSaleHandler implements IQueryHandler<GetProductSaleQuery>
 
   async execute(
     query: GetProductSaleQuery,
-  ): Promise<Result<ProductSaleEntity, ProductSaleError>> {
+  ): Promise<Result<ProductSaleEntity | null, ProductSaleError>> {
     const { _id } = query;
 
-    const product = await this.repository.getOneProductSale(_id);
+    const result = await this.repository.getOneProductSale(_id);
 
-    if (!product) {
-      return err(ProductSaleError.NOT_FOUND);
-    }
+    if (result.isErr()) return err(result.error);
 
-    return ok(product);
+    return ok(result.value);
   }
 }

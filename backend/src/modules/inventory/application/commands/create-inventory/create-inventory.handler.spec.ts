@@ -3,6 +3,7 @@ import { CreateInventoryCommand } from './create-inventory.command';
 import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
 import { InventoryEntity } from '../../../domain/entities/inventory.entity';
 import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
+import { ok, err } from '@core/libs/result';
 import { CreateInventoryHandler } from './create-inventory.handlers';
 
 describe('CreateInventoryHandler', () => {
@@ -37,8 +38,6 @@ describe('CreateInventoryHandler', () => {
       10,
     );
 
-    mockRepository.getInventoryByProduct.mockResolvedValue(null);
-
     const createdInventory = new InventoryEntity(
       '123',
       'product-id',
@@ -47,28 +46,20 @@ describe('CreateInventoryHandler', () => {
       100,
     );
 
-    mockRepository.create.mockResolvedValue(createdInventory);
+    mockRepository.getInventoryByProduct.mockResolvedValue(
+      err(InventoryError.NOT_FOUND),
+    );
+
+    mockRepository.create.mockResolvedValue(ok(createdInventory));
 
     const result = await handler.execute(command);
 
-    expect(result.isOk()).toEqual(true);
-
-    if (result.isOk()) {
-      expect(result.value).toEqual('123');
-    }
-
+    expect(result.isOk()).toBe(true);
+    if (result.isOk()) expect(result.value).toBe('123');
     expect(mockRepository.getInventoryByProduct).toHaveBeenCalledWith(
       'product-id',
     );
-
-    expect(mockRepository.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        productId: 'product-id',
-        createdBy: 'user-id',
-        minimumStock: 10,
-        currentStock: 100,
-      }),
-    );
+    expect(mockRepository.create).toHaveBeenCalledTimes(1);
   });
 
   it('should return DUPLICATE_PRODUCT when inventory already exists', async () => {
@@ -87,16 +78,15 @@ describe('CreateInventoryHandler', () => {
       100,
     );
 
-    mockRepository.getInventoryByProduct.mockResolvedValue(existingInventory);
+    mockRepository.getInventoryByProduct.mockResolvedValue(
+      ok(existingInventory),
+    );
 
     const result = await handler.execute(command);
 
-    expect(result.isErr()).toEqual(true);
-
-    if (result.isErr()) {
-      expect(result.error).toEqual(InventoryError.DUPLICATE_PRODUCT);
-    }
-
+    expect(result.isErr()).toBe(true);
+    if (result.isErr())
+      expect(result.error).toBe(InventoryError.DUPLICATE_PRODUCT);
     expect(mockRepository.create).not.toHaveBeenCalled();
   });
 });

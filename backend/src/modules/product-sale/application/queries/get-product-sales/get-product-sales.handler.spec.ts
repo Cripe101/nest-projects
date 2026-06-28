@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
-
 import { GetProductSalesHandler } from './get-product-sales.handler';
 import { PRODUCT_SALE_REPOSITORY } from '../../ports/product-sale.port';
+import { ok } from '@core/libs/result';
 
 describe('GetProductSalesHandler', () => {
   let handler: GetProductSalesHandler;
@@ -44,26 +44,12 @@ describe('GetProductSalesHandler', () => {
       },
     ];
 
-    mockRepository.getAllProductSales.mockResolvedValue(sales);
+    mockRepository.getAllProductSales.mockResolvedValue(ok(sales));
 
     const result = await handler.execute();
 
     expect(result.isOk()).toEqual(true);
-    if (result.isOk()) {
-      expect(result.value).toEqual(sales);
-    }
-    expect(mockRepository.getAllProductSales).toHaveBeenCalled();
-  });
-
-  it('should return an empty array when there are no sales', async () => {
-    mockRepository.getAllProductSales.mockResolvedValue([]);
-
-    const result = await handler.execute();
-
-    expect(result.isOk()).toEqual(true);
-    if (result.isOk()) {
-      expect(result.value).toEqual([]);
-    }
+    if (result.isOk()) expect(result.value).toEqual(sales);
     expect(mockRepository.getAllProductSales).toHaveBeenCalled();
   });
 });

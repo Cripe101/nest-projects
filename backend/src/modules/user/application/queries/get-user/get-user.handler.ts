@@ -21,12 +21,10 @@ export class GetUserHandler implements IQueryHandler<GetUserQuery> {
   ): Promise<Result<UserEntity | null, UserError>> {
     const { id } = query;
 
-    const user = await this.repository.getOneUser(id);
+    const result = await this.repository.getOneUser(id);
 
-    if (user.isErr()) {
-      return err(user.error);
-    }
+    if (result.isErr()) return err(result.error);
 
-    return ok(user?.value);
+    return ok(result.value);
   }
 }

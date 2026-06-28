@@ -16,7 +16,6 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly repository: UserRepositoryPort,
-
     private readonly jwtService: JwtService,
   ) {}
 
@@ -27,22 +26,34 @@ export class LoginUserHandler implements ICommandHandler<LoginUserCommand> {
 
     const result = await this.repository.getUserByUsername(username);
 
-    if (result.isErr()) return err(result.error);
+    if (result.isErr()) {
+      return err(result.error);
+    }
 
-    if (!result.value) return err(UserError.NOT_FOUND);
+    if (!result.value) {
+      return err(UserError.NOT_FOUND);
+    }
 
     const user = result.value;
 
-    const isMatch = await bcrypt.compare(password, user.password!);
+    if (!user.password) {
+      return err(AuthError.INVALID);
+    }
 
-    if (!isMatch || result.isErr()) {
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return err(AuthError.INVALID);
+    }
+
+    if (!isMatch) {
       return err(AuthError.INVALID);
     }
 
     const payload = {
-      sub: user?._id,
-      username: user?.username,
-      role: user?.role,
+      sub: user._id,
+      username: user.username,
+      role: user.role,
     };
 
     return ok({

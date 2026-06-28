@@ -6,7 +6,7 @@ import {
   type ProductRepositoryPort,
 } from '../../ports/product.repository.port';
 import { Inject } from '@nestjs/common';
-import { Result, ok } from '@core/libs/result';
+import { Result, ok, err } from '@core/libs/result';
 
 @QueryHandler(GetProductsQuery)
 export class GetProductsHandler implements IQueryHandler<GetProductsQuery> {
@@ -16,8 +16,10 @@ export class GetProductsHandler implements IQueryHandler<GetProductsQuery> {
   ) {}
 
   async execute(): Promise<Result<ProductEntity[], null>> {
-    const products = await this.repository.getAllProducts();
+    const result = await this.repository.getAllProducts();
 
-    return ok(products);
+    if (result.isErr()) return err(null);
+
+    return ok(result.value);
   }
 }

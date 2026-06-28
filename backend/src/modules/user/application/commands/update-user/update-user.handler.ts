@@ -25,8 +25,9 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
       command.username,
     );
 
-    if (existingUser.isOk() && existingUser.value?._id !== _id) {
-      return err(UserError.DUPLICATE_USERNAME);
+    if (existingUser.isOk()) {
+      if (existingUser.value?._id !== _id)
+        return err(UserError.DUPLICATE_USERNAME);
     }
 
     const user = await this.repository.updateOneUser(_id, {

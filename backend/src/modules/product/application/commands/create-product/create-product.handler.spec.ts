@@ -3,6 +3,7 @@ import { CreateProductHandler } from './create-product.handler';
 import { CreateProductCommand } from './create-product.command';
 import { PRODUCT_REPOSITORY } from '../../ports/product.repository.port';
 import { ProductEntity } from '@modules/product/domain/entities/product.entity';
+import { ok } from '@core/libs/result';
 
 describe('CreateProductHandler', () => {
   let handler: CreateProductHandler;
@@ -49,16 +50,12 @@ describe('CreateProductHandler', () => {
       'image.jpg',
     );
 
-    mockRepository.create.mockResolvedValue(product);
+    mockRepository.create.mockResolvedValue(ok(product));
 
     const result = await handler.execute(command);
 
     expect(result.isOk()).toBe(true);
-
-    if (result.isOk()) {
-      expect(result.value).toEqual(product._id);
-    }
-
+    if (result.isOk()) expect(result.value).toEqual(product._id);
     expect(mockRepository.create).toHaveBeenCalledTimes(1);
   });
 });

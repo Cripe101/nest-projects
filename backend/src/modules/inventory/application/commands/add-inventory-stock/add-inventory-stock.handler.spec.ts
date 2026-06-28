@@ -4,6 +4,7 @@ import { AddInventoryStockCommand } from './add-inventory-stock.command';
 import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
 import { InventoryEntity } from '../../../domain/entities/inventory.entity';
 import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
+import { ok, err } from '@core/libs/result';
 
 describe('AddInventoryStockHandler', () => {
   let handler: AddInventoryStockHandler;
@@ -39,29 +40,24 @@ describe('AddInventoryStockHandler', () => {
       150,
     );
 
-    mockRepository.addStock.mockResolvedValue(inventory);
+    mockRepository.addStock.mockResolvedValue(ok(inventory));
 
     const result = await handler.execute(command);
 
     expect(result.isOk()).toBe(true);
-    if (result.isOk()) {
-      expect(result.value).toBe(inventory._id);
-    }
-    expect(mockRepository.addStock).toHaveBeenCalledTimes(1);
+    if (result.isOk()) expect(result.value).toBe(inventory._id);
     expect(mockRepository.addStock).toHaveBeenCalledWith('inventory-id', 50);
   });
 
   it('should return InventoryError.NOT_FOUND when inventory does not exist', async () => {
     const command = new AddInventoryStockCommand('inventory-id', 50);
 
-    mockRepository.addStock.mockResolvedValue(null);
+    mockRepository.addStock.mockResolvedValue(err(InventoryError.NOT_FOUND));
 
     const result = await handler.execute(command);
 
     expect(result.isErr()).toBe(true);
-    if (result.isErr()) {
-      expect(result.error).toBe(InventoryError.NOT_FOUND);
-    }
-    expect(mockRepository.addStock).toHaveBeenCalledTimes(1);
+    if (result.isErr()) expect(result.error).toBe(InventoryError.NOT_FOUND);
+    expect(mockRepository.addStock).toHaveBeenCalledWith('inventory-id', 50);
   });
 });

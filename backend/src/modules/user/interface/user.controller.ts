@@ -102,11 +102,13 @@ export class UserController {
     return this.queryBus.execute(new GetUsersQuery());
   }
 
-  @Get(':id')
+  @Get('username/:username')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  async getUser(@Param('id') id: string) {
-    const result = await this.queryBus.execute(new GetUserQuery(id));
+  async getUserByUsername(@Param('username') username: string) {
+    const result = await this.queryBus.execute(
+      new GetUserByUsernameQuery(username),
+    );
 
     if (result.isErr()) {
       throw new NotFoundException(result.error);
@@ -115,13 +117,11 @@ export class UserController {
     return ok(result.value);
   }
 
-  @Get('username/:username')
+  @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  async getUserByUsername(@Param('username') username: string) {
-    const result = await this.queryBus.execute(
-      new GetUserByUsernameQuery(username),
-    );
+  async getUser(@Param('id') id: string) {
+    const result = await this.queryBus.execute(new GetUserQuery(id));
 
     if (result.isErr()) {
       throw new NotFoundException(result.error);

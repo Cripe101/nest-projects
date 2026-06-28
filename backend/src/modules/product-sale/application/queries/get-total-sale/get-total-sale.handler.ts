@@ -5,7 +5,7 @@ import {
   type ProductSaleRepositoryPort,
 } from '../../ports/product-sale.port';
 import { Inject } from '@nestjs/common';
-import { Result, ok } from '@core/libs/result';
+import { Result, ok, err } from '@core/libs/result';
 
 @QueryHandler(GetTotalSaleQuery)
 export class GetTotalSaleHandler implements IQueryHandler<GetTotalSaleQuery> {
@@ -15,8 +15,10 @@ export class GetTotalSaleHandler implements IQueryHandler<GetTotalSaleQuery> {
   ) {}
 
   async execute(): Promise<Result<{ totalSale: number }, null>> {
-    const sale = await this.repository.getTotalSale();
+    const result = await this.repository.getTotalSale();
 
-    return ok(sale);
+    if (result.isErr()) return err(null);
+
+    return ok(result.value);
   }
 }

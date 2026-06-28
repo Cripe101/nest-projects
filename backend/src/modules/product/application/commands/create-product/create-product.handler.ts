@@ -6,7 +6,7 @@ import { CreateProductCommand } from './create-product.command';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
 import { ProductEntity } from '@modules/product/domain/entities/product.entity';
-import { Result, ok } from '@core/libs/result';
+import { Result, ok, err } from '@core/libs/result';
 
 @CommandHandler(CreateProductCommand)
 export class CreateProductHandler implements ICommandHandler<CreateProductCommand> {
@@ -29,6 +29,8 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
 
     const product = await this.repository.create(createdProduct);
 
-    return ok(product?._id as string);
+    if (product.isErr()) return err(null);
+
+    return ok(product.value?._id as string);
   }
 }

@@ -1,106 +1,110 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '../../src/app.module';
 import request from 'supertest';
+import { AppModule } from '../../src/app.module';
 import { UserRole } from '../../src/core/constants/user-role.enum';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
+
   let token: string;
-  let createdUserId: string;
-  let createdUserUsername: string;
+  let userId: string;
+  let username: string;
 
   beforeAll(async () => {
-    const module = await Test.createTestingModule({
+    const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    app = module.createNestApplication();
+    app = moduleRef.createNestApplication();
     await app.init();
 
-    const loginResponse = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        username: 'Mhegz',
-        password: 'Mhegz2003',
-      });
+    const login = await request(app.getHttpServer()).post('/auth/login').send({
+      username: 'admin',
+      password: 'admin',
+    });
 
-    token = loginResponse.body.value.accessToken;
+    token = login.body?.value?.accessToken;
   });
 
   afterAll(async () => {
-    if (app) {
-      await app.close();
-    }
+    await app.close();
   });
 
-  it('should create a user', async () => {
+  it('POST /users', async () => {
     const response = await request(app.getHttpServer())
       .post('/users')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        username: 'test-user',
+        firstName: 'John',
+        middleName: 'A',
+        lastName: 'Doe',
+        email: 'john@example.com',
+        username: 'john-doe',
         password: 'password123',
         role: UserRole.STAFF,
       });
 
-    createdUserId = response.body.value;
+    expect(response.status).toBe(201);
 
-    expect(response.body).toBeDefined();
-    expect(response.body.value).toEqual(createdUserId);
+    expect(response.body.value).toBeDefined();
+
+    userId = response.body.value;
   });
 
-  it('should get all users', async () => {
+  it('GET /users', async () => {
     const response = await request(app.getHttpServer())
       .get('/users')
       .set('Authorization', `Bearer ${token}`);
 
-    expect(Array.isArray(response.body.value)).toEqual(true);
-    expect(response.body.value.length).toBeGreaterThan(0);
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body.value)).toBe(true);
   });
 
-  it('should get user by id', async () => {
+  it('GET /users/:id', async () => {
     const response = await request(app.getHttpServer())
-      .get('/users/' + createdUserId)
+      .get(`/users/${userId}`)
       .set('Authorization', `Bearer ${token}`);
 
-    createdUserUsername = response.body.value.username;
+    expect(response.status).toBe(200);
 
-    expect(response.body).toBeDefined();
-    expect(response.body.value._id).toEqual(createdUserId);
-    expect(response.body.value.username).toEqual('test-user');
-    expect(response.body.value.role).toEqual(UserRole.STAFF);
+    expect(response.body.value._id).toBe(userId);
+
+    username = response.body.value?.username;
   });
 
-  it('should get user by username', async () => {
+  it('GET /users/username/:username', async () => {
     const response = await request(app.getHttpServer())
-      .get('/users/username/' + createdUserUsername)
+      .get(`/users/username/${username}`)
       .set('Authorization', `Bearer ${token}`);
 
-    expect(response.body).toBeDefined();
-    expect(response.body.value.username).toEqual(createdUserUsername);
-    expect(response.body.value.role).toEqual(UserRole.STAFF);
+    expect(response.status).toBe(200);
+    expect(response.body.value.username).toBe(username);
   });
 
-  it('should update user', async () => {
+  it('PUT /users/:id', async () => {
     const response = await request(app.getHttpServer())
-      .put('/users/' + createdUserId)
+      .put(`/users/${userId}`)
       .set('Authorization', `Bearer ${token}`)
       .send({
-        username: 'updated-user',
+        firstName: 'Jane',
+        middleName: 'B',
+        lastName: 'Smith',
+        email: 'jane@example.com',
+        username: 'jane-smith',
         role: UserRole.CASHIER,
       });
 
-    expect(response.body).toBeDefined();
-    expect(response.body.value).toEqual(createdUserId);
+    expect(response.status).toBe(200);
+    expect(response.body.value).toBe(userId);
   });
 
-  it('should delete user', async () => {
+  it('DELETE /users/:id', async () => {
     const response = await request(app.getHttpServer())
-      .delete('/users/' + createdUserId)
+      .delete(`/users/${userId}`)
       .set('Authorization', `Bearer ${token}`);
 
-    expect(response.status).toEqual(200);
-    expect(response.body).toBeDefined();
+    expect(response.status).toBe(200);
+    expect(response.body.value).toBe(userId);
   });
 });

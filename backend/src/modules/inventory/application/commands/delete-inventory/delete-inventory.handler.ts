@@ -18,12 +18,10 @@ export class DeleteInventoryHandler implements ICommandHandler<DeleteInventoryCo
   async execute(
     command: DeleteInventoryCommand,
   ): Promise<Result<string, InventoryError>> {
-    const inventory = await this.repository.deleteOneInventory(command.id);
+    const result = await this.repository.deleteOneInventory(command.id);
 
-    if (!inventory) {
-      return err(InventoryError.NOT_FOUND);
-    }
+    if (result.isErr()) return err(result.error);
 
-    return ok(inventory?._id as string);
+    return ok(result.value?._id as string);
   }
 }

@@ -25,9 +25,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
     const checkIfUserExists = await this.repository.getUserByUsername(username);
 
-    if (checkIfUserExists) {
-      return err(UserError.DUPLICATE_USERNAME);
-    }
+    if (checkIfUserExists.isOk()) return err(UserError.DUPLICATE_USERNAME);
 
     const hashedPassword = await this.hashPassword(password);
 
@@ -44,7 +42,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
     const result = await this.repository.create(user);
 
-    if (result.isErr()) return err(result.error);
+    if (result.isErr()) return err(UserError.DUPLICATE_USERNAME);
 
     return ok(result.value._id as string);
   }

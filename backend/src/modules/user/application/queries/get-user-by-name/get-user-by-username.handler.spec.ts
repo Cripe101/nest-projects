@@ -4,6 +4,7 @@ import { GetUserByUsernameQuery } from './get-user-by-username.query';
 import { USER_REPOSITORY } from '../../ports/user.repository.port';
 import { UserError } from '@modules/user/domain/errors/user.error';
 import { UserRole } from '@core/constants/user-role.enum';
+import { err, ok } from '@core/libs/result';
 
 describe('GetUserByUsernameHandler', () => {
   let handler: GetUserByUsernameHandler;
@@ -29,16 +30,14 @@ describe('GetUserByUsernameHandler', () => {
   });
 
   it('should return NOT_FOUND when no user found', async () => {
-    mockRepository.getUserByUsername.mockResolvedValue(null);
+    mockRepository.getUserByUsername.mockResolvedValue(
+      err(UserError.NOT_FOUND),
+    );
 
     const result = await handler.execute(new GetUserByUsernameQuery('Mheg'));
 
     expect(result.isErr()).toBe(true);
-
-    if (result.isErr()) {
-      expect(result.error).toBe(UserError.NOT_FOUND);
-    }
-
+    if (result.isErr()) expect(result.error).toBe(UserError.NOT_FOUND);
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
   });
 
@@ -49,16 +48,12 @@ describe('GetUserByUsernameHandler', () => {
       role: UserRole.ADMIN,
     };
 
-    mockRepository.getUserByUsername.mockResolvedValue(user);
+    mockRepository.getUserByUsername.mockResolvedValue(ok(user));
 
     const result = await handler.execute(new GetUserByUsernameQuery('Mheg'));
 
     expect(result.isOk()).toBe(true);
-
-    if (result.isOk()) {
-      expect(result.value).toEqual(user);
-    }
-
+    if (result.isOk()) expect(result.value).toEqual(user);
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
   });
 });

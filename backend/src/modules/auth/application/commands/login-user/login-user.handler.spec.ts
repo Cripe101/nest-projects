@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { LoginUserHandler } from './login-user.handler';
 import { LoginUserCommand } from './login-user.command';
 import { USER_REPOSITORY } from '@modules/user/application/ports/user.repository.port';
+import { ok } from '@core/libs/result';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),
@@ -48,7 +49,7 @@ describe('LoginUserHandler', () => {
       role: 'admin',
     };
 
-    mockRepository.getUserByUsername.mockResolvedValue(user);
+    mockRepository.getUserByUsername.mockResolvedValue(ok(user));
 
     (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
@@ -59,7 +60,7 @@ describe('LoginUserHandler', () => {
     );
 
     expect(result.isOk()).toEqual(true);
-    if (result.isOk()) {
+    if (result.isOk())
       expect(result.value).toEqual({
         accessToken: 'jwt-token',
         user: {
@@ -68,7 +69,7 @@ describe('LoginUserHandler', () => {
           role: 'admin',
         },
       });
-    }
+
     expect(mockRepository.getUserByUsername).toHaveBeenCalledWith('Mheg');
     expect(bcrypt.compare).toHaveBeenCalledWith('password', 'hashed-password');
     expect(mockJwtService.sign).toHaveBeenCalled();
@@ -84,7 +85,7 @@ describe('LoginUserHandler', () => {
 
     const command = new LoginUserCommand('Mheg', 'wrong-password');
 
-    mockRepository.getUserByUsername.mockResolvedValue(user);
+    mockRepository.getUserByUsername.mockResolvedValue(ok(user));
 
     (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 

@@ -113,20 +113,20 @@ export class InventoryController {
     return ok(result.value);
   }
 
-  @Get()
-  async getAllInventory() {
-    const result = await this.queryBus.execute(new GetInventoriesQuery());
-
-    return ok(result.value);
-  }
-
   @Get(':id')
   async getOneInventory(@Param('id') id: string) {
     const result = await this.queryBus.execute(new GetInventoryQuery(id));
 
-    if (result.isErr()) {
-      throw new NotFoundException(result.error);
-    }
+    if (result.isErr()) throw new NotFoundException(result.error);
+
+    return ok(result.value);
+  }
+
+  @Get()
+  async getAllInventory() {
+    const result = await this.queryBus.execute(new GetInventoriesQuery());
+
+    if (result.isErr()) return null;
 
     return ok(result.value);
   }

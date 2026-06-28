@@ -20,12 +20,10 @@ export class AddInventoryStockHandler implements ICommandHandler<AddInventorySto
   ): Promise<Result<string, InventoryError>> {
     const { inventoryId, quantity } = command;
 
-    const inventory = await this.repository.addStock(inventoryId, quantity);
+    const result = await this.repository.addStock(inventoryId, quantity);
 
-    if (!inventory) {
-      return err(InventoryError.NOT_FOUND);
-    }
+    if (result.isErr()) return err(result.error);
 
-    return ok(inventory?._id as string);
+    return ok(result.value?._id as string);
   }
 }

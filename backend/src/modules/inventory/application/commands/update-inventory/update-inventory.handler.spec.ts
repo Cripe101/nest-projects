@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing';
-
 import { UpdateInventoryHandler } from './update-inventory.handler';
 import { UpdateInventoryCommand } from './update-inventory.command';
 import { INVENTORY_REPOSITORY } from '../../ports/inventory.repository.port';
+import { ok, err } from '@core/libs/result';
+import { InventoryError } from '@modules/inventory/domain/errors/inventory.error';
 
 describe('UpdateInventoryHandler', () => {
   let handler: UpdateInventoryHandler;
@@ -36,7 +37,7 @@ describe('UpdateInventoryHandler', () => {
       createdBy: 'user-id',
     };
 
-    mockRepository.updateOneInventory.mockResolvedValue(updatedInventory);
+    mockRepository.updateOneInventory.mockResolvedValue(ok(updatedInventory));
 
     const result = await handler.execute(
       new UpdateInventoryCommand(
@@ -49,14 +50,14 @@ describe('UpdateInventoryHandler', () => {
     );
 
     expect(result.isOk()).toEqual(true);
-    if (result.isOk()) {
-      expect(result.value).toEqual('inventory-id');
-    }
+    if (result.isOk()) expect(result.value).toEqual('inventory-id');
     expect(mockRepository.updateOneInventory).toHaveBeenCalled();
   });
 
-  it('should throw NotFoundException when inventory does not exist', async () => {
-    mockRepository.updateOneInventory.mockResolvedValue(null);
+  it('should return InventoryError.NOT_FOUND when inventory does not exist', async () => {
+    mockRepository.updateOneInventory.mockResolvedValue(
+      err(InventoryError.NOT_FOUND),
+    );
 
     const result = await handler.execute(
       new UpdateInventoryCommand(
@@ -69,6 +70,7 @@ describe('UpdateInventoryHandler', () => {
     );
 
     expect(result.isErr()).toEqual(true);
+    if (result.isErr()) expect(result.error).toEqual(InventoryError.NOT_FOUND);
     expect(mockRepository.updateOneInventory).toHaveBeenCalled();
   });
 });

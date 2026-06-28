@@ -64,7 +64,7 @@ export class UserRepository implements UserRepositoryPort {
   }
 
   async getAllUsers(): Promise<Result<UserEntity[], null>> {
-    const users = await this.userModel.find();
+    const users = await this.userModel.find().lean();
 
     return ok(UserMapper.toEntity(users));
   }
@@ -72,7 +72,7 @@ export class UserRepository implements UserRepositoryPort {
   async getUserByUsername(
     username: string,
   ): Promise<Result<UserEntity | null, UserError>> {
-    const user = await this.userModel.findOne({ username });
+    const user = await this.userModel.findOne({ username }).lean();
 
     if (!user) {
       return err(UserError.NOT_FOUND);
@@ -82,7 +82,7 @@ export class UserRepository implements UserRepositoryPort {
   }
 
   async getOneUser(id: string): Promise<Result<UserEntity | null, UserError>> {
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findById(id).lean();
 
     if (!user) {
       return err(UserError.NOT_FOUND);

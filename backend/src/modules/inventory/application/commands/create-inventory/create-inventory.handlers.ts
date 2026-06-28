@@ -23,9 +23,7 @@ export class CreateInventoryHandler implements ICommandHandler<CreateInventoryCo
 
     const checkProduct = await this.repository.getInventoryByProduct(productId);
 
-    if (checkProduct) {
-      return err(InventoryError.DUPLICATE_PRODUCT);
-    }
+    if (checkProduct.isOk()) return err(InventoryError.DUPLICATE_PRODUCT);
 
     const inventory = new InventoryEntity(
       null,
@@ -37,6 +35,8 @@ export class CreateInventoryHandler implements ICommandHandler<CreateInventoryCo
 
     const result = await this.repository.create(inventory);
 
-    return ok(result?._id as string);
+    if (result.isErr()) return err(result.error);
+
+    return ok(result.value?._id as string);
   }
 }
