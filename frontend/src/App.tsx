@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import HomeLayout from "./layouts/HomeLayout";
-import Profit from "./pages/Profit";
+import Profit from "./pages/profit/Profit";
 import Inventory from "./pages/Inventory";
 import Sale from "./pages/Sale";
 import InventoryLayout from "./layouts/InventoryLayout";
@@ -16,6 +16,9 @@ import User from "./pages/User";
 import AddInventoryStock from "./components/inventory/AddInventoryStock";
 import Dashboard from "./pages/Dashboard";
 import AddUser from "./components/user/AddUser";
+import ProfitLayout from "./layouts/ProfitLayout";
+import Phone from "./pages/profit/Phone";
+import Gcash from "./pages/profit/Gcash";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +28,24 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Login />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <ProfitLayout />,
+    children: [
+      {
+        path: "/profit-dashboard",
+        element: <Profit />,
+      },
+      {
+        path: "/phone",
+        element: <Phone />,
+      },
+      {
+        path: "/g-cash",
+        element: <Gcash />,
       },
     ],
   },
@@ -51,10 +72,6 @@ const router = createBrowserRouter([
       {
         path: "/add-user",
         element: <AddUser />,
-      },
-      {
-        path: "/profit",
-        element: <Profit />,
       },
       {
         path: "/sale",

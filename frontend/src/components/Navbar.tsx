@@ -57,7 +57,7 @@ export default function Navbar({ navbarData }: { navbarData: NavbarItem[] }) {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 mx-2 mb-2 shadow shadow-green-200 rounded-xl bg-slate-50 md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 mx-5 mb-2 rounded-xl bg-sky-50 md:hidden">
         <div className="flex justify-around">
           {navbarData.map((item) => {
             const Icon = item.icon;

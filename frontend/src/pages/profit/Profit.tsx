@@ -10,8 +10,8 @@ import {
   getPhoneTotalProfit,
   getProfit,
   getProfitByMonth,
-} from "../api/ProfitApi";
-import DashboardCard from "../components/cards/DashboardCard";
+} from "../../api/ProfitApi";
+import DashboardCard from "../../components/cards/DashboardCard";
 
 const Profit = () => {
   const formatDate = (dateString: string) => {
