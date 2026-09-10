@@ -1,5 +1,11 @@
 import { BiPlus } from "react-icons/bi";
-import { CiCalendar, CiMobile1, CiTrash, CiWallet } from "react-icons/ci";
+import {
+  CiCalendar,
+  CiDatabase,
+  CiMobile1,
+  CiTrash,
+  CiWallet,
+} from "react-icons/ci";
 import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -141,62 +147,10 @@ const Profit = () => {
   return (
     <div className="p-5 md:p-10 grid gap-5">
       <h1 className="flex items-center gap-1.5">
-        <CiMobile1 size={26} />
-        <p className="text-lg">Phone</p>
+        <CiDatabase size={26} />
+        <p className="text-lg">Dashboard</p>
       </h1>
       <section className="grid md:grid-cols-4 gap-5">
-        <form className="flex flex-col gap-5 p-5 bg-slate-50 rounded-xl shadow">
-          <h1 className="flex items-center gap-1">
-            <BiPlus size={26} />
-            <p className="font-medium">Add Transaction</p>
-          </h1>
-
-          <datalist id="phone-options">
-            <option value="Phone" />
-            <option value="G-cash" />
-          </datalist>
-
-          <section className="grid gap-3">
-            <span className="grid grid-cols-2 gap-3">
-              <input
-                className="outline-none border border-slate-400 p-2 px-4 rounded-xl"
-                placeholder="Label"
-                type="select"
-                list="phone-options"
-                value={description}
-                onChange={(e) => {
-                  setDescription(e.target.value);
-                }}
-              />
-              <input
-                className="outline-none border border-slate-400 p-2 px-4 rounded-xl"
-                placeholder="Profit Amount"
-                type="number"
-                value={amount}
-                onChange={(e) => {
-                  setAmount(Number(e.target.value));
-                }}
-              />
-            </span>
-            <input
-              className="outline-none w-full border border-slate-400 p-2 px-4 rounded-xl"
-              placeholder="Date"
-              type="date"
-              value={date}
-              onChange={(e) => {
-                setDate(e.target.value);
-              }}
-            />
-          </section>
-
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="py-2 rounded-xl bg-[#2191FB] text-white text-lg font-bold cursor-pointer hover:bg-blue-700 active:scale-95 duration-200"
-          >
-            Submit
-          </button>
-        </form>
         <DashboardCard
           label="Monthly Profit"
           icon={CiCalendar}
