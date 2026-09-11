@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { BiPlus } from "react-icons/bi";
-import { CiMobile1, CiTrash, CiWallet } from "react-icons/ci";
+import { CiTrash, CiWallet } from "react-icons/ci";
 import { addProfit, deleteProfit, getProfit } from "../../api/ProfitApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";

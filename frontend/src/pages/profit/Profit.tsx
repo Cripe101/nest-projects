@@ -1,4 +1,3 @@
-import { BiPlus } from "react-icons/bi";
 import {
   CiCalendar,
   CiDatabase,
@@ -6,11 +5,11 @@ import {
   CiTrash,
   CiWallet,
 } from "react-icons/ci";
-import { useState } from "react";
+// import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import {
-  addProfit,
+  // addProfit,
   deleteProfit,
   getGcashTotalProfit,
   getPhoneTotalProfit,
@@ -30,51 +29,51 @@ const Profit = () => {
     });
   };
 
-  const [amount, setAmount] = useState<number>(0);
-  const [description, setDescription] = useState<string>("");
-  const [date, setDate] = useState<string | undefined>(
-    new Date().toISOString().split("T")[0],
-  );
+  // const [amount, setAmount] = useState<number>(0);
+  // const [description, setDescription] = useState<string>("");
+  // const [date, setDate] = useState<string | undefined>(
+  //   new Date().toISOString().split("T")[0],
+  // );
 
-  const addMutation = useMutation({
-    mutationKey: ["Phone"],
-    mutationFn: (data: {
-      date: string | undefined;
-      description: string;
-      amount: number;
-    }) =>
-      addProfit({
-        date: data.date,
-        description: data.description,
-        amount: data.amount,
-      }),
-    onSuccess: () => {
-      toast.success("Added Successfully", {
-        position: "top-right",
-        autoClose: 2000,
-        style: {
-          width: 300,
-          borderRadius: 10,
-        },
-      });
-      refetch();
-      phoneTotalProfit.refetch();
-      gcashTotalProfit.refetch();
-      monthlyQuery.refetch();
-      setAmount(0);
-      setDescription("");
-    },
-    onError: (err) => {
-      toast.error(err.message, {
-        position: "top-right",
-        autoClose: 2000,
-        style: {
-          width: 300,
-          borderRadius: 10,
-        },
-      });
-    },
-  });
+  // const addMutation = useMutation({
+  //   mutationKey: ["Phone"],
+  //   mutationFn: (data: {
+  //     date: string | undefined;
+  //     description: string;
+  //     amount: number;
+  //   }) =>
+  //     addProfit({
+  //       date: data.date,
+  //       description: data.description,
+  //       amount: data.amount,
+  //     }),
+  //   onSuccess: () => {
+  //     toast.success("Added Successfully", {
+  //       position: "top-right",
+  //       autoClose: 2000,
+  //       style: {
+  //         width: 300,
+  //         borderRadius: 10,
+  //       },
+  //     });
+  //     refetch();
+  //     phoneTotalProfit.refetch();
+  //     gcashTotalProfit.refetch();
+  //     monthlyQuery.refetch();
+  //     setAmount(0);
+  //     setDescription("");
+  //   },
+  //   onError: (err) => {
+  //     toast.error(err.message, {
+  //       position: "top-right",
+  //       autoClose: 2000,
+  //       style: {
+  //         width: 300,
+  //         borderRadius: 10,
+  //       },
+  //     });
+  //   },
+  // });
 
   const deleteMutation = useMutation({
     mutationKey: ["Phone"],
@@ -105,20 +104,20 @@ const Profit = () => {
     },
   });
 
-  const isoDate =
-    date && !isNaN(new Date(date).getTime())
-      ? new Date(date).toISOString()
-      : undefined;
+  // const isoDate =
+  //   date && !isNaN(new Date(date).getTime())
+  //     ? new Date(date).toISOString()
+  //     : undefined;
 
-  const handleSubmit = () => {
-    const data = {
-      date: isoDate,
-      amount: amount,
-      description: description,
-    };
+  // const handleSubmit = () => {
+  //   const data = {
+  //     date: isoDate,
+  //     amount: amount,
+  //     description: description,
+  //   };
 
-    addMutation.mutate(data);
-  };
+  //   addMutation.mutate(data);
+  // };
 
   const handleDelete = (id: string) => {
     deleteMutation.mutate(id);
