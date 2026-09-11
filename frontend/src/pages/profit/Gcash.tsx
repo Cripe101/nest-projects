@@ -12,7 +12,7 @@ const Gcash = () => {
   const [deleteTarget, setDeleteTarget] = useState<any>(null);
 
   // Date filter
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -107,15 +107,15 @@ const Gcash = () => {
 
     let transactions = [...gcashTransac.data];
 
-    if (selectedDate) {
+    if (selectedMonth) {
       transactions = transactions.filter((transaction: any) => {
         if (!transaction.date) return false;
 
-        const transactionDate = new Date(transaction.date)
+        const transactionMonth = new Date(transaction.date)
           .toISOString()
-          .split("T")[0];
+          .slice(0, 7);
 
-        return transactionDate === selectedDate;
+        return transactionMonth === selectedMonth;
       });
     }
 
@@ -130,7 +130,7 @@ const Gcash = () => {
     });
 
     return transactions;
-  }, [gcashTransac.data, selectedDate]);
+  }, [gcashTransac.data, selectedMonth]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
@@ -144,7 +144,7 @@ const Gcash = () => {
   // Reset page when filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedDate]);
+  }, [selectedMonth]);
 
   const isoDate =
     date && !isNaN(new Date(date).getTime())
@@ -238,7 +238,7 @@ const Gcash = () => {
           <div className="grid grid-cols-2 items-end gap-2">
             <div className="relative">
               <label className="block text-xs font-semibold text-slate-500 mb-1.5 ml-1">
-                Filter by date
+                Filter by month
               </label>
 
               <div className="relative">
@@ -248,20 +248,20 @@ const Gcash = () => {
                 />
 
                 <input
-                  type="date"
-                  value={selectedDate}
+                  type="month"
+                  value={selectedMonth}
                   onChange={(e) => {
-                    setSelectedDate(e.target.value);
+                    setSelectedMonth(e.target.value);
                   }}
                   className="w-full sm:w-45 h-10 pl-10 pr-3 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium text-slate-700 outline-none transition-all duration-200 hover:border-slate-300"
                 />
               </div>
             </div>
 
-            {selectedDate && (
+            {selectedMonth && (
               <button
                 type="button"
-                onClick={() => setSelectedDate("")}
+                onClick={() => setSelectedMonth("")}
                 className="flex items-center justify-center gap-1.5 h-10 px-3 rounded-xl border border-red-100 bg-red-50 text-sm font-medium text-red-500 hover:bg-red-100 hover:border-red-200 active:scale-95 transition-all duration-200"
               >
                 <FiX size={16} />
