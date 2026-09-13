@@ -12,6 +12,32 @@ export class MongoProfitRepository implements ProfitRepository {
     private readonly profitModel: Model<Profit>,
   ) {}
 
+  private getCurrentProfitPeriod() {
+    const now = new Date();
+
+    let startMonth = now.getMonth();
+    let startYear = now.getFullYear();
+
+    // If today is before the 11th, we're still in the previous period
+    if (now.getDate() < 11) {
+      startMonth -= 1;
+
+      if (startMonth < 0) {
+        startMonth = 11;
+        startYear -= 1;
+      }
+    }
+
+    const startOfPeriod = new Date(startYear, startMonth, 11, 0, 0, 0, 0);
+
+    const endOfPeriod = new Date(startYear, startMonth + 1, 12, 0, 0, 0, 0);
+
+    return {
+      startOfPeriod,
+      endOfPeriod,
+    };
+  }
+
   async createProfit(profit: Profit): Promise<Profit> {
     const created = new this.profitModel(profit);
 
@@ -50,23 +76,23 @@ export class MongoProfitRepository implements ProfitRepository {
   }
 
   async getTotalProfitByMonth(): Promise<{ totalProfit: number }> {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const { startOfPeriod, endOfPeriod } = this.getCurrentProfitPeriod();
 
     const [summary] = await this.profitModel.aggregate([
       {
         $match: {
           date: {
-            $gte: startOfMonth,
-            $lt: endOfMonth,
+            $gte: startOfPeriod,
+            $lt: endOfPeriod,
           },
         },
       },
       {
         $group: {
           _id: null,
-          totalProfit: { $sum: '$amount' },
+          totalProfit: {
+            $sum: '$amount',
+          },
         },
       },
     ]);
@@ -108,19 +134,7 @@ export class MongoProfitRepository implements ProfitRepository {
   }
 
   async getPhoneTotalProfit(): Promise<{ totalProfit: number }> {
-    const now = new Date();
-
-    const startOfPeriod = new Date(
-      now.getFullYear(),
-      now.getMonth() - (now.getDate() < 11 ? 1 : 0),
-      11,
-    );
-
-    const endOfPeriod = new Date(
-      startOfPeriod.getFullYear(),
-      startOfPeriod.getMonth() + 1,
-      11,
-    );
+    const { startOfPeriod, endOfPeriod } = this.getCurrentProfitPeriod();
 
     const [summary] = await this.profitModel.aggregate([
       {
@@ -148,19 +162,7 @@ export class MongoProfitRepository implements ProfitRepository {
   }
 
   async getGcashTotalProfit(): Promise<{ totalProfit: number }> {
-    const now = new Date();
-
-    const startOfPeriod = new Date(
-      now.getFullYear(),
-      now.getMonth() - (now.getDate() < 11 ? 1 : 0),
-      11,
-    );
-
-    const endOfPeriod = new Date(
-      startOfPeriod.getFullYear(),
-      startOfPeriod.getMonth() + 1,
-      11,
-    );
+    const { startOfPeriod, endOfPeriod } = this.getCurrentProfitPeriod();
 
     const [summary] = await this.profitModel.aggregate([
       {
