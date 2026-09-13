@@ -6,7 +6,7 @@ type DashboardCardProps = {
   label: string;
   data: string | number;
   icon: IconType;
-  date?: string;
+  date?: any;
 };
 
 const DashboardCard = ({
@@ -19,18 +19,22 @@ const DashboardCard = ({
 }: DashboardCardProps) => {
   return (
     <div
-      className={`px-10 py-5 rounded-xl ${bgColor} ${text} grid gap-3 shadow`}
+      className={`px-5 py-3 rounded-xl ${bgColor} ${text} grid gap-3 shadow`}
     >
       <section className="flex justify-between">
         <h1
           className={`flex ${label === "Phone" ? "gap-0.5" : "gap-1"} items-center`}
         >
-          <Icon size={30} />
-          <p className="text-lg font-medium">{label}</p>
+          <Icon size={26} />
+          <p className="text-sm font-bold">{label}</p>
         </h1>
-        <h1 className="text-lg font-medium">{date}</h1>
+        <h1 className="text-sm font-medium">{date}</h1>
       </section>
-      <h1 className="text-5xl">₱ {data}.00</h1>
+
+      <section className="flex justify-between text-6xl font-medium">
+        <p>₱</p>
+        <h1> {data}.00</h1>
+      </section>
     </div>
   );
 };
