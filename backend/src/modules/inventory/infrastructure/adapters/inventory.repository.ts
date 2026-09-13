@@ -39,7 +39,7 @@ export class InventoryRepository implements InventoryRepositoryPort {
   ): Promise<Result<InventoryEntity | null, InventoryError>> {
     const updatedInventory = await this.inventoryModel
       .findByIdAndUpdate(
-        id,
+        { _id: id },
         {
           productId: new Types.ObjectId(
             InventoryMapper.getProductId(inventory.productId),
@@ -62,7 +62,9 @@ export class InventoryRepository implements InventoryRepositoryPort {
   async deleteOneInventory(
     id: string,
   ): Promise<Result<InventoryEntity | null, InventoryError>> {
-    const deletedInventory = await this.inventoryModel.findByIdAndDelete(id);
+    const deletedInventory = await this.inventoryModel.findByIdAndDelete({
+      _id: id,
+    });
 
     if (!deletedInventory) return err(InventoryError.NOT_FOUND);
 
@@ -98,7 +100,7 @@ export class InventoryRepository implements InventoryRepositoryPort {
     quantity: number,
   ): Promise<Result<InventoryEntity, InventoryError>> {
     const updatedInventory = await this.inventoryModel.findByIdAndUpdate(
-      id,
+      { _id: id },
       {
         $inc: {
           currentStock: quantity,
@@ -132,7 +134,7 @@ export class InventoryRepository implements InventoryRepositoryPort {
     id: string,
   ): Promise<Result<InventoryEntity | null, InventoryError>> {
     const inventory = await this.inventoryModel
-      .findById(id)
+      .findById({ _id: id })
       .populate('productId')
       .lean();
 

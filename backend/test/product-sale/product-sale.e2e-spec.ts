@@ -50,8 +50,6 @@ describe('ProductSaleController (e2e)', () => {
         minimumStock: 10,
       });
 
-    console.log(inventoryResponse.body);
-
     inventoryId = inventoryResponse.body.value;
   });
 

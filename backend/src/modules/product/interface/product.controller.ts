@@ -99,8 +99,10 @@ export class ProductController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  async deleteOneProduct(@Param('id') id: string) {
-    const result = await this.commandBus.execute(new DeleteProductCommand(id));
+  async deleteOneProduct(@Param('id') id: string, @Req() req: RequestWithUser) {
+    const result = await this.commandBus.execute(
+      new DeleteProductCommand(id, req.user.id),
+    );
 
     if (result.isErr()) {
       throw new NotFoundException(result.error);

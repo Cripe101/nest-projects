@@ -1,7 +1,7 @@
 import { ProductEntity } from '@modules/product/domain/entities/product.entity';
 
 export class InventoryResponseDto {
-  _id!: string | null;
+  _id!: string;
 
   productId!: string | ProductEntity;
 

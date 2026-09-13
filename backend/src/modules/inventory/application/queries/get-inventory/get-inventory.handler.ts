@@ -19,7 +19,9 @@ export class GetInventoryHandler implements IQueryHandler<GetInventoryQuery> {
   async execute(
     query: GetInventoryQuery,
   ): Promise<Result<InventoryEntity | null, InventoryError>> {
-    const result = await this.repository.getOneInventory(query.id);
+    const { _id } = query;
+
+    const result = await this.repository.getOneInventory(_id);
 
     if (result.isErr()) return err(result.error);
 

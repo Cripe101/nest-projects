@@ -24,7 +24,7 @@ describe('InventoryController (e2e)', () => {
         password: 'Mhegz2003',
       });
 
-    token = loginResponse.body.accessToken;
+    token = loginResponse.body.value.accessToken;
 
     const productResponse = await request(app.getHttpServer())
       .post('/products')
@@ -106,12 +106,12 @@ describe('InventoryController (e2e)', () => {
   });
 
   it('should delete inventory', async () => {
-    await request(app.getHttpServer())
-      .delete('/products/' + productId)
-      .set('Authorization', `Bearer ${token}`);
-
     const response = await request(app.getHttpServer())
       .delete('/inventories/' + inventoryId)
+      .set('Authorization', `Bearer ${token}`);
+
+    await request(app.getHttpServer())
+      .delete('/products/' + productId)
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.body).toBeDefined();

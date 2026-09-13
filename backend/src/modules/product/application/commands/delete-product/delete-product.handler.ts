@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteProductCommand } from './delete-product.command';
-import { Inject } from '@nestjs/common';
+import { Inject, NotAcceptableException } from '@nestjs/common';
 import {
   PRODUCT_REPOSITORY,
   type ProductRepositoryPort,
@@ -18,7 +18,15 @@ export class DeleteProductHandler implements ICommandHandler<DeleteProductComman
   async execute(
     command: DeleteProductCommand,
   ): Promise<Result<string, ProductError>> {
-    const { id } = command;
+    const { id, user_id } = command;
+
+    const product = await this.repository.getOneProduct(id);
+
+    if (product.isErr()) return err(product.error);
+
+    const checkUser = user_id === product.value?.addedBy;
+
+    if (!checkUser) throw new NotAcceptableException('Not valid action');
 
     const result = await this.repository.deleteOneProduct(id);
 

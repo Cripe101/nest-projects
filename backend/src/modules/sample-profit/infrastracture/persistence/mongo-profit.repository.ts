@@ -108,10 +108,28 @@ export class MongoProfitRepository implements ProfitRepository {
   }
 
   async getPhoneTotalProfit(): Promise<{ totalProfit: number }> {
+    const now = new Date();
+
+    const startOfPeriod = new Date(
+      now.getFullYear(),
+      now.getMonth() - (now.getDate() < 11 ? 1 : 0),
+      11,
+    );
+
+    const endOfPeriod = new Date(
+      startOfPeriod.getFullYear(),
+      startOfPeriod.getMonth() + 1,
+      11,
+    );
+
     const [summary] = await this.profitModel.aggregate([
       {
         $match: {
           description: 'Phone',
+          createdAt: {
+            $gte: startOfPeriod,
+            $lt: endOfPeriod,
+          },
         },
       },
       {
@@ -130,10 +148,28 @@ export class MongoProfitRepository implements ProfitRepository {
   }
 
   async getGcashTotalProfit(): Promise<{ totalProfit: number }> {
+    const now = new Date();
+
+    const startOfPeriod = new Date(
+      now.getFullYear(),
+      now.getMonth() - (now.getDate() < 11 ? 1 : 0),
+      11,
+    );
+
+    const endOfPeriod = new Date(
+      startOfPeriod.getFullYear(),
+      startOfPeriod.getMonth() + 1,
+      11,
+    );
+
     const [summary] = await this.profitModel.aggregate([
       {
         $match: {
           description: 'G-cash',
+          createdAt: {
+            $gte: startOfPeriod,
+            $lt: endOfPeriod,
+          },
         },
       },
       {

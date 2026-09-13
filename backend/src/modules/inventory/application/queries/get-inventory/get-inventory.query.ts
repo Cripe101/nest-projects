@@ -1,3 +1,3 @@
 export class GetInventoryQuery {
-  constructor(public readonly id: string) {}
+  constructor(public readonly _id: string) {}
 }
